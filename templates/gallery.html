@@ -1,0 +1,71 @@
+{%- extends "base.html" %}
+{% block title %}
+media gallery
+{% endblock %}
+{% block head %}
+	<style>
+	 @media (min-width: 576px) {
+		 .gallery-entry, gallery-sizer {
+			 width: 100%;
+		 }
+	 }
+	 @media (min-width: 768px) {
+		 .gallery-entry, gallery-sizer {
+			 width: 47%;
+		 }
+	 }
+	 @media (min-width: 992px) {
+		 .gallery-entry, gallery-sizer {
+			 width: 32%;
+		 }
+	 }
+	 @media (min-width: 1200px) {
+		 .gallery-entry, gallery-sizer {
+			 width: 19%;
+		 }
+	 }
+	 .gallery-sizer,
+	 .gallery-entry {
+		 margin: 0.2em;
+	 }
+	</style>
+	<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+{% endblock %}
+{% block navbar %}
+	<a href="{{ url_for("view_thread", thread_id=thread_id) }}" class="nav-item nav-link">Back to thread</a>
+	<a href="{{ url_for("view_catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
+{% endblock %}
+{% block content %}
+	<div class="container-fluid">
+		<div id="grid" style="display: flex; flex-wrap: wrap;">
+			<script>
+			 document.write('<div class="gallery-sizer"></div>')
+			</script>
+			{% for post in posts %}
+				{% if post["media"] %}
+					<div class="gallery-entry">
+						<a href="{{ url_for("uploaded_file", media_id=post["media"]) }}">
+							<img class="img-fluid img-thumbnail" src="{{ url_for("uploaded_thumb", media_id=post["media"]) }}">
+						</a>
+						{% if post["media_ext"] in ["gif", "webm"] %}
+							<small class="text-muted">Animated - click to play</small>
+						{% endif %}
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+	<script>
+	 var grid = $("#grid")
+	 grid.imagesLoaded( function() {
+		 grid.masonry({
+			 columnWidth: '.gallery-sizer',
+			 itemSelector: '.gallery-entry',
+			 percentPosition: true,
+			 horizontalOrder: true
+		 })
+	 })
+	</script>
+{% endblock %}
+

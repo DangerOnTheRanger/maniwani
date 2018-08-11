@@ -1,0 +1,20 @@
+{%- extends "base.html" %}
+{% block title %}
+administrate board
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<form method="post">
+			<div class="form-group">
+				<label for="name">Board name</label>
+				<input type="text" id="name" name="name" class="form-control" value="{{ board.name }}">
+			</div>
+			<div class="form-group">
+				<label for="rules">Board rules</label>
+				<textarea id="rules" name="rules" class="form-control">{{ board.rules | safe }}</textarea>
+				<small class="form-text text-muted">Board rules are written in Markdown.</small>
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+{% endblock %}

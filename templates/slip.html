@@ -1,0 +1,37 @@
+{%- extends "base.html" %}
+{% block title %}
+slip
+{% endblock %}
+{% block content %}
+	<div class="container">
+		{% if get_slip() is none %}
+			<div class="jumbotron">
+			<p class="lead">A <i>slip</i> is what Maniwani uses to keep track of user settings and permissions
+				in an anonymous manner.</p>
+			<p>You can sign up for a slip using the form below, or log in
+				to an existing slip. All that's required is a name and password for your slip - be sure not
+				to forget it, as there is currently no way to recover a lost password!</p>
+			</div>
+			<form method="post">
+				<div class="form-group">
+					<label for="slipName">Name</label>
+					<input type="text" class="form-control" id="slipName" name="name">
+					<small class="form-text text-muted">
+						Your slip name must be no longer than 20 characters. Note also that your slip
+						name is not publicly displayed - it's only used for when site admins need to
+						know your slip to add/remove permissions to it.
+					</small>
+				</div>
+				<div class="form-group">
+					<label for="slipPassword">Password</label>
+					<input type="password" class="form-control" id="slipPassword" name="password">
+				</div>
+				<button type="submit" class="btn btn-primary" formaction="{{ url_for("slip_login") }}">Log in</button>
+				<button type="submit" class="btn btn-primary" formaction="{{ url_for("slip_request") }}">Sign up</button>
+			</form>
+		{% else %}
+			<p>Your slip is: <b>{{ get_slip().name }}</b></p>
+			<a href="{{ url_for("unset_slip") }}" class="btn btn-primary">Log out</a>
+		{% endif %}
+	</div>
+{% endblock %}

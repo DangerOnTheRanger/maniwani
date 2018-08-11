@@ -1,0 +1,40 @@
+{% macro post_form(form_action, hidden_name, hidden_value, embed_submit=True) %}
+	<form id="postForm" method="post" enctype="multipart/form-data" action="{{ form_action }}">
+		<div class="form-group">
+			<label for="subject">Subject</label>
+			<input type="text" id="subject" name="subject" class="form-control">
+		</div>
+		{% if get_slip() %}
+			<div class="form-check">
+				<input type="checkbox" class="form-check-input" id="useslip" name="useslip" value="true">
+				<label for="useslip" class="form-check-label">Post with slip</label>
+				<small class="form-text text-muted">This will only have an effect if your slip
+					has special permissions enabled for this board (admin, mod, etc.).</small>
+			</div>
+		{% endif %}
+		<div class="form-group">
+			<label for="body">Body</label>
+			<textarea id="form-body" name="body" class="form-control"></textarea>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" id="spoiler" name="spoiler" value="true">
+			<label for="spoiler" class="form-check-label">Spoiler?</label>
+		</div>
+		<div class="form-group">
+			<label for="media">Media upload</label>
+			<input type="file" id="media" name="media">
+			<small class="form-text text-muted">Max file size is 5MB. Allowed file upload types are:
+				<ul>
+					<li>webm</li>
+					<li>png</li>
+					<li>jpg</li>
+					<li>gif</li>
+				</ul>
+			</small>
+		</div>
+		<input type="hidden" name="{{ hidden_name }}" value="{{ hidden_value }}">
+		{% if embed_submit %}
+			<button type="submit" class="btn btn-primary">Submit</button>
+		{% endif %}
+	</form>
+{% endmacro %}

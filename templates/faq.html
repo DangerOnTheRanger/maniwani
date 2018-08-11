@@ -1,0 +1,47 @@
+{%- extends "base.html" %}
+{% block title %}
+frequently asked questions
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<h1 id="whats-an-imageboard">What's an imageboard?</h1>
+		<p class="lead">An imageboard is kind of like a forum.</p>
+		<p>But a bit more image-focused, and temporary in nature. You post images you like to spark
+			discussion and get others to post similar images. Also, unlike a forum, threads don't last
+			indefinitely. Old threads that have either been around for a certain period of time, or that
+			nobody is posting in any longer, get removed to make way for new threads. This helps keep
+			discussion focused on new and relevant things and prevent the site from getting tunnel vision
+			on any particular topic. If you don't see anyone discussing a topic you'd like to see talked
+			about, just make a thread!</p>
+		<p>You might also be wondering why everyone is anonymous, especially if you're used to some of
+			the larger social media networks out there. There's a pretty good reason for this, actually:
+			The content of each post should be more important than the identity of whoever posted it.
+			With everyone being anonymous, a lot of harmful by-products of usernames on other sites are
+			no longer possible:
+			<ul>
+				<li>Trawling a user's post history to bring up irrelevant things to discredit a post or
+					argument of theirs</li>
+				<li>Forming a cult of personality around one user or a group of users</li>
+				<li>Making false appeals to authority based on whoever made a post</li>
+			</ul>
+			You can still tell who is who on a per-thread basis by checking the "Posted by:" field - this
+			is to prevent a single person from making intentionally weak arguments on a side they disagree
+			with (a practice known as false-flagging) and for certain threads where the identity of a certain
+			poster is important - if someone is relaying a live event, for example.
+		</p>
+		<h1 id="why-maniwani">Why Maniwani? There's other imageboards out there.</h1>
+		<p class="lead">Maniwani's just better.</p>
+		<p>But seriously, Maniwani has had a lot of thought and effort put into its design, especially
+			on the visual side of things. If you're new to the concept of imageboards, you'll probably
+			find Maniwani easier to get the hang of compared to the competition. It also makes sure not
+			to leave mobile users out in the cold - the site was written from the ground up such that
+			mobile users wouldn't need to use a 3rd-party client just to have an enjoyable experience on
+			their phones and tablets!</p>
+		<p>For the techies, Maniwani also includes a full REST API capable of doing anything the web frontend
+			can do, in addition to gracefully downgrading if Javascript has been disabled.</p>
+		<h1 id="what-topics">What topics can I talk about here?</h1>
+		<p class="lead">Plenty!</p>
+		<p>Go look at the <a href="{{ url_for("list_boards") }}">board listing</a> to get an idea of the sort of
+			things you can talk about.</p>
+	</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{%- extends "base.html" %}
+{% block title %}
+	{% if board is defined %}
+		/{{ board.name }}/ rules
+	{% else %}
+		rules
+	{% endif %}
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<h1>Global rules</h1>
+		<ul>
+			<li>Content posted must be legal in the United States, where this site is hosted.</li>
+			<li>You should probably be 18 or older to post here, or failing that, smart enough
+				to not mention your age to anyone.</li>
+			<li>Try to stay on-topic. It's very possible for a thread to gradually move in a new
+				direction, but try to post something related to discussion that's already occurred.</li>
+		</ul>
+		{% if board is defined and board.rules %}
+			<h1>/{{ board.name }}/ rules</h1>
+			{{ markdown(board.rules) | safe }}
+		{% endif %}
+	</div>
+{% endblock %}

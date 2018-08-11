@@ -1,0 +1,89 @@
+{%- extends "base.html" %}
+{% block title %}
+board index
+{% endblock %}
+{% block head %}
+	<style>
+	 .board {
+		 margin: 0.1em;
+	 }
+	 .board-container {
+		 position: relative;
+		 text-align: center;
+	 }
+	 .board-media {
+		 opacity: 0.4;
+	 }
+	 .board-name {
+		 font-size: 4em;
+	 }
+	 .over-image {
+		 position: absolute;
+		 top: 50%;
+		 left: 50%;
+		 transform: translate(-50%, -50%);
+	 }
+	 .no-image {
+		 vertical-align: -50%;
+	 }
+	 .dummy-media {
+		 width: 280px;
+		 height: auto;
+	 }
+	 @media (min-width: 576px) {
+		 .board, board-sizer {
+			 width: 95%;
+		 }
+	 }
+	 @media (min-width: 768px) {
+		 .board, board-sizer {
+			 width: 49%;
+		 }
+	 }
+	 @media (min-width: 992px) {
+		 .board, board-sizer {
+			 width: 32%;
+		 }
+	 }
+	 @media (min-width: 1200px) {
+		 .board, board-sizer {
+			 width: 19%;
+		 }
+	 }
+	</style>
+	<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+{% endblock %}
+{% block content %}
+	<div class="container-fluid">
+		<div id="grid" style="display: flex; flex-wrap: wrap;">
+			<script>
+			 document.write('<div class="board-sizer"></div>')
+			</script>
+			{% for board in boards %}
+				<a href="{{ url_for("view_catalog", board_id=board["id"]) }}" class="board bg-light border rounded">
+					<div class="board-container">
+						{% if board["media"] %}
+							<img src="{{ url_for("uploaded_thumb", media_id=board["media"]) }}" class="board-media img-fluid">
+							<span class="board-name over-image text-dark">/{{ board["name"] }}/</span>
+						{% else %}
+							<div class="dummy-media"></div>
+							<span class="board-name text-dark align-middle no-image">/{{ board["name"] }}/</span>
+						{% endif %}
+					</div>
+				</a>
+			{% endfor %}	
+		</div>
+		<script>
+		 var grid = $("#grid")
+		 grid.imagesLoaded( function() {
+			 grid.masonry({
+				 columnWidth: '.board-sizer',
+				 itemSelector: '.board',
+				 percentPosition: true,
+				 horizontalOrder: true
+			 })
+		 })
+		</script>
+	</div>
+{% endblock %}

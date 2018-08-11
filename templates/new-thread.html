@@ -1,0 +1,13 @@
+{%- extends "base.html" %}
+{% block title %}
+new thread
+{% endblock %}
+{% block navbar %}
+	<a href="{{ url_for("view_catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
+{% endblock %}
+{% import "post-base.html" as post %}
+{% block content %}
+	<div class="container">
+		{{ post.post_form(url_for("thread_submit"), "board", board_id) }}
+	</div>
+{% endblock %}
