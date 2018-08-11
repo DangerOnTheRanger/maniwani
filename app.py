@@ -240,14 +240,30 @@ def uploaded_thumb(media_id):
     return send_from_directory(thumb_dir, "%d.jpg" % media_id,
                                last_modified=datetime.datetime.now())
 
-    
+
+tags = db.Table('tags',
+                db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
+                db.Column('thread_id', db.Integer, db.ForeignKey('thread.id'), primary_key=True)
+)   
 class Thread(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     board = db.Column(db.Integer, db.ForeignKey("board.id"), nullable=False)
     views = db.Column(db.Integer, nullable=False)
     posts = relationship("Post", order_by=Post.datetime)
     last_updated = db.Column(db.DateTime)
-
+    tags = relationship("Tag", secondary=tags, lazy='subquery',
+        backref=db.backref('threads', lazy=True))
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    bg_style = db.Column(db.String, nullable=True)
+    text_style = db.Column(db.String, nullable=True)
+    def to_dict(self):
+        return {"name" : self.name}
+def style_for_tag(tag_name):
+    tag = db.session.query(Tag).filter(Tag.name == tag_name).one()
+    return {"bg_style" : tag.bg_style, "text_style" : tag.text_style}
+app.jinja_env.globals["style_for_tag"] = style_for_tag
     
 class ThreadPosts:
     def get(self, thread_id):
@@ -261,15 +277,17 @@ class ThreadPosts:
     def retrieve(self, thread_id):
         session = db.session
         thread = session.query(Thread).filter(Thread.id == thread_id).one()
-        return self._to_json(thread.posts)
+        return self._to_json(thread.posts, thread)
 
-    def _to_json(self, posts):
+    def _to_json(self, posts, thread):
         result = []
-        for post in posts:
+        for index, post in enumerate(posts):
             p_dict = dict()
             p_dict["body"] = post.body
             p_dict["datetime"] = post.datetime
             p_dict["id"] = post.id
+            if index == 0:
+                p_dict["tags"] = thread.tags
             session = db.session
             poster = session.query(Poster).filter(Poster.id == post.poster).one()
             p_dict["poster"] = poster.hex_string
@@ -357,10 +375,21 @@ class NewThread:
         parser.add_argument("subject", type=str)
         parser.add_argument("body", type=str, required=True)
         parser.add_argument("board", type=int, required=True)
+        parser.add_argument("tags", type=str)
         args = parser.parse_args()
         if "media" not in request.files or not request.files["media"].filename:
             raise SubmissionError("A file is required to post a thread!", args["board"])
-        thread = Thread(board=args["board"], views=0)
+        tags = []
+        if args["tags"]:
+            tag_list = args["tags"].replace(" ", "").split(",")
+            for tag_name in tag_list:
+                tag = db.session.query(Tag).filter(Tag.name == tag_name).one_or_none()
+                if tag is None:
+                    tag = Tag(name=tag_name)
+                    db.session.add(tag)
+                tags.append(tag)
+        db.session.flush()
+        thread = Thread(board=args["board"], views=0, tags=tags)
         # FIXME: use one transaction for all of this, the current state defeats
         # the purpose of having transactions in the first place
         db.session.add(thread)
@@ -447,6 +476,7 @@ class BoardCatalog:
             t_dict["body"] = op.body
             t_dict["id"] = thread.id
             t_dict["media"] = op.media
+            t_dict["tags"] = thread.tags
             result.append(t_dict)
         return result
 class BoardCatalogResource(BoardCatalog, Resource): pass
@@ -497,9 +527,11 @@ def board_admin_update(board_id):
     db.session.commit()
     return redirect(url_for("view_catalog", board_id=board_id))
 
+
 @app.route("/faq")
 def faq():
     return render_template("faq.html")
+
 
 class Firehose:
     def get(self):

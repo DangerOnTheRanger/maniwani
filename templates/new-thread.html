@@ -8,6 +8,6 @@ new thread
 {% import "post-base.html" as post %}
 {% block content %}
 	<div class="container">
-		{{ post.post_form(url_for("thread_submit"), "board", board_id) }}
+		{{ post.post_form(url_for("thread_submit"), "board", board_id, thread_op=True) }}
 	</div>
 {% endblock %}

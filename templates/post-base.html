@@ -1,4 +1,4 @@
-{% macro post_form(form_action, hidden_name, hidden_value, embed_submit=True) %}
+{% macro post_form(form_action, hidden_name, hidden_value, embed_submit=True, thread_op=False) %}
 	<form id="postForm" method="post" enctype="multipart/form-data" action="{{ form_action }}">
 		<div class="form-group">
 			<label for="subject">Subject</label>
@@ -10,6 +10,13 @@
 				<label for="useslip" class="form-check-label">Post with slip</label>
 				<small class="form-text text-muted">This will only have an effect if your slip
 					has special permissions enabled for this board (admin, mod, etc.).</small>
+			</div>
+		{% endif %}
+		{% if thread_op %}
+			<div class="form-group">
+				<label for="tags">Tags</label>
+				<input type="text" id="tags" name="tags" class="form-control">
+				<small class="form-text text-muted">Enter tags for this thread separated by commas.</small>
 			</div>
 		{% endif %}
 		<div class="form-group">

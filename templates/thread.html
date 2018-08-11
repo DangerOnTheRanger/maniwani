@@ -121,6 +121,15 @@
 							<div class="col"><b>{{ post["subject"] }}</b></div>
 						</div>
 					{% endif %}
+					{% if post["tags"] %}
+						<div class="row">
+							<div class="col"><small class="text-muted">Tags: </small>
+								{% for tag in post["tags"] %}
+									<small>{{ tag.name }} </small>
+								{% endfor %}
+							</div>
+						</div>
+					{% endif %}
 					<div class="row">
 						<div class="col-auto"><small class="text-secondary">Posted by:</small> <small class="text-info">{{ post["poster"] }}</small>
 							{% if post["slip"] %}
