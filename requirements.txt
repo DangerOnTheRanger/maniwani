@@ -1,0 +1,5 @@
+Flask
+Flask-SQLAlchemy
+Markdown
+Pillow
+SQLAlchemy
