@@ -19,7 +19,7 @@ Maniwani; if you're having problems with 3.4, file a bug report, but also try 3.
 if you can.
 
 `pip -r requirements.txt`, ideally inside a `virtualenv`, should take care of
-prerequisites. After that, modify `makedb.py` to your tastes to customize
+prerequisites. After that, `touch secret` and modify `makedb.py` to your tastes to customize
 database initialization before executing `python makedb.py`. Lastly, run
 `flask run` from this directory and point your web browser at http://127.0.0.1:5000
 to view your new Maniwani installation. If you ever want to wipe the database clean,
