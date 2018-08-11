@@ -40,7 +40,7 @@
 			</script>
 			{% for thread in threads %}
 				{% set bg_style = "bg-light" %}
-				{% set ns = namespace(bg_style="bg-light", text_style="text-primary") %}
+				{% set ns = namespace(bg_style="bg-light", text_style="text-body") %}
 				{% if thread.tags %}
 					{% set ns.main_tag = thread.tags[0].name %}
 					{% if style_for_tag(ns.main_tag).get("bg_style") %}
