@@ -70,6 +70,9 @@
 					</div>
 					<div class="{{ "pt-1 border border-top-0 rounded-bottom " + ns.bg_style }}">
 						<a href="{{ url_for("view_thread", thread_id=thread["id"]) }}" class="btn btn-dark m-2">View thread</a>
+						<span class="{{ "mt-3 mr-2 float-right " + ns.text_style }}">
+							<i class="fas fa-comment"></i> {{ thread["num_replies"] }} 
+							<i class="fas fa-image"></i> {{ thread["num_media"] }}
 					</div>
 				</div>
 			{% endfor %}		

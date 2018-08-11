@@ -253,6 +253,9 @@ class Thread(db.Model):
     last_updated = db.Column(db.DateTime)
     tags = relationship("Tag", secondary=tags, lazy='subquery',
         backref=db.backref('threads', lazy=True))
+
+    def num_media(self):
+        return db.session.query(Post).filter(and_(Post.thread == self.id, Post.media != None)).count()
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -356,7 +359,7 @@ def view_thread(thread_id):
     db.session.commit()
     board_id = thread.board
     num_posters = db.session.query(Poster).filter(Poster.thread == thread_id).count()
-    num_media = db.session.query(Post).filter(and_(Post.thread == thread_id, Post.media != None)).count()
+    num_media = thread.num_media()
     return render_template("thread.html", thread_id=thread_id, board_id=board_id, posts=posts, num_views=thread.views, num_media=num_media, num_posters=num_posters)
 
 @app.route("/thread/<int:thread_id>/gallery")
@@ -477,6 +480,9 @@ class BoardCatalog:
             t_dict["id"] = thread.id
             t_dict["media"] = op.media
             t_dict["tags"] = thread.tags
+            t_dict["views"] = thread.views
+            t_dict["num_replies"] = len(thread.posts) - 1
+            t_dict["num_media"] = thread.num_media()
             result.append(t_dict)
         return result
 class BoardCatalogResource(BoardCatalog, Resource): pass
