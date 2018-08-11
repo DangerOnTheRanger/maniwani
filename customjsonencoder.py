@@ -1,7 +1,7 @@
 # Taken from: http://blog.mmast.net/sqlalchemy-serialize-json
 
-from sqlalchemy.ext.declarative import DeclarativeMeta
 from flask.json import JSONEncoder
+from sqlalchemy.ext.declarative import DeclarativeMeta
 
 
 class CustomJSONEncoder(JSONEncoder):

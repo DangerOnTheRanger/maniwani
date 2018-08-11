@@ -1,5 +1,9 @@
 import os
-from app import db, Board, Tag, gen_slip
+from model.Board import Board
+from model.Slip import gen_slip
+from model.Tag import Tag
+from shared import db
+
 db.create_all()
 # set up some boards
 for board_name in ("anime", "tech", "meta", "politics", "gaming", "music"):

@@ -1,13 +1,13 @@
 {%- extends "base.html" %}
 {% block title %}
-	{% if posts[0]["subject"] != "" %}
-		{{ posts[0]["subject"] }}
-	{% else %}
-		view thread
-	{% endif %}
+{% if posts[0]["subject"] != "" %}
+{{ posts[0]["subject"] }}
+{% else %}
+view thread
+{% endif %}
 {% endblock %}
 {% block head %}
-	<style>
+<style>
 	 .media-container {
 		 position: relative;
 		 text-align: center;
@@ -19,42 +19,48 @@
 		 transform: translate(-50%, -50%);
 		 font-size: 6em;
 	 }
-	</style>
+
+
+
+</style>
 {% endblock %}
 {% block navbar %}
-	<noscript>
-		<a href="{{ url_for("new_post", thread_id=thread_id) }}" class="nav-item nav-link">New post</a>
-	</noscript>
-	<script>
+<noscript>
+    <a href="{{ url_for(" new_post", thread_id=thread_id) }}" class="nav-item nav-link">New post</a>
+</noscript>
+<script>
 	 document.write("<a href=\"#\" class=\"nav-item nav-link\" data-toggle=\"modal\" data-target=\"#replyModal\">New post</a>")
-	</script>
-	<a href="{{ url_for("view_gallery", thread_id=thread_id) }}" class="nav-item nav-link">Gallery</a>
-	<a href="{{ url_for("view_catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
+
+
+
+</script>
+<a href="{{ url_for(" view_gallery", thread_id=thread_id) }}" class="nav-item nav-link">Gallery</a>
+<a href="{{ url_for(" view_catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
 {% endblock %}
 {% block navbar_right %}
-	<span class="navbar-item navbar-text">Views: <span class="text-light mr-1">{{ num_views }}</span></span>
-	<span class="navbar-item navbar-text">Images/videos: <span class="text-light mr-1">{{ num_media }}</span></span>
-	<span class="navbar-item navbar-text">Posters: <span class="text-light mr-1">{{ num_posters }}</span></span>
+<span class="navbar-item navbar-text">Views: <span class="text-light mr-1">{{ num_views }}</span></span>
+<span class="navbar-item navbar-text">Images/videos: <span class="text-light mr-1">{{ num_media }}</span></span>
+<span class="navbar-item navbar-text">Posters: <span class="text-light mr-1">{{ num_posters }}</span></span>
 {% endblock %}
 {% block content %}
-	<div class="modal fade" id="replyModal" tabindex="-1">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Reply to thread</h5>
-				</div>
-				<div class="modal-body">
-					{% import "post-base.html" as post %}
-					{{ post.post_form(url_for("post_submit", thread_id=thread_id), "thread", thread_id, False) }}
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary" form="postForm">Submit</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script>
+<div class="modal fade" id="replyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reply to thread</h5>
+            </div>
+            <div class="modal-body">
+                {% import "post-base.html" as post %}
+                {{ post.post_form(url_for("post_submit", thread_id=thread_id), "thread", thread_id, False) }}
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" form="postForm">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
 	 $("#replyModal").on("show.bs.modal", function(event) {
 		 var href = $(event.relatedTarget)
 		 if(href.attr("data-post")) {
@@ -64,109 +70,133 @@
 			 $("#form-body").val(oldText + ">>" + postId)
 		 }
 	 })
-	</script>
-	<div class="container-fluid">
-		{% for post in posts %}
-			<div class="row" id="{{ post["id"] }}">
-				{% if post["media"] %}
-					{% if post["media_ext"] == "webm" %}
-						<div class="col">
-							<a href="{{ url_for("uploaded_file", media_id=post["media"]) }}">
-								<video style="width: 100%; max-width: 25em;">
-									<source src="{{ url_for("uploaded_file", media_id=post["media"]) }}" type="video/webm">
-								</video>
-							</a>
-						</div>
-					{% else %}
-						<div class="col">
-							<div class="img-thumbnail" style="display: inline-block;">
-								<a href="{{ url_for("uploaded_file", media_id=post["media"]) }}" class="media-container">
-									{% set ns = namespace(img_style="max-width: 15em; max-height: 20em;") %}
-									{% if post["spoiler"] == True %}
-										<span id="spoiler-label-{{ post["media"] }}" class="spoiler-label text-danger">!</span>
-										{% set ns.img_style = ns.img_style + " opacity: 0.025;" %}
-									{% endif %}
-									{% if post["media_ext"] == "gif" %}
-										<img src="{{ url_for("uploaded_thumb", media_id=post["media"]) }}" data-full="{{ url_for("uploaded_file", media_id=post["media"]) }}" data-thumb="{{ url_for("uploaded_thumb", media_id=post["media"]) }}" data-id="{{ post["media"] }}" class="img-animated" style="{{ ns.img_style }}">
-									{% else %}
-										<img src="{{ url_for("uploaded_thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}">
-									{% endif %}
-								</a>
-							</div>
-						</div>
-					{% endif %}
-				{% endif %}
-				<div class="container-fluid">
-					{% if post["spoiler"] == True %}
-						<div class="row">
-							<div class="col">
-								<small class="text-danger">Media contains spoiler!</small>
-							</div>
-						</div>
-					{% endif %}
-					{% if post["media_ext"] in ["gif", "webm"] %}
-						<div class="row">
-							<div class="col">
-								<noscript>
-									<small class="text-muted">Animated - click to play</small>
-								</noscript>
-								<script>
+
+
+
+</script>
+<div class="container-fluid">
+    {% for post in posts %}
+    <div class="row" id="{{ post[" id
+    "] }}">
+    {% if post["media"] %}
+    {% if post["media_ext"] == "webm" %}
+    <div class="col">
+        <a href="{{ url_for(" uploaded_file", media_id=post["media"]) }}">
+        <video style="width: 100%; max-width: 25em;">
+            <source src="{{ url_for(" uploaded_file
+            ", media_id=post["media"]) }}" type="video/webm">
+        </video>
+        </a>
+    </div>
+    {% else %}
+    <div class="col">
+        <div class="img-thumbnail" style="display: inline-block;">
+            <a href="{{ url_for(" uploaded_file", media_id=post["media"]) }}" class="media-container">
+            {% set ns = namespace(img_style="max-width: 15em; max-height: 20em;") %}
+            {% if post["spoiler"] == True %}
+            <span id="spoiler-label-{{ post[" media"] }}" class="spoiler-label text-danger">!</span>
+            {% set ns.img_style = ns.img_style + " opacity: 0.025;" %}
+            {% endif %}
+            {% if post["media_ext"] == "gif" %}
+            <img src="{{ url_for(" uploaded_thumb", media_id=post["media"]) }}" data-full="{{ url_for("uploaded_file",
+            media_id=post["media"]) }}" data-thumb="{{ url_for("uploaded_thumb", media_id=post["media"]) }}" data-id="{{
+            post["media"] }}" class="img-animated" style="{{ ns.img_style }}">
+            {% else %}
+            <img src="{{ url_for(" uploaded_thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}">
+            {% endif %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+    <div class="container-fluid">
+        {% if post["spoiler"] == True %}
+        <div class="row">
+            <div class="col">
+                <small class="text-danger">Media contains spoiler!</small>
+            </div>
+        </div>
+        {% endif %}
+        {% if post["media_ext"] in ["gif", "webm"] %}
+        <div class="row">
+            <div class="col">
+                <noscript>
+                    <small class="text-muted">Animated - click to play</small>
+                </noscript>
+                <script>
 								 document.write('<small class="text-muted">Animated - click or hover to play</small>')
-								</script>
-							</div>
-						</div>
-					{% endif %}
-					{% if post["subject"] %}
-						<div class="row">
-							<div class="col"><b>{{ post["subject"] }}</b></div>
-						</div>
-					{% endif %}
-					{% if post["tags"] %}
-						<div class="row">
-							<div class="col"><small class="text-muted">Tags: </small>
-								{% for tag in post["tags"] %}
-									<small>{{ tag.name }} </small>
-								{% endfor %}
-							</div>
-						</div>
-					{% endif %}
-					<div class="row">
-						<div class="col-auto"><small class="text-secondary">Posted by:</small> <small class="text-info">{{ post["poster"] }}</small>
-							{% if post["slip"] %}
-								{% if slip_from_id(post["slip"]).is_admin %}
-									<span class="badge badge-danger">Admin</span>
-								{% elif slip_from_id(post["slip"]).is_mod %}
-									<span class="badge badge-success">Mod</span>
-								{% endif %}
-							{% endif %}
-						</div>
-						<div class="col-auto"><small class="text-secondary">At:</small> <small class="text-info">{{ post["datetime"].strftime("%b %d, %Y %H:%M") }}</small></div>
-						<div class="w-100 d-block d-md-none"></div>
-						<div class="col-auto"><small><a class="badge badge-primary" href="#{{ post["id"] }}">Permalink</a></small></div>
-						<noscript>
-							<div class="col-auto"><small><a class="badge badge-primary" href="#">ID: {{ post["id"] }}</a></small></div>
-						</noscript>
-						<script>
+
+
+
+                </script>
+            </div>
+        </div>
+        {% endif %}
+        {% if post["subject"] %}
+        <div class="row">
+            <div class="col"><b>{{ post["subject"] }}</b></div>
+        </div>
+        {% endif %}
+        {% if post["tags"] %}
+        <div class="row">
+            <div class="col">
+                <small class="text-muted">Tags:</small>
+                {% for tag in post["tags"] %}
+                <small>{{ tag.name }}</small>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-auto">
+                <small class="text-secondary">Posted by:</small>
+                <small class="text-info">{{ post["poster"] }}</small>
+                {% if post["slip"] %}
+                {% if slip_from_id(post["slip"]).is_admin %}
+                <span class="badge badge-danger">Admin</span>
+                {% elif slip_from_id(post["slip"]).is_mod %}
+                <span class="badge badge-success">Mod</span>
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-auto">
+                <small class="text-secondary">At:</small>
+                <small class="text-info">{{ post["datetime"].strftime("%b %d, %Y %H:%M") }}</small>
+            </div>
+            <div class="w-100 d-block d-md-none"></div>
+            <div class="col-auto">
+                <small><a class="badge badge-primary" href="#{{ post[" id"] }}">Permalink</a></small>
+            </div>
+            <noscript>
+                <div class="col-auto">
+                    <small><a class="badge badge-primary" href="#">ID: {{ post["id"] }}</a></small>
+                </div>
+            </noscript>
+            <script>
 						 document.write("<div class=\"col-auto\"><small><a class=\"badge badge-primary\" href=\"#\" data-post=\"{{ post["id"] }}\" data-toggle=\"modal\" data-target=\"#replyModal\">Reply</a></small></div>")
-						</script>
-					</div>
-					{% if post["replies"] %}
-						<div class="row">
-							<div class="col-auto"><small class="text-secondary">Replies: </small>
-							{% for reply in post["replies"] %}
-								<a class="badge badge-secondary" href="{{ url_for_post(reply) }}">&gt;&gt;{{ reply }} </a>
-							{% endfor %}
-							</div>
-						</div>
-					{% endif %}
-					<div class="row">
-						{{ post["body"]|safe }}
-					</div>
-				</div>
-			</div>
-		{% endfor %}
-		<a href="#" name="thread-bottom"></a>
-		<script>
+
+
+
+            </script>
+        </div>
+        {% if post["replies"] %}
+        <div class="row">
+            <div class="col-auto">
+                <small class="text-secondary">Replies:</small>
+                {% for reply in post["replies"] %}
+                <a class="badge badge-secondary" href="{{ url_for_post(reply) }}">&gt;&gt;{{ reply }} </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="row">
+            {{ post["body"]|safe }}
+        </div>
+    </div>
+</div>
+{% endfor %}
+<a href="#" name="thread-bottom"></a>
+<script>
 		 $(".img-animated").hover(function() {
 			 $(this).attr("src", $(this).data("full"))
 			 $(this).data("old-opacity", $(this).css("opacity"))
@@ -179,6 +209,9 @@
 			 id = $(this).data("id")
 			 $("#spoiler-label-" + id).show()
 		 })
-		</script>
-	</div>
+
+
+
+</script>
+</div>
 {% endblock %}

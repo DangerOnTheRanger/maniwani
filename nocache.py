@@ -1,8 +1,10 @@
 # Taken from: https://arusahni.net/blog/2014/03/flask-nocache.html
-from flask import make_response
-from functools import wraps, update_wrapper
 from datetime import datetime
+from functools import wraps, update_wrapper
+
+from flask import make_response
 from werkzeug.http import http_date
+
 
 def nocache(view):
     @wraps(view)
@@ -13,5 +15,5 @@ def nocache(view):
         response.headers['Pragma'] = 'no-cache'
         response.headers['Expires'] = '-1'
         return response
-        
+
     return update_wrapper(no_cache, view)

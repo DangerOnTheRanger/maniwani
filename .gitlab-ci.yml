@@ -1,7 +1,7 @@
 image: python:latest
 
 services:
-  - name: postgres:latest
+- name: postgres:latest
 
 variables:
   POSTGRES_DB: dbadmin
@@ -20,5 +20,7 @@ test:
   - pwd
   - pip3 install --upgrade pip setuptools
   - pip3 install -r requirements.txt
+  - touch secret
+  - python makedb.py
   - python -m unittest discover --verbose
   - python mytest.py
