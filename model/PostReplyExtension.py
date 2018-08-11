@@ -1,11 +1,8 @@
 import re
 
-from flask import url_for
 from markdown import Extension
 
 from model.PostReplyPattern import PostReplyPattern
-from model.Thread import Thread
-
 
 
 class PostReplyExtension(Extension):

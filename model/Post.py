@@ -1,18 +1,11 @@
 import datetime
 
-from flask import url_for
 from markdown import markdown
 
 from model.PostReplyExtension import PostReplyExtension
-from model.Thread import Thread
 from model.ThreadRootExtension import ThreadRootExtension
 from outputmixin import OutputMixin
 from shared import db
-
-
-def url_for_post(post_id):
-    thread = Thread.query.filter(Thread.posts.any(id=post_id)).one()
-    return url_for("view_thread", thread_id=thread.id) + "#" + str(post_id)
 
 
 def render_for_catalog(posts):
