@@ -9,6 +9,7 @@ Flask-SQLAlchemy = "*"
 Markdown = "*"
 Pillow = "*"
 SQLAlchemy = "*"
+flask-restful = "*"
 
 [dev-packages]
 
