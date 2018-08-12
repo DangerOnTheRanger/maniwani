@@ -18,8 +18,7 @@ def get_secret():
 app.secret_key = get_secret()
 
 def gen_poster_id():
-    id_chars = "ABCDEF0123456789"
-    return ''.join(random.sample(id_chars, 4))
+    return '%04X' % random.randint(0, 0xffff)
 
 def ip_to_int(ip_str):
     # TODO: IPv6 support
