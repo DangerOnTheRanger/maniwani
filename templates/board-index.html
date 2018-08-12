@@ -3,7 +3,7 @@
 board index
 {% endblock %}
 {% block head %}
-	<style>
+<style>
 	 .board {
 		 margin: 0.1em;
 	 }
@@ -50,31 +50,37 @@ board index
 			 width: 19%;
 		 }
 	 }
-	</style>
-	<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+
+
+</style>
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 {% endblock %}
 {% block content %}
-	<div class="container-fluid">
-		<div id="grid" style="display: flex; flex-wrap: wrap;">
-			<script>
+<div class="container-fluid">
+    <div id="grid" style="display: flex; flex-wrap: wrap;">
+        <script>
 			 document.write('<div class="board-sizer"></div>')
-			</script>
-			{% for board in boards %}
-				<a href="{{ url_for("view_catalog", board_id=board["id"]) }}" class="board bg-light border rounded">
-					<div class="board-container">
-						{% if board["media"] %}
-							<img src="{{ url_for("uploaded_thumb", media_id=board["media"]) }}" class="board-media img-fluid">
-							<span class="board-name over-image text-dark">/{{ board["name"] }}/</span>
-						{% else %}
-							<div class="dummy-media"></div>
-							<span class="board-name text-dark align-middle no-image">/{{ board["name"] }}/</span>
-						{% endif %}
-					</div>
-				</a>
-			{% endfor %}	
-		</div>
-		<script>
+
+
+
+        </script>
+        {% for board in boards %}
+        <a href="{{ url_for("view_catalog", board_id=board["id"]) }}" class="board bg-light border rounded">
+        <div class="board-container">
+            {% if board["media"] %}
+            <img src="{{ url_for("uploaded_thumb", media_id=board["media"]) }}" class="board-media img-fluid">
+            <span class="board-name over-image text-dark">/{{ board["name"] }}/</span>
+            {% else %}
+            <div class="dummy-media"></div>
+            <span class="board-name text-dark align-middle no-image">/{{ board["name"] }}/</span>
+            {% endif %}
+        </div>
+        </a>
+        {% endfor %}
+    </div>
+    <script>
 		 var grid = $("#grid")
 		 grid.imagesLoaded( function() {
 			 grid.masonry({
@@ -84,6 +90,9 @@ board index
 				 horizontalOrder: true
 			 })
 		 })
-		</script>
-	</div>
+
+
+
+    </script>
+</div>
 {% endblock %}

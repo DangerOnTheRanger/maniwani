@@ -3,12 +3,12 @@
 /{{ board_name }}/ catalog
 {% endblock %}
 {% block navbar %}
-	<a href="{{ url_for("new_thread", board_id=board_id) }}" class="nav-item nav-link">New thread</a>
-	{% if get_slip() and get_slip().is_admin %}
-		<a href="{{ url_for("board_admin", board_id=board_id) }}" class="nav-item nav-link">Admin</a>
-	{% endif %}
+<a href="{{ url_for("new_thread", board_id=board_id) }}" class="nav-item nav-link">New thread</a>
+{% if get_slip() and get_slip().is_admin %}
+<a href="{{ url_for("board_admin", board_id=board_id) }}" class="nav-item nav-link">Admin</a>
+{% endif %}
 {% endblock %}
 {% block content %}
-	{% import "catalog-view.html" as catalog_view %}
-	{{ catalog_view.catalog_view(threads) }}
+{% import "catalog-view.html" as catalog_view %}
+{{ catalog_view.catalog_view(threads) }}
 {% endblock %}
