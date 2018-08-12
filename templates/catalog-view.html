@@ -1,5 +1,5 @@
 {% macro catalog_view(threads) %}
-<style>
+	<style>
 	 @media (max-width: 575px) {
 		 .thread, .thread-sizer {
 			 width: 98%;
@@ -26,23 +26,20 @@
 	 }
 	 @media (min-width: 1200px) {
 		 .thread, .thread-sizer {
-			 width: 19%;
+			 width: 19.5%;
 			 margin: 0.2em;
 		 }
+		 .catalog-padding {
+			 padding: 0px;
+		 }
 	 }
-
-
-
-</style>
+	</style>
 <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-<div class="container-fluid">
+<div class="container-fluid catalog-padding">
     <div id="grid" class="d-flex flex-wrap">
         <script>
 			 document.write('<div class="thread-sizer" style="display: none;"></div>')
-
-
-
         </script>
         {% for thread in threads %}
         {% set bg_style = "bg-light" %}
