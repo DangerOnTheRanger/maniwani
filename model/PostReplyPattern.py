@@ -5,12 +5,6 @@ from markdown.util import etree
 from markdown.inlinepatterns import Pattern
 
 from model.Reply import REPLY_REGEXP
-from model.Thread import Thread
-
-
-def url_for_post(post_id):
-    thread = Thread.query.filter(Thread.posts.any(id=post_id)).one()
-    return url_for("view_thread", thread_id=thread.id) + "#" + str(post_id)
 
 
 def url_for_post(post_id):
