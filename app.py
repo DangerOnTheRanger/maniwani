@@ -1,13 +1,11 @@
 import datetime
-import os
 import random
 
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory, session, flash
-from flask_restful import Api, reqparse
+from flask import request, render_template, redirect, url_for, send_from_directory, session, flash
+from flask_restful import reqparse
 from markdown import markdown
 from werkzeug.security import check_password_hash
 
-from customjsonencoder import CustomJSONEncoder
 from model.Board import Board
 from model.BoardCatalogResource import BoardCatalogResource
 from model.BoardList import BoardList
@@ -229,3 +227,8 @@ rest_api.add_resource(FirehoseResource, "/api/v1/firehose")
 @app.route("/")
 def index():
     return render_template("index.html", threads=Firehose().get_impl())
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('not-found.html'), 404
