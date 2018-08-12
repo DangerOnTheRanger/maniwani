@@ -35,7 +35,7 @@ class NewPost:
             should_bump = True
         if args.get("useslip") is True:
             slip = get_slip()
-            if slip:
+            if slip and (slip.is_admin or slip.is_mod):
                 poster.slip = slip.id
                 db.session.add(poster)
                 db.session.commit()
