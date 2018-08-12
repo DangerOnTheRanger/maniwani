@@ -67,14 +67,10 @@ view thread
 			 $("#form-body").val(oldText + ">>" + postId)
 		 }
 	 })
-
-
-
 </script>
 <div class="container-fluid">
     {% for post in posts %}
-    <div class="row" id="{{ post[" id
-    "] }}">
+    <div class="row" id="{{ post["id"] }}">
     {% if post["media"] %}
     {% if post["media_ext"] == "webm" %}
     <div class="col">
@@ -117,13 +113,10 @@ view thread
         <div class="row">
             <div class="col">
                 <noscript>
-                    <small class="text-muted">Animated - click to play</small>
+					<small class="text-muted">Animated - click to play</small>
                 </noscript>
                 <script>
-								 document.write('<small class="text-muted">Animated - click or hover to play</small>')
-
-
-
+				 document.write('<small class="text-muted">Animated - click or hover to play</small>')
                 </script>
             </div>
         </div>
