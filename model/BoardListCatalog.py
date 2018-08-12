@@ -1,4 +1,6 @@
 from flask.json import jsonify
+from shared import db
+from model.Board import Board
 
 
 class BoardCatalog:

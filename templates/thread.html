@@ -19,14 +19,11 @@ view thread
 		 transform: translate(-50%, -50%);
 		 font-size: 6em;
 	 }
-
-
-
 </style>
 {% endblock %}
 {% block navbar %}
 <noscript>
-    <a href="{{ url_for(" new_post", thread_id=thread_id) }}" class="nav-item nav-link">New post</a>
+    <a href="{{ url_for("new_post", thread_id=thread_id) }}" class="nav-item nav-link">New post</a>
 </noscript>
 <script>
 	 document.write("<a href=\"#\" class=\"nav-item nav-link\" data-toggle=\"modal\" data-target=\"#replyModal\">New post</a>")
@@ -34,8 +31,8 @@ view thread
 
 
 </script>
-<a href="{{ url_for(" view_gallery", thread_id=thread_id) }}" class="nav-item nav-link">Gallery</a>
-<a href="{{ url_for(" view_catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
+<a href="{{ url_for("view_gallery", thread_id=thread_id) }}" class="nav-item nav-link">Gallery</a>
+<a href="{{ url_for("view_catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
 {% endblock %}
 {% block navbar_right %}
 <span class="navbar-item navbar-text">Views: <span class="text-light mr-1">{{ num_views }}</span></span>
@@ -81,28 +78,27 @@ view thread
     {% if post["media"] %}
     {% if post["media_ext"] == "webm" %}
     <div class="col">
-        <a href="{{ url_for(" uploaded_file", media_id=post["media"]) }}">
+        <a href="{{ url_for("uploaded_file", media_id=post["media"]) }}">
         <video style="width: 100%; max-width: 25em;">
-            <source src="{{ url_for(" uploaded_file
-            ", media_id=post["media"]) }}" type="video/webm">
+            <source src="{{ url_for("uploaded_file", media_id=post["media"]) }}" type="video/webm">
         </video>
         </a>
     </div>
     {% else %}
     <div class="col">
         <div class="img-thumbnail" style="display: inline-block;">
-            <a href="{{ url_for(" uploaded_file", media_id=post["media"]) }}" class="media-container">
+            <a href="{{ url_for("uploaded_file", media_id=post["media"]) }}" class="media-container">
             {% set ns = namespace(img_style="max-width: 15em; max-height: 20em;") %}
             {% if post["spoiler"] == True %}
-            <span id="spoiler-label-{{ post[" media"] }}" class="spoiler-label text-danger">!</span>
+            <span id="spoiler-label-{{ post["media"] }}" class="spoiler-label text-danger">!</span>
             {% set ns.img_style = ns.img_style + " opacity: 0.025;" %}
             {% endif %}
             {% if post["media_ext"] == "gif" %}
-            <img src="{{ url_for(" uploaded_thumb", media_id=post["media"]) }}" data-full="{{ url_for("uploaded_file",
+            <img src="{{ url_for("uploaded_thumb", media_id=post["media"]) }}" data-full="{{ url_for("uploaded_file",
             media_id=post["media"]) }}" data-thumb="{{ url_for("uploaded_thumb", media_id=post["media"]) }}" data-id="{{
             post["media"] }}" class="img-animated" style="{{ ns.img_style }}">
             {% else %}
-            <img src="{{ url_for(" uploaded_thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}">
+            <img src="{{ url_for("uploaded_thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}">
             {% endif %}
             </a>
         </div>
@@ -209,9 +205,6 @@ view thread
 			 id = $(this).data("id")
 			 $("#spoiler-label-" + id).show()
 		 })
-
-
-
 </script>
 </div>
 {% endblock %}

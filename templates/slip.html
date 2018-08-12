@@ -26,14 +26,12 @@ slip
             <label for="slipPassword">Password</label>
             <input type="password" class="form-control" id="slipPassword" name="password">
         </div>
-        <button type="submit" class="btn btn-primary" formaction="{{ url_for(" slip_login
-        ") }}">Log in</button>
-        <button type="submit" class="btn btn-primary" formaction="{{ url_for(" slip_request
-        ") }}">Sign up</button>
+        <button type="submit" class="btn btn-primary" formaction="{{ url_for("slip_login") }}">Log in</button>
+        <button type="submit" class="btn btn-primary" formaction="{{ url_for("slip_request") }}">Sign up</button>
     </form>
     {% else %}
     <p>Your slip is: <b>{{ get_slip().name }}</b></p>
-    <a href="{{ url_for(" unset_slip") }}" class="btn btn-primary">Log out</a>
+    <a href="{{ url_for("unset_slip") }}" class="btn btn-primary">Log out</a>
     {% endif %}
 </div>
 {% endblock %}

@@ -1,3 +1,4 @@
+from model.ThreadPostProcessor import ThreadPostprocessor
 # TODO: Enable \r\n to <br /> support (no more reddit spacing)
 from markdown import Extension
 

@@ -3,7 +3,7 @@
 new thread
 {% endblock %}
 {% block navbar %}
-<a href="{{ url_for(" view_catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
+<a href="{{ url_for("view_catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
 {% endblock %}
 {% import "post-base.html" as post %}
 {% block content %}

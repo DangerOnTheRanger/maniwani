@@ -21,31 +21,16 @@ from model.NewPostResource import NewPostResource
 from model.NewThread import NewThread
 from model.NewThreadResource import NewThreadResource
 from model.Post import render_for_catalog, render_for_threads
-from model.PostReplyExtension import url_for_post
+from model.PostReplyPattern import url_for_post
 from model.Poster import Poster
 from model.Session import Session
-from model.Slip import Slip, gen_slip, make_session, get_slip
+from model.Slip import Slip, gen_slip, make_session, get_slip, slip_from_id
 from model.SubmissionError import SubmissionError
 from model.Tag import Tag
 from model.Thread import Thread
 from model.ThreadPosts import ThreadPosts
 from model.ThreadPostsResource import ThreadPostsResource
-from shared import db
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["UPLOAD_FOLDER"] = "./uploads"
-app.config["THUMB_FOLDER"] = os.path.join(app.config["UPLOAD_FOLDER"], "thumb")
-app.json_encoder = CustomJSONEncoder
-rest_api = Api(app)
-
-
-def get_secret():
-    return open("secret").read()
-
-
-app.secret_key = get_secret()
+from shared import db, app, rest_api
 
 rest_api.add_resource(NewPostResource, "/api/v1/thread/<int:thread_id>/new")
 

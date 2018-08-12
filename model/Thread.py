@@ -1,7 +1,7 @@
 from sqlalchemy import and_
 from sqlalchemy.orm import relationship
 
-from model import Post
+from model.Post import Post
 from shared import db
 
 tags = db.Table('tags',

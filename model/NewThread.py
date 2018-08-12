@@ -1,4 +1,5 @@
 from flask import request
+from flask_restful import reqparse
 
 from model.NewPost import NewPost
 from model.SubmissionError import SubmissionError

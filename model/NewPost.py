@@ -1,15 +1,17 @@
 import os
 import re
 
-from PIL.Image import Image
+from PIL import Image
 from flask import request
 from flask_restful import reqparse, inputs
 
 from model.Media import Media
 from model.Poster import Poster
-from model.Reply import Reply
+from model.Post import Post
+from model.Reply import Reply, REPLY_REGEXP
 from model.Thread import Thread
-from shared import db, ip_to_int, gen_poster_id, get_slip, REPLY_REGEXP
+from model.Slip import get_slip
+from shared import app, db, ip_to_int, gen_poster_id
 
 
 class NewPost:

@@ -29,7 +29,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top mb-2">
-    <a class="navbar-brand" href="{{ url_for(" index") }}">Maniwani</a>
+    <a class="navbar-brand" href="{{ url_for("index") }}">Maniwani</a>
     <script>
 			 document.write('<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#site-nav"> \
 				 <span class="navbar-toggler-icon"></span> \
@@ -40,16 +40,16 @@
     </script>
     <div id="site-nav" class="navbar-nav">
         {% block navbar %}{% endblock %}
-        <a href="{{ url_for(" list_boards") }}" class="nav-item nav-link">Boards</a>
-        <a href="{{ url_for(" slip_landing") }}" class="nav-item nav-link">Slip</a>
+        <a href="{{ url_for("list_boards") }}" class="nav-item nav-link">Boards</a>
+        <a href="{{ url_for("slip_landing") }}" class="nav-item nav-link">Slip</a>
         {% if board_id is not defined and board is not defined %}
-        <a href="{{ url_for(" view_rules") }}" class="nav-item nav-link">Rules</a>
+        <a href="{{ url_for("view_rules") }}" class="nav-item nav-link">Rules</a>
         {% elif board_id is defined %}
-        <a href="{{ url_for(" view_rules", board_id=board_id) }}" class="nav-item nav-link">Rules</a>
+        <a href="{{ url_for("view_rules", board_id=board_id) }}" class="nav-item nav-link">Rules</a>
         {% else %}
-        <a href="{{ url_for(" view_rules", board_id=board.id) }}" class="nav-item nav-link">Rules</a>
+        <a href="{{ url_for("view_rules", board_id=board.id) }}" class="nav-item nav-link">Rules</a>
         {% endif %}
-        <a href="{{ url_for(" faq") }}" class="nav-item nav-link">FAQ</a>
+        <a href="{{ url_for("faq") }}" class="nav-item nav-link">FAQ</a>
         <div class="navbar-nav ml-auto">
             {% block navbar_right %}{% endblock %}
         </div>
