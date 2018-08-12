@@ -10,7 +10,7 @@ from model.Reply import REPLY_REGEXP
 def url_for_post(post_id):
     from model.Thread import Thread
     thread = Thread.query.filter(Thread.posts.any(id=post_id)).one()
-    return url_for("view_thread", thread_id=thread.id) + "#" + str(post_id)
+    return url_for("threads.view", thread_id=thread.id) + "#" + str(post_id)
 
 
 class PostReplyPattern(Pattern):

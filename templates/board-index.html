@@ -67,10 +67,10 @@ board index
 
         </script>
         {% for board in boards %}
-        <a href="{{ url_for("view_catalog", board_id=board["id"]) }}" class="board bg-light border rounded">
+        <a href="{{ url_for("boards.catalog", board_id=board["id"]) }}" class="board bg-light border rounded">
         <div class="board-container">
             {% if board["media"] %}
-            <img src="{{ url_for("uploaded_thumb", media_id=board["media"]) }}" class="board-media img-fluid">
+            <img src="{{ url_for("upload.thumb", media_id=board["media"]) }}" class="board-media img-fluid">
             <span class="board-name over-image text-dark">/{{ board["name"] }}/</span>
             {% else %}
             <div class="dummy-media"></div>
