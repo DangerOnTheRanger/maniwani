@@ -1,10 +1,24 @@
 import os
+
+from flask import Flask
+from flask_restful import Api
+
+from customjsonencoder import CustomJSONEncoder
 from model.Board import Board
 from model.Slip import gen_slip
 from model.Tag import Tag
 import model.Media
 import model.Poster
 from shared import db
+
+
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["UPLOAD_FOLDER"] = "./uploads"
+app.config["THUMB_FOLDER"] = os.path.join(app.config["UPLOAD_FOLDER"], "thumb")
+app.json_encoder = CustomJSONEncoder
+rest_api = Api(app)
 
 db.create_all()
 # set up some boards

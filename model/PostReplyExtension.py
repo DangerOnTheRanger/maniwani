@@ -1,6 +1,5 @@
 import re
 
-from flask import url_for
 from markdown import Extension
 
 from model.PostReplyPattern import PostReplyPattern
