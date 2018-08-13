@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from model.NewPost import NewPost
 from model.NewThread import NewThread
 from model.Post import Post, render_for_threads
+from model.PostRemoval import PostRemoval
 from model.PostReplyPattern import url_for_post
 from model.Poster import Poster
 from model.Slip import get_slip
@@ -53,8 +54,7 @@ def delete(thread_id):
         return redirect(url_for("threads.view", thread_id=thread_id))
     thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
     board_id = thread.board
-    db.session.delete(thread)
-    db.session.commit()
+    ThreadPosts().delete(thread_id)
     flash("Thread deleted!")
     return redirect(url_for("boards.catalog", board_id=board_id))
 
@@ -75,10 +75,9 @@ def delete_post(post_id):
     if not get_slip() or not (get_slip().is_admin or get_slip().is_mod):
         flash("Only moderators and admins can delete threads!")
         return redirect(url_for_post(post_id))
-    post = db.session.query(Post).filter(Post.id == post_id).one()
-    thread_id = post.thread
-    db.session.delete(post)
-    db.session.commit()
+    thread = db.session.query(Thread).filter(Thread.posts.any(Post.id == post_id)).one()
+    thread_id = thread.id
+    PostRemoval().delete(post_id)
     flash("Post deleted!")
     return redirect(url_for("threads.view", thread_id=thread_id))
 
