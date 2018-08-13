@@ -2,9 +2,11 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 
 from model.NewPost import NewPost
 from model.NewThread import NewThread
-from model.Post import render_for_threads
+from model.Post import Post, render_for_threads
+from model.PostRemoval import PostRemoval
 from model.PostReplyPattern import url_for_post
 from model.Poster import Poster
+from model.Slip import get_slip
 from model.SubmissionError import SubmissionError
 from model.Thread import Thread
 from model.ThreadPosts import ThreadPosts
@@ -45,6 +47,18 @@ def view(thread_id):
                            num_media=num_media, num_posters=num_posters)
 
 
+@threads_blueprint.route("/<int:thread_id>/delete")
+def delete(thread_id):
+    if not get_slip() or not (get_slip().is_admin or get_slip().is_mod):
+        flash("Only moderators and admins can delete threads!")
+        return redirect(url_for("threads.view", thread_id=thread_id))
+    thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
+    board_id = thread.board
+    ThreadPosts().delete(thread_id)
+    flash("Thread deleted!")
+    return redirect(url_for("boards.catalog", board_id=board_id))
+
+
 @threads_blueprint.route("/<int:thread_id>/new")
 def new_post(thread_id):
     return render_template("new-post.html", thread_id=thread_id)
@@ -54,6 +68,18 @@ def new_post(thread_id):
 def post_submit(thread_id):
     NewPost().post(thread_id)
     return redirect(url_for("threads.view", thread_id=thread_id) + "#thread-bottom")
+
+
+@threads_blueprint.route("/post/<int:post_id>/delete")
+def delete_post(post_id):
+    if not get_slip() or not (get_slip().is_admin or get_slip().is_mod):
+        flash("Only moderators and admins can delete threads!")
+        return redirect(url_for_post(post_id))
+    thread = db.session.query(Thread).filter(Thread.posts.any(Post.id == post_id)).one()
+    thread_id = thread.id
+    PostRemoval().delete(post_id)
+    flash("Post deleted!")
+    return redirect(url_for("threads.view", thread_id=thread_id))
 
 
 @threads_blueprint.route("/<int:thread_id>/gallery")
