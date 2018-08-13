@@ -164,6 +164,15 @@
 
 
 						</script>
+						{% if get_slip() and get_slip().is_admin or get_slip().is_mod %}
+							<div class="col-auto">
+								{% set ns = namespace(delete_url=url_for("threads.delete_post", post_id=post["id"])) %}
+								{% if loop.index0 == 0 %}
+									{% set ns.delete_url = url_for("threads.delete", thread_id=thread_id) %}
+								{% endif %}
+								<small><a class="badge badge-danger" href="{{ ns.delete_url }}">Delete</a></small>
+							</div>
+						{% endif %}
 					</div>
 					{% if post["replies"] %}
 						<div class="row">

@@ -14,7 +14,7 @@ class Thread(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     board = db.Column(db.Integer, db.ForeignKey("board.id"), nullable=False)
     views = db.Column(db.Integer, nullable=False)
-    posts = relationship("Post", order_by=Post.datetime)
+    posts = relationship("Post", order_by=Post.datetime, cascade="delete")
     last_updated = db.Column(db.DateTime)
     tags = relationship("Tag", secondary=tags, lazy='subquery',
                         backref=db.backref('threads', lazy=True))
