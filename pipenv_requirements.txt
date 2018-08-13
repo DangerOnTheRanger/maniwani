@@ -8,7 +8,8 @@ itsdangerous==0.24
 jinja2==2.10
 markdown==2.6.11
 markupsafe==1.0
-pillow==5.2.0
+pillow==5.2.0; python_version >= '2.7'
+psycopg2-binary==2.7.5
 pytz==2018.5
 six==1.11.0
 sqlalchemy==1.2.10
