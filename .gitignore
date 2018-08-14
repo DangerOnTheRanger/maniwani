@@ -1,6 +1,6 @@
 .idea/
 __pycache__/
-secret
-test.db
+*.db
 *.pyc
-uploads/
+uploads
+secret

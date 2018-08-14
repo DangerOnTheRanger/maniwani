@@ -1,5 +1,5 @@
 {% macro catalog_view(threads) %}
-<style>
+	<style>
 	 @media (max-width: 575px) {
 		 .thread, .thread-sizer {
 			 width: 98%;
@@ -26,23 +26,20 @@
 	 }
 	 @media (min-width: 1200px) {
 		 .thread, .thread-sizer {
-			 width: 19%;
+			 width: 19.5%;
 			 margin: 0.2em;
 		 }
+		 .catalog-padding {
+			 padding: 0px;
+		 }
 	 }
-
-
-
-</style>
+	</style>
 <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-<div class="container-fluid">
+<div class="container-fluid catalog-padding">
     <div id="grid" class="d-flex flex-wrap">
         <script>
 			 document.write('<div class="thread-sizer" style="display: none;"></div>')
-
-
-
         </script>
         {% for thread in threads %}
         {% set bg_style = "bg-light" %}
@@ -58,8 +55,8 @@
         {% endif %}
         <div class="thread border-top rounded">
             {% if thread["media"] %}
-            <a href="{{ url_for("view_thread", thread_id=thread["id"]) }}">
-            <img class="border-left border-right w-100 rounded-top" src="{{ url_for("uploaded_thumb",
+            <a href="{{ url_for("threads.view", thread_id=thread["id"]) }}">
+            <img class="border-left border-right w-100 rounded-top" src="{{ url_for("upload.thumb",
             media_id=thread["media"]) }}">
             </a>
             {% endif %}
@@ -78,7 +75,7 @@
         </div>
         <div class="{{ "pt-1 border border-top-0 rounded-bottom
         " + ns.bg_style }}">
-        <a href="{{ url_for("view_thread", thread_id=thread["id"]) }}" class="btn btn-dark m-2">View thread</a>
+        <a href="{{ url_for("threads.view", thread_id=thread["id"]) }}" class="btn btn-dark m-2">View thread</a>
         <span class="{{ "mt-3 mr-2 float-right " + ns.text_style }}">
         <i class="fas fa-comment"></i> {{ thread["num_replies"] }}
         <i class="fas fa-image"></i> {{ thread["num_media"] }}

@@ -2,7 +2,7 @@ import os
 import re
 
 from PIL import Image
-from flask import request
+from flask import current_app, request
 from flask_restful import reqparse, inputs
 
 from model.Media import Media
@@ -11,7 +11,7 @@ from model.Post import Post
 from model.Reply import Reply, REPLY_REGEXP
 from model.Thread import Thread
 from model.Slip import get_slip
-from shared import app, db, ip_to_int, gen_poster_id
+from shared import db, ip_to_int, gen_poster_id
 
 
 class NewPost:
@@ -35,7 +35,7 @@ class NewPost:
             should_bump = True
         if args.get("useslip") is True:
             slip = get_slip()
-            if slip:
+            if slip and (slip.is_admin or slip.is_mod):
                 poster.slip = slip.id
                 db.session.add(poster)
                 db.session.commit()
@@ -47,7 +47,7 @@ class NewPost:
             db.session.add(media)
             db.session.commit()
             media_id = media.id
-            full_path = os.path.join(app.config["UPLOAD_FOLDER"], "%d.%s" % (media_id, file_ext))
+            full_path = os.path.join(current_app.config["UPLOAD_FOLDER"], "%d.%s" % (media_id, file_ext))
             uploaded_file.save(full_path)
             if file_ext != "webm":
                 # non-webm thumbnail generation
@@ -66,7 +66,7 @@ class NewPost:
                 new_width = int(thumb.width * scale_factor)
                 new_height = int(thumb.height * scale_factor)
                 thumb = thumb.resize((new_width, new_height), Image.LANCZOS)
-                thumb.convert("RGB").save(os.path.join(app.config["THUMB_FOLDER"], "%d.jpg" % media_id), "JPEG")
+                thumb.convert("RGB").save(os.path.join(current_app.config["THUMB_FOLDER"], "%d.jpg" % media_id), "JPEG")
             else:
                 # FIXME: webm thumbnail generation
                 pass

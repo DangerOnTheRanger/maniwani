@@ -3,9 +3,9 @@
 <title>Maniwani - reply to thread</title>
 {% endblock %}
 {% block navbar %}
-<a href="{{ url_for(" view_thread", thread_id=thread_id) }}" class="nav-item nav-link">Back to thread</a>
+<a href="{{ url_for("threads.view", thread_id=thread_id) }}" class="nav-item nav-link">Back to thread</a>
 {% endblock %}
 {% import "post-base.html" as post %}
 {% block content %}
-{{ post.post_form(url_for("post_submit", thread_id=thread_id), "thread", thread_id) }}
+{{ post.post_form(url_for("threads.post_submit", thread_id=thread_id), "thread", thread_id) }}
 {% endblock %}

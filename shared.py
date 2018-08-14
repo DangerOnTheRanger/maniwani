@@ -3,23 +3,29 @@ import random
 from customjsonencoder import CustomJSONEncoder
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Resource, Api, reqparse, inputs
+from flask_restful import Api
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = "./uploads"
 app.config["THUMB_FOLDER"] = os.path.join(app.config["UPLOAD_FOLDER"], "thumb")
+app.url_map.strict_slashes = False
 app.json_encoder = CustomJSONEncoder
 db = SQLAlchemy(app)
 rest_api = Api(app)
+
+
 def get_secret():
     return open("secret").read()
+
+
 app.secret_key = get_secret()
 
+
 def gen_poster_id():
-    id_chars = "ABCDEF0123456789"
-    return ''.join(random.sample(id_chars, 4))
+    return '%04X' % random.randint(0, 0xffff)
+
 
 def ip_to_int(ip_str):
     # TODO: IPv6 support

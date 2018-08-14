@@ -27,5 +27,5 @@ class Post(OutputMixin, db.Model):
     thread = db.Column(db.Integer, db.ForeignKey("thread.id"), nullable=False)
     datetime = db.Column(db.DateTime, nullable=False, default=_datetime.datetime.utcnow)
     poster = db.Column(db.Integer, db.ForeignKey("poster.id"), nullable=False)
-    media = db.Column(db.Integer, db.ForeignKey("media.id"), nullable=True)
+    media = db.Column(db.Integer, db.ForeignKey("media.id", ondelete="CASCADE"), nullable=True)
     spoiler = db.Column(db.Boolean, nullable=True)

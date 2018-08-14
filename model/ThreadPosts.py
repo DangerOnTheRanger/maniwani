@@ -15,6 +15,12 @@ class ThreadPosts:
         session.commit()
         return jsonify(self.retrieve(thread_id))
 
+    def delete(self, thread_id):
+        thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
+        board_id = thread.board
+        db.session.delete(thread)
+        db.session.commit()
+
     def retrieve(self, thread_id):
         session = db.session
         thread = session.query(Thread).filter(Thread.id == thread_id).one()
