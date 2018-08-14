@@ -11,7 +11,7 @@ from model.Post import Post
 from model.Reply import Reply, REPLY_REGEXP
 from model.Thread import Thread
 from model.Slip import get_slip
-from shared import db, ip_to_int, gen_poster_id
+from shared import db, gen_poster_id
 
 
 class NewPost:
@@ -22,7 +22,7 @@ class NewPost:
         parser.add_argument("useslip", type=inputs.boolean)
         parser.add_argument("spoiler", type=inputs.boolean)
         args = parser.parse_args()
-        ip = ip_to_int(request.environ["REMOTE_ADDR"])
+        ip = request.environ["REMOTE_ADDR"]
         poster = db.session.query(Poster).filter_by(thread=thread_id, ip_address=ip).first()
         body = args["body"]
         should_bump = False

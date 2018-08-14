@@ -10,6 +10,7 @@ Markdown = "*"
 Pillow = "*"
 SQLAlchemy = "*"
 Flask-RESTful = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
 
