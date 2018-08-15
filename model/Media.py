@@ -81,10 +81,10 @@ class FolderStorage(StorageBase):
         return self._ATTACHMENT_FILENAME % (media_id, media_ext)
     def _thumbnail_name(self, media_id):
         return self._THUMBNAIL_FILENAME % media_id
-    def _write_attachment(self, attachment_file, media_id, media_ext):
+    def _write_attachment(self, attachment_bytes, media_id, media_ext):
         full_path = os.path.join(self._upload_folder,
                                  self._attachment_name(media_id, media_ext))
-        attachment_file.save(full_path)
+        open(full_path, "wb").write(attachment_bytes.getvalue())
     def _write_thumbnail(self, thumbnail_bytes, media_id):
         full_path = os.path.join(self._thumb_folder,
                                  self._thumbnail_name(media_id))
@@ -142,6 +142,8 @@ class S3Storage(StorageBase):
 
 
 def get_storage_provider():
+    if app.config.get("STORAGE_PROVIDER") is None:
+        return FolderStorage()
     if app.config["STORAGE_PROVIDER"] == "S3":
         # prevent non-s3 installations from needing to pull in boto3
         global boto3
