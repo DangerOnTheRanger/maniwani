@@ -10,6 +10,7 @@ Markdown = "*"
 Pillow = "*"
 SQLAlchemy = "*"
 Flask-RESTful = "*"
+boto3 = "*"
 
 [dev-packages]
 

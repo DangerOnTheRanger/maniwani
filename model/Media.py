@@ -2,7 +2,7 @@ import datetime
 import io
 import os
 from PIL import Image
-from flask import send_from_directory
+from flask import send_from_directory, redirect
 from shared import db, app
 
 
@@ -18,7 +18,8 @@ class StorageBase:
         db.session.add(media)
         db.session.flush()
         media_id = media.id
-        self._write_attachment(attachment_file, media_id, file_ext)
+        attachment_buffer = io.BytesIO(attachment_file.read())
+        self._write_attachment(attachment_buffer, media_id, file_ext)
         self._write_thumbnail(self._make_thumbnail(attachment_file, media_id, file_ext), media_id)
         return media
     def _make_thumbnail(self, attachment, media_id, file_ext):
@@ -40,10 +41,11 @@ class StorageBase:
             new_height = int(thumb.height * scale_factor)
             thumb = thumb.resize((new_width, new_height), Image.LANCZOS)
             thumb = thumb.convert("RGB")
-            thumb_contents = io.BytesIO()
-            thumb.save(thumb_contents, "JPEG")
-            print(thumb_contents)
-            return thumb_contents
+            # store in temp buffer since Pillow ends up closing it
+            # probably should be done in most cases, but we need an open file
+            temp_buffer = io.BytesIO()
+            thumb.save(temp_buffer, "JPEG")
+            return io.BytesIO(temp_buffer.getvalue())
         else:
             # FIXME: webm thumbnail generation
             pass
@@ -89,6 +91,63 @@ class FolderStorage(StorageBase):
         open(full_path, "wb").write(thumbnail_bytes.getvalue())
 
 
+class S3Storage(StorageBase):
+    _ATTACHMENT_KEY = "%d.%s"
+    _ATTACHMENT_BUCKET = "attachments"
+    _THUMBNAIL_KEY = "%d.jpg"
+    _THUMBNAIL_BUCKET = "thumbs"
+    
+    def __init__(self):
+        self._endpoint = app.config.get("S3_ENDPOINT")
+        self._access_key = app.config["S3_ACCESS_KEY"]
+        self._secret_key = app.config["S3_SECRET_KEY"]
+        self._s3_client = boto3.client("s3",
+                                       endpoint_url = self._endpoint,
+                                       aws_access_key_id = self._access_key,
+                                       aws_secret_access_key = self._secret_key)
+
+    def get_attachment(self, media_id):
+        media = db.session.query(Media).filter(Media.id == media_id).one()
+        media_ext = media.ext
+        s3_key = self._s3_attachment_key(media_id, media_ext)
+        media_url = self._s3_presigned_url(self._ATTACHMENT_BUCKET, s3_key)
+        return redirect(media_url)
+    def get_thumbnail(self, media_id):
+        s3_key = self._s3_thumbnail_key(media_id)
+        thumb_url = self._s3_presigned_url(self._THUMBNAIL_BUCKET, s3_key)
+        return redirect(thumb_url)
+    def delete_attachment(self, media_id, media_ext):
+        s3_attach_key = self._s3_attachment_key(media_id, media_ext)
+        self._s3_remove_key(self._ATTACHMENT_BUCKET, s3_attach_key)
+        s3_thumb_key = self._s3_thumb_key(media_id)
+        self._s3_remove_key(self.THUMBNAIL_BUCKET, s3_thumb_key)
+    def _write_attachment(self, attachment_file, media_id, media_ext):
+        s3_key = self._s3_attachment_key(media_id, media_ext)
+        self._s3_client.upload_fileobj(attachment_file, self._ATTACHMENT_BUCKET, s3_key)
+    def _write_thumbnail(self, thumbnail_bytes, media_id):
+        s3_key = self._s3_thumbnail_key(media_id)
+        self._s3_client.upload_fileobj(thumbnail_bytes, self._THUMBNAIL_BUCKET, s3_key)
+    def _s3_presigned_url(self, bucket, key):
+        return self._s3_client.generate_presigned_url(ClientMethod="get_object",
+                                                      Params={
+                                                          "Bucket": bucket,
+                                                          "Key": key
+                                                      })
+    def _s3_remove_key(self, bucket, key):
+        self._s3_client.delete_object(Bucket=bucket, Key=key)
+    def _s3_attachment_key(self, media_id, media_ext):
+        return self._ATTACHMENT_KEY % (media_id, media_ext)
+    def _s3_thumbnail_key(self, media_id):
+        return self._THUMBNAIL_KEY % (media_id)
+
+
 def get_storage_provider():
-    return FolderStorage()
+    if app.config["STORAGE_PROVIDER"] == "S3":
+        # prevent non-s3 installations from needing to pull in boto3
+        global boto3
+        boto3 = __import__("boto3")
+        return S3Storage()
+    elif app.config["STORAGE_PROVIDER"] == "FOLDER":
+        return FolderStorage()
+    # TODO: proper error-handling on unknown key value
 storage = get_storage_provider()
