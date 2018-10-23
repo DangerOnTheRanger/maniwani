@@ -1,6 +1,8 @@
 from flask import request
 from flask_restful import reqparse
+from sqlalchemy import desc
 
+from model.Board import Board
 from model.NewPost import NewPost
 from model.SubmissionError import SubmissionError
 from model.Tag import Tag
@@ -31,10 +33,13 @@ class NewThread:
                     db.session.add(tag)
                 tags.append(tag)
         db.session.flush()
+        num_threads = db.session.query(Thread).filter(Thread.board == args["board"]).count()
+        board = db.session.query(Board).filter(Board.id == args["board"]).one()
+        if num_threads >= board.max_threads:
+            dead_thread = db.session.query(Thread).filter(Thread.board == args["board"]).order_by(Thread.last_updated.asc()).first()
+            db.session.delete(dead_thread)
         thread = Thread(board=args["board"], views=0, tags=tags)
-        # FIXME: use one transaction for all of this, the current state defeats
-        # the purpose of having transactions in the first place
         db.session.add(thread)
-        db.session.commit()
+        db.session.flush()
         NewPost().post(thread_id=thread.id)
         return thread

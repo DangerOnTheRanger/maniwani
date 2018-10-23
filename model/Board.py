@@ -10,3 +10,4 @@ class Board(db.Model):
     name = db.Column(db.String(32), nullable=False)
     rules = db.Column(db.String, nullable=True)
     threads = relationship("Thread", order_by=desc(Thread.last_updated))
+    max_threads = db.Column(db.Integer, default=50)

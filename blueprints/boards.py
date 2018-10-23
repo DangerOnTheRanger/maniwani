@@ -61,9 +61,11 @@ def admin_update(board_id):
     parser = reqparse.RequestParser()
     parser.add_argument("name", type=str, required=True)
     parser.add_argument("rules", type=str, required=True)
+    parser.add_argument("max-threads", type=int, required=True)
     args = parser.parse_args()
     board.name = args["name"]
     board.rules = args["rules"]
+    board.max_threads = args["max-threads"]
     db.session.add(board)
     db.session.commit()
     return redirect(url_for("boards.catalog", board_id=board_id))

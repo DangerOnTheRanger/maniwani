@@ -14,6 +14,10 @@ administrate board
             <textarea id="rules" name="rules" class="form-control">{{ board.rules | safe }}</textarea>
             <small class="form-text text-muted">Board rules are written in Markdown.</small>
         </div>
+		<div class="form-group">
+			<label for="max-threads">Max threads</label>
+			<input type="text" id="max-threads" name="max-threads" class="form-control" value="{{ board.max_threads }}">
+		</div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
