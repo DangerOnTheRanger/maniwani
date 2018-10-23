@@ -18,10 +18,10 @@ Python 3.4+ is required for installation, but I currently use 3.6 for developing
 Maniwani; if you're having problems with 3.4, file a bug report, but also try 3.6
 if you can.
 
-`pip -r requirements.txt`, ideally inside a `virtualenv`, should take care of
-prerequisites. After that, `touch secret` and modify `makedb.py` to your tastes to customize
-database initialization before executing `python makedb.py`. Lastly, run
-`flask run` from this directory and point your web browser at http://127.0.0.1:5000
+As Maniwani uses Pipenv, simply run `pipenv install` to grab all requirements and
+create a new virtualenv, After that, `touch secret` and modify `makedb.py` to your
+tastes to customize database initialization before executing `pipenv run python makedb.py`.
+Lastly, run `pipenv run flask run` from this directory and point your web browser at http://127.0.0.1:5000
 to view your new Maniwani installation. If you ever want to wipe the database clean,
 that's currently handled by removing `test.db` and re-running the `makedb.py` script.
 
