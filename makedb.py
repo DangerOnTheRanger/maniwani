@@ -26,5 +26,7 @@ db.session.commit()
 # write a secret so we can have session support
 open("secret", "w").write(str(os.urandom(16)))
 # create upload and thumbnail directory if necessary
-if not os.path.exists("uploads/thumb"):
-    os.makedirs("uploads/thumb")
+if not os.path.exists("uploads/thumbs"):
+    os.makedirs("uploads/thumbs")
+if not os.path.exists("uploads/attachments"):
+    os.makedirs("uploads/attachments")
