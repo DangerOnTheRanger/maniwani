@@ -27,5 +27,6 @@ class BoardCatalog:
             t_dict["views"] = thread.views
             t_dict["num_replies"] = len(thread.posts) - 1
             t_dict["num_media"] = thread.num_media()
+            t_dict["admin_post"] = thread.admin_is_op()
             result.append(t_dict)
         return result
