@@ -33,40 +33,51 @@
 			 padding: 0px;
 		 }
 	 }
+	 .spoiler-label {
+		 position: absolute;
+		 top: 50%;
+		 left: 50%;
+		 transform: translate(-50%, -50%);
+		 font-size: 6em;
+	 }
 	</style>
-<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-<div class="container-fluid catalog-padding">
-    <div id="grid" class="d-flex flex-wrap">
-        <script>
+	<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+	<div class="container-fluid catalog-padding">
+		<div id="grid" class="d-flex flex-wrap">
+			<script>
 			 document.write('<div class="thread-sizer" style="display: none;"></div>')
-        </script>
-        {% for thread in threads %}	
-			{% set bg_style = "bg-light" %}
-			{% set ns = namespace(bg_style="bg-light", text_style="text-body") %}	
-			{% if thread.tags %}
-				{% set ns.main_tag = thread.tags[0].name %}
-				{% if style_for_tag(ns.main_tag).get("bg_style") %}
-					{% set ns.bg_style = style_for_tag(ns.main_tag).get("bg_style") %}
+			</script>
+			{% for thread in threads %}	
+				{% set bg_style = "bg-light" %}
+				{% set ns = namespace(bg_style="bg-light", text_style="text-body") %}	
+				{% if thread.tags %}
+					{% set ns.main_tag = thread.tags[0].name %}
+					{% if style_for_tag(ns.main_tag).get("bg_style") %}
+						{% set ns.bg_style = style_for_tag(ns.main_tag).get("bg_style") %}
+					{% endif %}
+					{% if style_for_tag(ns.main_tag).get("text_style") %}
+						{% set ns.text_style = style_for_tag(ns.main_tag).get("text_style") %}
+					{% endif %}
 				{% endif %}
-				{% if style_for_tag(ns.main_tag).get("text_style") %}
-					{% set ns.text_style = style_for_tag(ns.main_tag).get("text_style") %}
+				{% if thread.admin_post %}
+					{% set ns.bg_style = "bg-success" %}
+					{% set ns.text_style = "text-light" %}
 				{% endif %}
-			{% endif %}
-			{% if thread.admin_post %}
-				{% set ns.bg_style = "bg-success" %}
-				{% set ns.text_style = "text-light" %}
-			{% endif %}
-			<div class="thread border-top rounded">
-				{% if thread["media"] %}
-					<a href="{{ url_for("threads.view", thread_id=thread["id"]) }}">
-						<img class="border-left border-right w-100 rounded-top" src="{{ url_for("upload.thumb",
-																					 media_id=thread["media"]) }}">
+				<div class="thread border-top rounded">
+					<div class="border-left border-right" style="position: relative;">
+						<a href="{{ url_for("threads.view", thread_id=thread["id"]) }}">
+							{% set style_ns = namespace(extra_style="") %}
+							{% if thread["spoiler"] == True %}
+								<span id="spoiler-label-{{ thread["media"] }}" class="spoiler-label text-danger">!</span>
+								{% set style_ns.extra_style = "opacity: 0.025;" %}
+							{% endif %}
+							<img style="{{ style_ns.extra_style }}" class="w-100 rounded-top" src="{{ url_for("upload.thumb",
+																								   media_id=thread["media"]) }}">
 					</a>
-				{% endif %}
+				</div>
 				{% if thread["subject"] %}
-					<div class="{{ "p-2 border-left border-right
-								" + ns.bg_style }}">
+					<div class="{{ "p-2 border-left border-right " + ns.bg_style }}">
 						<h5 class="{{ ns.text_style }}">{{ thread["subject"] }}</h5>
 					</div>
 				{% else %}
