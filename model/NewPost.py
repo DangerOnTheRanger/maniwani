@@ -58,4 +58,5 @@ class NewPost:
             thread = db.session.query(Thread).filter_by(id=thread_id).one()
             thread.last_updated = post.datetime
             db.session.add(thread)
+        db.session.flush()
         db.session.commit()

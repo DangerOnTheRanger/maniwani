@@ -23,6 +23,7 @@ class BoardCatalog:
             t_dict["body"] = op.body
             t_dict["id"] = thread.id
             t_dict["media"] = op.media
+            t_dict["spoiler"] = op.spoiler
             t_dict["tags"] = thread.tags
             t_dict["views"] = thread.views
             t_dict["num_replies"] = len(thread.posts) - 1
