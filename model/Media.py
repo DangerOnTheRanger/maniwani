@@ -1,6 +1,7 @@
 import datetime
 import io
 import os
+import subprocess
 from PIL import Image
 from flask import send_from_directory, redirect
 from shared import db, app
@@ -12,6 +13,8 @@ class Media(db.Model):
 
 
 class StorageBase:
+    _FFMPEG_BINARY = "ffmpeg"
+    _FFMPEG_FLAGS = "-i pipe:0 -f mjpeg -vf scale=w=500:h=500:force_original_aspect_ratio=decrease pipe:1"
     def save_attachment(self, attachment_file):
         file_ext = attachment_file.filename.rsplit('.', 1)[1].lower()
         media = Media(ext=file_ext)
@@ -47,8 +50,14 @@ class StorageBase:
             thumb.save(temp_buffer, "JPEG")
             return io.BytesIO(temp_buffer.getvalue())
         else:
-            # FIXME: webm thumbnail generation
-            pass
+            ffmpeg_commandline = ("%s %s" % (self._FFMPEG_BINARY,
+                                             self._FFMPEG_FLAGS)).split()
+            attachment.seek(0)
+            temp_buffer = io.BytesIO(attachment.read())
+            ffmpeg_result = subprocess.run(ffmpeg_commandline,
+                                           input=temp_buffer.getvalue(),
+                                           stdout=subprocess.PIPE)
+            return io.BytesIO(ffmpeg_result.stdout)
     def _write_attachment(self, attachment_file, media_id, media_ext):
         raise NotImplementedError
     def _write_thumbnail(self, thumbnail_bytes, media_id):
