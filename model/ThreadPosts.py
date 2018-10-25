@@ -1,6 +1,7 @@
 from flask.json import jsonify
 from model.Media import Media
 from model.Poster import Poster
+from model.PostRemoval import PostRemoval
 from model.Reply import Reply
 from model.Thread import Thread
 from shared import db
@@ -17,8 +18,8 @@ class ThreadPosts:
 
     def delete(self, thread_id):
         thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
-        board_id = thread.board
-        db.session.delete(thread)
+        for post in thread.posts:
+            PostRemoval().delete_impl(post.id)
         db.session.commit()
 
     def retrieve(self, thread_id):

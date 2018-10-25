@@ -11,6 +11,9 @@ class Media(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ext = db.Column(db.String(4), nullable=False)
 
+    def delete_attachment(self):
+        storage.delete_attachment(self.id, self.ext)
+
 
 class StorageBase:
     _FFMPEG_BINARY = "ffmpeg"
@@ -128,8 +131,8 @@ class S3Storage(StorageBase):
     def delete_attachment(self, media_id, media_ext):
         s3_attach_key = self._s3_attachment_key(media_id, media_ext)
         self._s3_remove_key(self._ATTACHMENT_BUCKET, s3_attach_key)
-        s3_thumb_key = self._s3_thumb_key(media_id)
-        self._s3_remove_key(self.THUMBNAIL_BUCKET, s3_thumb_key)
+        s3_thumb_key = self._s3_thumbnail_key(media_id)
+        self._s3_remove_key(self._THUMBNAIL_BUCKET, s3_thumb_key)
     def _write_attachment(self, attachment_file, media_id, media_ext):
         s3_key = self._s3_attachment_key(media_id, media_ext)
         self._s3_client.upload_fileobj(attachment_file, self._ATTACHMENT_BUCKET, s3_key)
