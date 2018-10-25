@@ -69,34 +69,31 @@
 		{% for post in posts %}
 			<div class="{{ "row pt-2 " + loop.cycle("bg-white", "bg-light") }}" id="{{ post["id"] }}">
 				{% if post["media"] %}
-					{% if post["media_ext"] == "webm" %}
-						<div class="col">
-							<a href="{{ url_for("upload.file", media_id=post["media"]) }}">
-								<video style="width: 100%; max-width: 25em;">
-									<source src="{{ url_for("upload.file", media_id=post["media"]) }}" type="video/webm">
-								</video>
+					<div class="col">
+						<div class="img-thumbnail" style="display: inline-block;">
+							<a href="{{ url_for("upload.file", media_id=post["media"]) }}" class="media-container">
+								{% set ns = namespace(img_style="max-width: 15em; max-height: 20em;") %}
+								{% if post["spoiler"] == True %}
+									<span id="spoiler-label-{{ post["media"] }}" class="spoiler-label text-danger">!</span>
+									{% set ns.img_style = ns.img_style + " opacity: 0.025;" %}
+								{% endif %}
+								{% if post["media_ext"] == "gif" %}
+									<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" data-full="{{ url_for("upload.file",
+																												media_id=post["media"]) }}" data-thumb="{{ url_for("upload.thumb", media_id=post["media"]) }}" data-id="{{
+																																																						post["media"] }}" class="img-animated" style="{{ ns.img_style }}">
+								{% elif post["media_ext"] == "webm" %}
+									<div data-id="{{ post["media"] }}" class="post-vid">
+										<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}" id="{{ "thumb-%d" % post["media"] }}">
+										<video loop preload="none" class="mb-0 pb-0" style="{{ "display: none; " + ns.img_style }}" id="{{ "vid-%d" % post["media"] }}">
+											<source src="{{ url_for("upload.file", media_id=post["media"]) }}" type="video/webm">
+										</video>
+									</div>
+								{% else %}
+									<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}">
+								{% endif %}
 							</a>
 						</div>
-					{% else %}
-						<div class="col">
-							<div class="img-thumbnail" style="display: inline-block;">
-								<a href="{{ url_for("upload.file", media_id=post["media"]) }}" class="media-container">
-									{% set ns = namespace(img_style="max-width: 15em; max-height: 20em;") %}
-									{% if post["spoiler"] == True %}
-										<span id="spoiler-label-{{ post["media"] }}" class="spoiler-label text-danger">!</span>
-										{% set ns.img_style = ns.img_style + " opacity: 0.025;" %}
-									{% endif %}
-									{% if post["media_ext"] == "gif" %}
-										<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" data-full="{{ url_for("upload.file",
-																													media_id=post["media"]) }}" data-thumb="{{ url_for("upload.thumb", media_id=post["media"]) }}" data-id="{{
-																																																							post["media"] }}" class="img-animated" style="{{ ns.img_style }}">
-									{% else %}
-										<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}">
-									{% endif %}
-								</a>
-							</div>
-						</div>
-					{% endif %}
+					</div>
 				{% endif %}
 				<div class="container-fluid">
 					{% if post["spoiler"] == True %}
@@ -203,6 +200,24 @@
 			 $(this).css("opacity", $(this).data("old-opacity"))
 			 id = $(this).data("id")
 			 $("#spoiler-label-" + id).show()
+		 })
+		 $(".post-vid").hover(function() {
+			 var media_id = $(this).data("id")
+			 $("#spoiler-label-" + media_id).toggle()
+			 var vid = $("#vid-" + media_id)
+			 vid.get(0).play()
+			 vid.get(0).onplay = function() {
+				 vid.toggle()
+				 $("#thumb-" + media_id).toggle()
+			 }
+		 }, function() {
+			 var media_id = $(this).data("id")
+			 $("#thumb-" + media_id).toggle()
+			 $("#spoiler-label-" + media_id).toggle()
+			 var vid = $("#vid-" + media_id)
+			 vid.get(0).currentTime = 0
+			 vid.get(0).pause()
+			 vid.toggle()
 		 })
 		</script>
 	</div>
