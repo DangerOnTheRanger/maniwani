@@ -14,7 +14,7 @@ class Media(db.Model):
 
 class StorageBase:
     _FFMPEG_BINARY = "ffmpeg"
-    _FFMPEG_FLAGS = "-i pipe:0 -f mjpeg -vf scale=w=500:h=500:force_original_aspect_ratio=decrease pipe:1"
+    _FFMPEG_FLAGS = "-i pipe:0 -f mjpeg -frames:v 1 -vf scale=w=500:h=500:force_original_aspect_ratio=decrease pipe:1"
     def save_attachment(self, attachment_file):
         file_ext = attachment_file.filename.rsplit('.', 1)[1].lower()
         media = Media(ext=file_ext)
