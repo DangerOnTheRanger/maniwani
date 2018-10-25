@@ -20,6 +20,7 @@ class ThreadPosts:
         thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
         for post in thread.posts:
             PostRemoval().delete_impl(post.id)
+        db.session.delete(thread)
         db.session.commit()
 
     def retrieve(self, thread_id):
