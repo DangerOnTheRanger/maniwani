@@ -16,7 +16,6 @@ class Media(db.Model):
 
 
 class StorageBase:
-    _FFMPEG_BINARY = "ffmpeg"
     _FFMPEG_FLAGS = "-i pipe:0 -f mjpeg -frames:v 1 -vf scale=w=500:h=500:force_original_aspect_ratio=decrease pipe:1"
     def save_attachment(self, attachment_file):
         file_ext = attachment_file.filename.rsplit('.', 1)[1].lower()
@@ -53,7 +52,7 @@ class StorageBase:
             thumb.save(temp_buffer, "JPEG")
             return io.BytesIO(temp_buffer.getvalue())
         else:
-            ffmpeg_commandline = ("%s %s" % (self._FFMPEG_BINARY,
+            ffmpeg_commandline = ("%s %s" % (self._get_ffmpeg_path(),
                                              self._FFMPEG_FLAGS)).split()
             attachment.seek(0)
             temp_buffer = io.BytesIO(attachment.read())
@@ -65,6 +64,9 @@ class StorageBase:
         raise NotImplementedError
     def _write_thumbnail(self, thumbnail_bytes, media_id):
         raise NotImplementedError
+    def _get_ffmpeg_path(self):
+        return app.config.get("FFMPEG_PATH") or "ffmpeg"
+    
 
 
 class FolderStorage(StorageBase):
