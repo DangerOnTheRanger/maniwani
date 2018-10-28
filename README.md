@@ -14,16 +14,45 @@ Please note that Maniwani is currently pre-alpha software and not ready
 to be run in a production environment. Deploy to any Internet-facing servers at
 your own risk!
 
+### With Docker
+
+In this directory, run the following to build a Docker image:
+
+	docker build -t maniwani .
+	
+To run your new instance, then type:
+
+	docker run -p 5000:5000 maniwani
+	
+Note that currently running Maniwani in this way will not save any data after the
+container is closed. The Docker method is intended for the time being to see what
+Maniwani is capable of, as well as serve as a quick and easily-replicated testbed. 
+
+### Without Docker
+
 Python 3.4+ is required for installation, but I currently use 3.6 for developing
 Maniwani; if you're having problems with 3.4, file a bug report, but also try 3.6
 if you can.
 
-As Maniwani uses Pipenv, simply run `pipenv install` to grab all requirements and
-create a new virtualenv. After that, `touch secret` and modify `makedb.py` to your
-tastes to customize database initialization before executing `pipenv run python makedb.py`.
-Lastly, run `pipenv run flask run` from this directory and point your web browser at http://127.0.0.1:5000
-to view your new Maniwani installation. If you ever want to wipe the database clean,
-that's currently handled by removing `test.db` and re-running the `makedb.py` script.
+As Maniwani uses Pipenv, simply run `pipenv install` to grab all requirements (except
+for `ffmpeg` - see the "Notes on ffmpeg" section) and create a new virtualenv.
+After that, `touch secret` and modify `makedb.py` to your tastes to customize database
+initialization before executing `pipenv run python makedb.py`. Lastly,
+run `pipenv run flask run` from this directory and point your web browser
+at http://127.0.0.1:5000 to view your new Maniwani installation. If you ever want to
+wipe the database clean, that's currently handled by removing `test.db` and re-running
+the `makedb.py` script.
+
+#### Notes on ffmpeg
+
+Installing `ffmpeg` can either be done with your system's package manager if you
+do not already have it installed, or you can use the `ffmpeg_bootstrap.py` script
+to grab a static build of `ffmpeg` like so, assuming you are in the same directory
+as the script itself:
+
+	python3 ffmpeg_bootstrap.py
+	cp ffmpeg-stub-config.cfg ../maniwani.cfg
+	echo MANIWANI_CFG=maniwani.cfg > ../.env
 
 
 Features
