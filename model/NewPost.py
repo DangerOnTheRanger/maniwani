@@ -48,12 +48,15 @@ class NewPost:
         db.session.add(post)
         db.session.flush()
         replying = re.finditer(REPLY_REGEXP, body)
+        replies = set()
         if replying:
             for match in replying:
                 for raw_reply_id in match.groups():
                     reply_id = int(raw_reply_id)
-                    reply = Reply(reply_from=post.id, reply_to=reply_id)
-                    db.session.add(reply)
+                    replies.add(reply_id)
+            for reply_id in replies:
+                reply = Reply(reply_from=post.id, reply_to=reply_id)
+                db.session.add(reply)
         if should_bump:
             thread = db.session.query(Thread).filter_by(id=thread_id).one()
             thread.last_updated = post.datetime
