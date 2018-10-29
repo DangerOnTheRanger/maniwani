@@ -27,6 +27,8 @@ class StorageBase:
         self._write_attachment(attachment_buffer, media_id, file_ext)
         self._write_thumbnail(self._make_thumbnail(attachment_file, media_id, file_ext), media_id)
         return media
+    def bootstrap(self):
+        pass
     def _make_thumbnail(self, attachment, media_id, file_ext):
         if file_ext != "webm":
             # non-webm thumbnail generation
@@ -135,6 +137,9 @@ class S3Storage(StorageBase):
         self._s3_remove_key(self._ATTACHMENT_BUCKET, s3_attach_key)
         s3_thumb_key = self._s3_thumbnail_key(media_id)
         self._s3_remove_key(self._THUMBNAIL_BUCKET, s3_thumb_key)
+    def bootstrap(self):
+        self._s3_client.create_bucket(Bucket=self._ATTACHMENT_BUCKET)
+        self._s3_client.create_bucket(Bucket=self._THUMBNAIL_BUCKET)
     def _write_attachment(self, attachment_file, media_id, media_ext):
         s3_key = self._s3_attachment_key(media_id, media_ext)
         self._s3_client.upload_fileobj(attachment_file, self._ATTACHMENT_BUCKET, s3_key)
