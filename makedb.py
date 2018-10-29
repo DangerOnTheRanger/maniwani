@@ -1,3 +1,4 @@
+import os
 from customjsonencoder import CustomJSONEncoder
 from model.Board import Board
 from model.Slip import gen_slip

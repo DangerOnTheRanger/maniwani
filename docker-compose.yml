@@ -1,22 +1,22 @@
 version: '3'
 services:
-	maniwani:
-		build:
-		ports:
-			- "3031:5000"
-	minio:
-		image: "minio/minio"
-		restart: always
-		environment:
-			- MINIO_ACCESS_KEY: minio
-			- MINIO_SECRET_KEY: miniostorage
-		volumes:
-			- ./compose-data/minio:/data
-	postgres:
-		image: postgres
-		restart: always
-		environment:
-			- POSTGRES_USER: dev
-			- POSTGRES_PASSWORD: dev
-		volumes:
-			- ./compose-data/postgres:/var/lib/postgresql/data
+    maniwani:
+        build: .
+        ports:
+            - "3031:5000"
+    minio:
+        image: "minio/minio"
+        restart: always
+        environment:
+            - MINIO_ACCESS_KEY=minio
+            - MINIO_SECRET_KEY=miniostorage
+        volumes:
+            - ./compose-data/minio:/data
+    postgres:
+        image: postgres
+        restart: always
+        environment:
+            - POSTGRES_USER=dev
+            - POSTGRES_PASSWORD=dev
+        volumes:
+            - ./compose-data/postgres:/var/lib/postgresql/data
