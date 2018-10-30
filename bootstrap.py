@@ -45,6 +45,8 @@ def setup_tags(json_settings):
         tag_name = tag_info["tag"]
         bg_style = tag_info["bgstyle"]
         text_style = tag_info["textstyle"]
+        tag = Tag(name=tag_name, bg_style=bg_style, text_style=text_style)
+        db.session.add(tag)
 
 
 def write_secret():
