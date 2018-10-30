@@ -75,11 +75,10 @@ if you can.
 As Maniwani uses Pipenv, simply run `pipenv install` to grab all requirements (except
 for `ffmpeg` - see the "Notes on ffmpeg" section) and create a new virtualenv.
 After that, run `pipenv run python bootstrap.py` to initialize the database and set
-some initial options before executing `pipenv run python makedb.py`. Lastly,
-run `pipenv run flask run` from this directory and point your web browser
-at http://127.0.0.1:5000 to view your new Maniwani installation. If you ever want to
-wipe the database clean, that's currently handled by removing `test.db` and re-running
-the `makedb.py` script.
+some initial options. Lastly, run `pipenv run flask run` from this directory and
+point your web browser at http://127.0.0.1:5000 to view your new Maniwani installation.
+If you ever want to wipe the database clean, that's currently handled by removing `test.db`
+and re-running the `makedb.py` script.
 
 #### Notes on ffmpeg
 
