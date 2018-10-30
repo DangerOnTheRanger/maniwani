@@ -7,6 +7,19 @@ Where does the name come from? I could tell you, but by that point
 you'd [have been torn to pieces.](https://wikipedia.org/wiki/Katanagatari)
 
 
+Features
+--------
+
+* Per-thread auto-generated IDs, with avatars! (IDs done, avatars planned)
+* Markdown support in posts
+* Download all media files in a thread (planned)
+* Push notification support for new posts/threads with Javascript enabled (planned)
+* Graceful UI degradation if Javascript is *not* enabled
+* REST API for 3rd-party clients
+* Global WebM audio support, muted by default but user-configurable (user settings not yet done)
+
+
+
 Installation
 ------------
 
@@ -78,18 +91,6 @@ as the script itself:
 	python3 ffmpeg_bootstrap.py
 	cp ffmpeg-stub-config.cfg ../maniwani.cfg
 	echo MANIWANI_CFG=maniwani.cfg > ../.env
-
-
-Features
---------
-
-* Per-thread auto-generated IDs, with avatars! (IDs done, avatars planned)
-* Markdown support in posts
-* Download all media files in a thread (planned)
-* Push notification support for new posts/threads with Javascript enabled (planned)
-* Graceful UI degradation if Javascript is *not* enabled
-* REST API for 3rd-party clients
-* Global WebM audio support, muted by default but user-configurable (user settings not yet done)
 
 
 Screenshots
