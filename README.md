@@ -37,12 +37,10 @@ and Minio), though for the time being this setup is Linux-only and requires `doc
 In this directory, type:
 
 	docker-compose build
-	
-Once that is completed, then type:
-
+	docker-compose up -d
 	docker-compose run maniwani bootstrap
 	
-This command will only need to be run once per clean installation of the production
+The last command will only need to be run once per clean installation of the production
 environment. If you ever want to remove all database and storage data, remove the
 `compose-data` directory, though you'll likely need root permissions to do so since
 some subdirectories are created by other users. At this point, you can use the normal
