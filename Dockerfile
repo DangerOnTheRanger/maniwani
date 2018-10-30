@@ -13,7 +13,6 @@ RUN apk add ffmpeg
 # workaround for some pip issues on alpine
 ENV LIBRARY_PATH=/lib:/usr/lib
 RUN pipenv install --system --deploy
-RUN touch secret
 RUN python bootstrap.py
 EXPOSE 5000
 RUN chown -R maniwani:maniwani ./
