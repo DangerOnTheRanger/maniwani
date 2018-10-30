@@ -4,14 +4,17 @@ RUN pip install pipenv
 COPY . /maniwani
 COPY ./build-helpers/docker-entrypoint.sh ./docker-entrypoint.sh
 RUN adduser -D maniwani
+# dependencies for Pillow
 RUN apk add build-base python-dev py-pip jpeg-dev zlib-dev
+# dependencies for psycopg2
 RUN apk add postgresql-dev gcc python3-dev musl-dev
 RUN apk add ffmpeg
 
+# workaround for some pip issues on alpine
 ENV LIBRARY_PATH=/lib:/usr/lib
 RUN pipenv install --system --deploy
 RUN touch secret
-RUN python makedb.py
+RUN python bootstrap.py
 EXPOSE 5000
 RUN chown -R maniwani:maniwani ./
 USER maniwani
@@ -23,7 +26,9 @@ USER root
 RUN apk add uwsgi-python3 uwsgi-http
 USER maniwani
 WORKDIR /maniwani
+# clean up dev image bootstrapping
 RUN rm test.db
+RUN rm -r uploads
 COPY ./build-helpers/config-template.cfg ./maniwani.cfg
 ENV MANIWANI_CFG=./maniwani.cfg
 # workaround for uwsgi inexplicably not picking up /usr/local/lib even though

@@ -14,19 +14,46 @@ Please note that Maniwani is currently pre-alpha software and not ready
 to be run in a production environment. Deploy to any Internet-facing servers at
 your own risk!
 
-### With Docker
+### With Docker - standalone development image
 
-In this directory, run the following to build a Docker image:
+In this directory, run the following to build a development Docker image:
 
-	docker build -t maniwani .
+	docker build -t maniwani-dev --target dev .
 	
 To run your new instance, then type:
 
-	docker run -p 5000:5000 maniwani
+	docker run -p 5000:5000 maniwani-dev
 	
-Note that currently running Maniwani in this way will not save any data after the
-container is closed. The Docker method is intended for the time being to see what
-Maniwani is capable of, as well as serve as a quick and easily-replicated testbed. 
+Point your web browser at http://127.0.0.1:5000 to view your new installation. Note
+that running Maniwani in this way will not save any data after the container is closed.
+This Docker method is intended to easily see what Maniwani is capable of, as well as
+serve as a quick and easily-replicated testbed.
+
+### With Docker - production image and environment
+
+It is also possible through `docker-compose` to spin up an environment very similar
+to what one might use in production for Maniwani (uWSGI in addition to Postgres
+and Minio), though for the time being this setup is Linux-only and requires `docker-compose`.
+In this directory, type:
+
+	docker-compose build
+	
+Once that is completed, then type:
+
+	docker-compose run maniwani bootstrap
+	
+This command will only need to be run once per clean installation of the production
+environment. If you ever want to remove all database and storage data, remove the
+`compose-data` directory, though you'll likely need root permissions to do so since
+some subdirectories are created by other users. At this point, you can use the normal
+`docker-compose start` and `docker-compose stop` to start and stop the production
+environment, navigating to http://127.0.0.1:5000 as per usual to view Maniwani.
+
+As a final sidenote, this method will run all of your computer's traffic through
+a local DNS proxy while active, as otherwise it would not be possible to view
+attachments, since the local S3 server would be unreachable via hostname. If
+you want to audit the DNS proxy code (which is an open-source 3rd-party container),
+feel free to do so at https://github.com/mageddo/dns-proxy-server .
 
 ### Without Docker
 
@@ -36,8 +63,8 @@ if you can.
 
 As Maniwani uses Pipenv, simply run `pipenv install` to grab all requirements (except
 for `ffmpeg` - see the "Notes on ffmpeg" section) and create a new virtualenv.
-After that, `touch secret` and modify `makedb.py` to your tastes to customize database
-initialization before executing `pipenv run python makedb.py`. Lastly,
+After that, run `pipenv run python bootstrap.py` to initialize the database and set
+some initial options before executing `pipenv run python makedb.py`. Lastly,
 run `pipenv run flask run` from this directory and point your web browser
 at http://127.0.0.1:5000 to view your new Maniwani installation. If you ever want to
 wipe the database clean, that's currently handled by removing `test.db` and re-running

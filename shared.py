@@ -21,8 +21,8 @@ rest_api = Api(app)
 def get_secret():
     return open("secret").read()
 
-
-app.secret_key = get_secret()
+if os.path.exists("secret"):
+    app.secret_key = get_secret()
 
 
 def gen_poster_id():

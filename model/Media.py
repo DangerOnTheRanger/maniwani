@@ -92,7 +92,12 @@ class FolderStorage(StorageBase):
                                self._attachment_name(media_id, media_ext)))
         os.remove(os.path.join(self._thumb_folder,
                                self._thumbnail_name(media_id)))
-
+    def bootstrap(self):
+        # create upload and thumbnail directory if necessary
+        if not os.path.exists("uploads/thumbs"):
+            os.makedirs("uploads/thumbs")
+        if not os.path.exists("uploads/attachments"):
+            os.makedirs("uploads/attachments")
     def _attachment_name(self, media_id, media_ext):
         return self._ATTACHMENT_FILENAME % (media_id, media_ext)
     def _thumbnail_name(self, media_id):

@@ -1,0 +1,43 @@
+{
+	"default_threadlimit": 100,
+	"boards": [
+		{
+			"name": "anime"
+		},
+		{
+			"name": "tech"
+		},
+		{
+			"name": "meta",
+			"threadlimit": 50
+		},
+		{
+			"name": "politics"
+		},
+		{
+			"name": "gaming"
+		},
+		{
+			"name": "music"
+		}
+	],
+	"slips": [
+		{
+			"username": "admin",
+			"password": "admin",
+			"is_admin": true
+		}
+	],
+	"tags": [
+		{
+			"tag": "general",
+			"bgstyle": "bg-secondary",
+			"textstyle": "text-light"
+		},
+		{
+			"tag": "dump",
+			"bgstyle": "bg-info",
+			"textstyle": "text-light"
+		}
+	]
+}
