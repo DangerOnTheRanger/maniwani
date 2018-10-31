@@ -97,23 +97,23 @@ Screenshots
 
 Front page aggregating all boards:
 
-![Front page](https://i.imgur.com/kHhixknh.png)
+![Front page](https://i.imgur.com/qCx2Jn9h.png)
 
 Viewing a thread:
 
-![Thread view](https://i.imgur.com/hiNt0GTh.png)
+![Thread view](https://i.imgur.com/DT0DCWeh.png)
 
 Board index (images are pulled from the most recent OP in each board):
 
-![Board index](https://i.imgur.com/dQ8MzKPh.png)
+![Board index](https://i.imgur.com/zmgUG8nh.png)
 
 Thread gallery mode:
 
-![Gallery mode](https://i.imgur.com/6QMyd1Mh.png)
+![Gallery mode](https://i.imgur.com/sG1fzJbh.png)
 
 Board catalog view, also showing off responsive mode:
 
-![Board catalog](https://i.imgur.com/nb72pxrh.png)
+![Board catalog](https://i.imgur.com/oskEajch.jpg)
 
 
 
