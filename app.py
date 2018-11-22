@@ -19,7 +19,8 @@ app.register_blueprint(boards_blueprint, url_prefix='/boards')
 app.register_blueprint(threads_blueprint, url_prefix='/threads')
 app.register_blueprint(upload_blueprint, url_prefix='/upload')
 app.register_blueprint(slip_blueprint, url_prefix='/slip')
-app.register_blueprint(slip_blueprint, url_prefix='/vendor')
+if app.config["SERVE_STATIC"]:
+    app.register_blueprint(slip_blueprint, url_prefix='/vendor')
 
 rest_api.add_resource(BoardListResource, "/api/v1/boards/")
 rest_api.add_resource(BoardCatalogResource, "/api/v1/board/<int:board_id>/catalog")
@@ -35,6 +36,7 @@ def page_not_found(e):
     return render_template('not-found.html'), 404
 
 
-@app.route('/vendor/<path:path>')
-def send_js(path):
-    return send_from_directory('templates/vendor', path)
+if app.config["SERVE_STATIC"]:
+    @app.route('/static/<path:path>')
+    def serve_static(path):
+        return send_from_directory('static', path)
