@@ -29,6 +29,8 @@ class StorageBase:
         return media
     def bootstrap(self):
         pass
+    def static_resource(self, path):
+        raise NotImplementedError
     def _make_thumbnail(self, attachment, media_id, file_ext):
         if file_ext != "webm":
             # non-webm thumbnail generation
@@ -117,6 +119,8 @@ class S3Storage(StorageBase):
     _ATTACHMENT_BUCKET = "attachments"
     _THUMBNAIL_KEY = "%d.jpg"
     _THUMBNAIL_BUCKET = "thumbs"
+    _STATIC_DIR = "static"
+    _STATIC_BUCKET = "static"
     
     def __init__(self):
         self._endpoint = app.config.get("S3_ENDPOINT")
@@ -145,6 +149,19 @@ class S3Storage(StorageBase):
     def bootstrap(self):
         self._s3_client.create_bucket(Bucket=self._ATTACHMENT_BUCKET)
         self._s3_client.create_bucket(Bucket=self._THUMBNAIL_BUCKET)
+        self._s3_client.create_bucket(Bucket=self._STATIC_BUCKET, ACL="public-read")
+        # copy over all static files
+        for base, _, filenames in os.walk(self._STATIC_DIR):
+            # skip directories with no files, nothing to copy there
+            if not filenames:
+                continue
+            for filename in filenames:
+                # strip static/ 
+                s3_key = "/".join([base[len(self._STATIC_DIR + "/"):], filename])
+                full_path = os.path.join(self._STATIC_DIR, s3_key)
+                self._s3_client.upload_file(full_path, self._STATIC_BUCKET, s3_key)
+    def static_resource(self, path):
+        return "%s/%s/%s" % (self._s3_client.meta.endpoint_url, self._STATIC_BUCKET, path)
     def _write_attachment(self, attachment_file, media_id, media_ext):
         s3_key = self._s3_attachment_key(media_id, media_ext)
         self._s3_client.upload_fileobj(attachment_file, self._ATTACHMENT_BUCKET, s3_key)
@@ -177,3 +194,14 @@ def get_storage_provider():
         return FolderStorage()
     # TODO: proper error-handling on unknown key value
 storage = get_storage_provider()
+
+
+@app.context_processor
+def static_handler():
+    if app.config["SERVE_STATIC"]:
+        def static_resource(path):
+            return "/static" + path
+    else:
+        def static_resource(path):
+            return storage.static_resource(path)
+    return dict(static_resource=static_resource)

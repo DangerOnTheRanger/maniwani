@@ -10,6 +10,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = "./uploads"
 app.config["THUMB_FOLDER"] = os.path.join(app.config["UPLOAD_FOLDER"], "thumbs")
+app.config["SERVE_STATIC"] = True
 if os.getenv("MANIWANI_CFG"):
     app.config.from_envvar("MANIWANI_CFG")
 app.url_map.strict_slashes = False
