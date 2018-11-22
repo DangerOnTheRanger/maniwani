@@ -4,6 +4,7 @@ from flask import url_for
 from markdown import markdown
 
 from model.PostReplyExtension import PostReplyExtension
+from model.Spoiler import SpoilerExtension
 from model.ThreadRootExtension import ThreadRootExtension
 from outputmixin import OutputMixin
 from shared import db
@@ -11,13 +12,15 @@ from shared import db
 def render_for_catalog(posts):
     for post in posts:
         post["body"] = markdown(post["body"],
-                                extensions=[PostReplyExtension()])
+                                extensions=[PostReplyExtension(),
+                                            SpoilerExtension()])
 
 
 def render_for_threads(posts):
     for post in posts:
         post["body"] = markdown(post["body"],
-                                extensions=[ThreadRootExtension(), PostReplyExtension()])
+                                extensions=[ThreadRootExtension(), PostReplyExtension(),
+                                            SpoilerExtension()])
 
 
 class Post(OutputMixin, db.Model):
