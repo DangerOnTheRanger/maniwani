@@ -2,8 +2,6 @@ version: '3'
 services:
     maniwani:
         build: .
-        ports:
-            - "5000:3031"
     minio:
         image: "minio/minio"
         hostname: minio
@@ -16,6 +14,15 @@ services:
         volumes:
             - ./compose-data/minio:/data
         command: server /data
+	nginx:
+		image: nginx
+		restart: always
+		ports:
+			- "5000:5000"
+		depends_on:
+			- maniwani
+		volumes:
+			- ./build-helpers/nginx.conf:/etc/nginx/nginx.conf
     postgres:
         image: postgres
         restart: always
