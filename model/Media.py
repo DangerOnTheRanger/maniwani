@@ -1,5 +1,6 @@
 import datetime
 import io
+import json
 import os
 import subprocess
 from PIL import Image
@@ -121,25 +122,36 @@ class S3Storage(StorageBase):
     _THUMBNAIL_BUCKET = "thumbs"
     _STATIC_DIR = "static"
     _STATIC_BUCKET = "static"
+    _PUBLIC_READ_POLICY = json.dumps({"Version":"2012-10-17",
+                                      "Statement":[
+                                          {
+                                              "Sid":"allpublic",
+                                              "Effect":"Allow",
+                                              "Principal":{"AWS": "*"},
+                                              "Action": "s3:GetObject",
+                                              "Resource": "arn:aws:s3:::%s/*"
+                                          }
+                                      ]})
     
     def __init__(self):
-        self._endpoint = app.config.get("S3_ENDPOINT")
+        self._endpoint = app.config["S3_ENDPOINT"]
         self._access_key = app.config["S3_ACCESS_KEY"]
         self._secret_key = app.config["S3_SECRET_KEY"]
-        self._s3_client = boto3.client("s3",
-                                       endpoint_url = self._endpoint,
-                                       aws_access_key_id = self._access_key,
-                                       aws_secret_access_key = self._secret_key)
+        self._bucket_uuid = app.config.get("S3_UUID_PREFIX") or ""
+        self._s3_client = boto3.resource("s3",
+                                         endpoint_url=self._endpoint,
+                                         aws_access_key_id=self._access_key,
+                                         aws_secret_access_key=self._secret_key)
 
     def get_attachment(self, media_id):
         media = db.session.query(Media).filter(Media.id == media_id).one()
         media_ext = media.ext
         s3_key = self._s3_attachment_key(media_id, media_ext)
-        media_url = self._s3_presigned_url(self._ATTACHMENT_BUCKET, s3_key)
+        media_url = self._format_url(self._ATTACHMENT_BUCKET, s3_key)
         return redirect(media_url)
     def get_thumbnail(self, media_id):
         s3_key = self._s3_thumbnail_key(media_id)
-        thumb_url = self._s3_presigned_url(self._THUMBNAIL_BUCKET, s3_key)
+        thumb_url = self._format_url(self._THUMBNAIL_BUCKET, s3_key)
         return redirect(thumb_url)
     def delete_attachment(self, media_id, media_ext):
         s3_attach_key = self._s3_attachment_key(media_id, media_ext)
@@ -149,33 +161,37 @@ class S3Storage(StorageBase):
     def bootstrap(self):
         self._s3_client.create_bucket(Bucket=self._ATTACHMENT_BUCKET)
         self._s3_client.create_bucket(Bucket=self._THUMBNAIL_BUCKET)
-        self._s3_client.create_bucket(Bucket=self._STATIC_BUCKET, ACL="public-read")
+        self._s3_client.create_bucket(Bucket=self._STATIC_BUCKET)
+        static_bucket = self._get_bucket(self._STATIC_BUCKET)
         # copy over all static files
         for base, _, filenames in os.walk(self._STATIC_DIR):
-            # skip directories with no files, nothing to copy there
-            if not filenames:
-                continue
             for filename in filenames:
                 # strip static/ 
                 s3_key = "/".join([base[len(self._STATIC_DIR + "/"):], filename])
                 full_path = os.path.join(self._STATIC_DIR, s3_key)
-                self._s3_client.upload_file(full_path, self._STATIC_BUCKET, s3_key)
+                static_bucket.upload_file(full_path, s3_key)
+        for bucket_name in (self._ATTACHMENT_BUCKET, self._THUMBNAIL_BUCKET, self._STATIC_BUCKET):
+            bucket = self._get_bucket(bucket_name)
+            formatted_policy = self._PUBLIC_READ_POLICY % (bucket.name)
+            bucket.Policy().put(Policy=self._PUBLIC_READ_POLICY % bucket.name)
+            bucket.Policy().reload()
     def static_resource(self, path):
-        return "%s/%s/%s" % (self._s3_client.meta.endpoint_url, self._STATIC_BUCKET, path)
+        return self._format_url(self._STATIC_BUCKET, path)
+    def _format_url(self, bucket, path):
+        return "%s/%s/%s" % (self._endpoint, bucket, path)
+    def _get_bucket(self, bucket):
+        return self._s3_client.Bucket(self._bucket_uuid + bucket)
     def _write_attachment(self, attachment_file, media_id, media_ext):
         s3_key = self._s3_attachment_key(media_id, media_ext)
-        self._s3_client.upload_fileobj(attachment_file, self._ATTACHMENT_BUCKET, s3_key)
+        bucket = self._get_bucket(self._ATTACHMENT_BUCKET)
+        bucket.upload_fileobj(attachment_file, s3_key)
     def _write_thumbnail(self, thumbnail_bytes, media_id):
         s3_key = self._s3_thumbnail_key(media_id)
-        self._s3_client.upload_fileobj(thumbnail_bytes, self._THUMBNAIL_BUCKET, s3_key)
-    def _s3_presigned_url(self, bucket, key):
-        return self._s3_client.generate_presigned_url(ClientMethod="get_object",
-                                                      Params={
-                                                          "Bucket": bucket,
-                                                          "Key": key
-                                                      })
-    def _s3_remove_key(self, bucket, key):
-        self._s3_client.delete_object(Bucket=bucket, Key=key)
+        bucket = self._get_bucket(self._THUMBNAIL_BUCKET)
+        bucket.upload_fileobj(thumbnail_bytes, s3_key)
+    def _s3_remove_key(self, bucket_name, key):
+        bucket = self._get_bucket(bucket_name)
+        bucket.delete_key(key)
     def _s3_attachment_key(self, media_id, media_ext):
         return self._ATTACHMENT_KEY % (media_id, media_ext)
     def _s3_thumbnail_key(self, media_id):

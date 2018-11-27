@@ -14,15 +14,15 @@ services:
         volumes:
             - ./compose-data/minio:/data
         command: server /data
-	nginx:
-		image: nginx
-		restart: always
-		ports:
-			- "5000:5000"
-		depends_on:
-			- maniwani
-		volumes:
-			- ./build-helpers/nginx.conf:/etc/nginx/nginx.conf
+    nginx:
+        image: nginx
+        restart: always
+        ports:
+            - "5000:5000"
+        depends_on:
+            - maniwani
+        volumes:
+            - ./build-helpers/nginx.conf:/etc/nginx/nginx.conf
     postgres:
         image: postgres
         restart: always
