@@ -1,19 +1,19 @@
 FROM python:3.6-alpine AS dev
 WORKDIR /maniwani
 RUN pip install pipenv
-COPY . /maniwani
-COPY ./build-helpers/docker-entrypoint.sh ./docker-entrypoint.sh
 RUN adduser -D maniwani
 # dependencies for Pillow
-RUN apk add build-base python-dev py-pip jpeg-dev zlib-dev
+RUN apk add build-base py-pip jpeg-dev zlib-dev
 # dependencies for psycopg2
 RUN apk add postgresql-dev gcc python3-dev musl-dev
 RUN apk add ffmpeg
-
+COPY . /maniwani
+COPY ./build-helpers/docker-entrypoint.sh ./docker-entrypoint.sh
 # workaround for some pip issues on alpine
 ENV LIBRARY_PATH=/lib:/usr/lib
 RUN pipenv install --system --deploy
 RUN python bootstrap.py
+RUN apk remove postgresql-dev gcc python3-dev musl-dev build-base py-pip jpeg-dev zlib-dev
 EXPOSE 5000
 RUN chown -R maniwani:maniwani ./
 USER maniwani
