@@ -1,5 +1,6 @@
 FROM python:3.6-alpine AS dev
 WORKDIR /maniwani
+# backend dependencies
 RUN pip install pipenv
 RUN adduser -D maniwani
 # dependencies for Pillow
@@ -12,8 +13,19 @@ COPY ./build-helpers/docker-entrypoint.sh ./docker-entrypoint.sh
 # workaround for some pip issues on alpine
 ENV LIBRARY_PATH=/lib:/usr/lib
 RUN pipenv install --system --deploy
-RUN python bootstrap.py
+# remove backend build-time dependencies
 RUN apk del build-base gcc python3-dev musl-dev jpeg-dev zlib-dev
+# frontend dependencies
+RUN apk add nodejs nodejs-npm
+# build static frontend files, attempt to remove node_modules just in case
+RUN rm -rf node_modules
+RUN npm install
+RUN npm run gulp
+# remove frontend build-time dependencies
+RUN apk del nodejs-npm nodejs
+RUN rm -rf node_modules
+# bootstrap dev image
+RUN python bootstrap.py
 EXPOSE 5000
 RUN chown -R maniwani:maniwani ./
 USER maniwani

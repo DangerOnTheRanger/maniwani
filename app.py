@@ -14,13 +14,13 @@ from model.PostRemovalResource import PostRemovalResource
 from model.ThreadPostsResource import ThreadPostsResource
 from shared import app, rest_api
 
-app.register_blueprint(main_blueprint, url_prefix='/')
-app.register_blueprint(boards_blueprint, url_prefix='/boards')
-app.register_blueprint(threads_blueprint, url_prefix='/threads')
-app.register_blueprint(upload_blueprint, url_prefix='/upload')
-app.register_blueprint(slip_blueprint, url_prefix='/slip')
+app.register_blueprint(main_blueprint, url_prefix="/")
+app.register_blueprint(boards_blueprint, url_prefix="/boards")
+app.register_blueprint(threads_blueprint, url_prefix="/threads")
+app.register_blueprint(upload_blueprint, url_prefix="/upload")
+app.register_blueprint(slip_blueprint, url_prefix="/slip")
 if app.config["SERVE_STATIC"]:
-    app.register_blueprint(slip_blueprint, url_prefix='/vendor')
+    app.register_blueprint(slip_blueprint, url_prefix="/static")
 
 rest_api.add_resource(BoardListResource, "/api/v1/boards/")
 rest_api.add_resource(BoardCatalogResource, "/api/v1/board/<int:board_id>/catalog")
@@ -33,10 +33,10 @@ rest_api.add_resource(FirehoseResource, "/api/v1/firehose")
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('not-found.html'), 404
+    return render_template("not-found.html"), 404
 
 
 if app.config["SERVE_STATIC"]:
-    @app.route('/static/<path:path>')
+    @app.route("/static/<path:path>")
     def serve_static(path):
-        return send_from_directory('static', path)
+        return send_from_directory("static", path)
