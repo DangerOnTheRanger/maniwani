@@ -216,7 +216,7 @@ storage = get_storage_provider()
 def static_handler():
     if app.config["SERVE_STATIC"]:
         def static_resource(path):
-            return "/static" + path
+            return "/static/" + path
     else:
         def static_resource(path):
             return storage.static_resource(path)

@@ -1,7 +1,0 @@
-.spoiler {
-	color: var(--dark);
-	background-color: var(--dark);
-}
-.spoiler:hover {
-	color: var(--white);
-}
