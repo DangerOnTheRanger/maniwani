@@ -8,22 +8,32 @@ RUN apk add build-base jpeg-dev zlib-dev
 # dependencies for psycopg2
 RUN apk add libpq postgresql-dev gcc python3-dev musl-dev
 RUN apk add ffmpeg
-COPY . /maniwani
-COPY ./build-helpers/docker-entrypoint.sh ./docker-entrypoint.sh
+# frontend dependencies
+RUN apk add nodejs nodejs-npm
 # workaround for some pip issues on alpine
 ENV LIBRARY_PATH=/lib:/usr/lib
+COPY Pipfile /maniwani
+COPY Pipfile.lock /maniwani
 RUN pipenv install --system --deploy
 # remove backend build-time dependencies
 RUN apk del build-base gcc python3-dev musl-dev jpeg-dev zlib-dev
-# frontend dependencies
-RUN apk add nodejs nodejs-npm
-# build static frontend files, attempt to remove node_modules just in case
-RUN rm -rf node_modules
+# build static frontend files
+COPY package.json /maniwani
+COPY package-lock.json /maniwani
 RUN npm install
+COPY Gulpfile.js /maniwani
+COPY scss /maniwani/scss
 RUN npm run gulp
 # remove frontend build-time dependencies
 RUN apk del nodejs-npm nodejs
 RUN rm -rf node_modules
+# copy source files over
+COPY *.py /maniwani/
+COPY blueprints /maniwani/blueprints
+COPY build-helpers /maniwani/build-helpers
+COPY model /maniwani/model
+COPY templates /maniwani/templates
+COPY ./build-helpers/docker-entrypoint.sh ./docker-entrypoint.sh
 # bootstrap dev image
 RUN python bootstrap.py
 EXPOSE 5000
