@@ -2,7 +2,6 @@ FROM python:3.6-alpine AS dev
 WORKDIR /maniwani
 # backend dependencies
 RUN pip install pipenv
-RUN adduser -D maniwani
 # dependencies for Pillow
 RUN apk add build-base jpeg-dev zlib-dev
 # dependencies for psycopg2
@@ -37,15 +36,11 @@ COPY ./build-helpers/docker-entrypoint.sh ./docker-entrypoint.sh
 # bootstrap dev image
 RUN python bootstrap.py
 EXPOSE 5000
-RUN chown -R maniwani:maniwani ./
-USER maniwani
 
 ENTRYPOINT ["sh", "./docker-entrypoint.sh", "devmode"]
 
 FROM dev AS prod
-USER root
 RUN apk add uwsgi-python3 uwsgi-http
-USER maniwani
 WORKDIR /maniwani
 # clean up dev image bootstrapping
 RUN rm test.db
@@ -56,5 +51,9 @@ ENV MANIWANI_CFG=./maniwani.cfg
 # system python has it
 ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.6/site-packages
 COPY ./build-helpers/uwsgi.ini ./uwsgi.ini
+# chown and switch users for security purposes
+RUN adduser -D maniwani
+RUN chown -R maniwani:maniwani ./
+USER maniwani
 
 ENTRYPOINT ["sh", "./docker-entrypoint.sh"]
