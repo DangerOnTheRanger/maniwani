@@ -17,7 +17,7 @@ if os.getenv("MANIWANI_CFG"):
 app.url_map.strict_slashes = False
 app.json_encoder = CustomJSONEncoder
 db = SQLAlchemy(app)
-migrate = Migrate (app, db)
+migrate = Migrate(app, db)
 rest_api = Api(app)
 
 

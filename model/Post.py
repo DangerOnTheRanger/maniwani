@@ -32,3 +32,4 @@ class Post(OutputMixin, db.Model):
     poster = db.Column(db.Integer, db.ForeignKey("poster.id"), nullable=False)
     media = db.Column(db.Integer, db.ForeignKey("media.id", ondelete="CASCADE"), nullable=True)
     spoiler = db.Column(db.Boolean, nullable=True)
+

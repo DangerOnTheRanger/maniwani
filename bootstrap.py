@@ -1,12 +1,18 @@
 import json
 import os
+
+from alembic import command
+from alembic.config import Config
+from flask.cli import with_appcontext
+
 from model.Board import Board
 from model.Slip import gen_slip
 from model.Tag import Tag
 from model.Media import storage
-from shared import db
+from shared import app, db
 
 
+MIGRATION_DIR = "./migrations"
 BOOTSTRAP_SETTINGS = "./build-helpers/bootstrap-config.json"
 SECRET_FILE = "./secret"
 
@@ -60,6 +66,13 @@ def setup_storage():
 
 
 def save_db():
+    if os.path.exists(MIGRATION_DIR):
+        alembic_config = Config(os.path.join(MIGRATION_DIR, "alembic.ini"))
+        alembic_config.set_main_option("script_location", MIGRATION_DIR)
+        with app.app_context():
+            # mark the database as being up to date migration-wise since
+            # it was just created
+            command.stamp(config=alembic_config, revision="head")
     db.session.commit()
 
 
