@@ -6,6 +6,9 @@ if [ $1 = "devmode" ]; then
 # attempting to bootstrap a production environment?
 elif [ $1 = "bootstrap" ]; then
 	python3 bootstrap.py
+# database migration?
+elif [ $1 = "migrate" ]; then
+	flask db upgrade
 # running normal production mode startup
 else
 	uwsgi --ini uwsgi.ini

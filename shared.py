@@ -2,6 +2,7 @@ import os
 import random
 from customjsonencoder import CustomJSONEncoder
 from flask import Flask
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 
@@ -16,6 +17,7 @@ if os.getenv("MANIWANI_CFG"):
 app.url_map.strict_slashes = False
 app.json_encoder = CustomJSONEncoder
 db = SQLAlchemy(app)
+migrate = Migrate (app, db)
 rest_api = Api(app)
 
 
