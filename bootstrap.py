@@ -30,7 +30,13 @@ def setup_boards(json_settings):
     for board_info in json_settings["boards"]:
         name = board_info["name"]
         threadlimit = board_info.get("threadlimit") or json_settings["default_threadlimit"]
-        board = Board(name=name, max_threads=threadlimit)
+        mimetypes = board_info.get("mimetypes")
+        if mimetypes is None:
+            mimetypes = json_settings["default_mimetypes"]
+            extra_mimetypes = board_info.get("extra_mimetypes")
+            if extra_mimetypes:
+                mimetypes = mimetypes + "|" + extra_mimetypes
+        board = Board(name=name, max_threads=threadlimit, mimetypes=mimetypes)
         db.session.add(board)
 
 

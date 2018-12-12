@@ -66,6 +66,7 @@ def admin_update(board_id):
     board.name = args["name"]
     board.rules = args["rules"]
     board.max_threads = args["max-threads"]
+    board.mimetypes = args["mimetypes"]
     db.session.add(board)
     db.session.commit()
     return redirect(url_for("boards.catalog", board_id=board_id))

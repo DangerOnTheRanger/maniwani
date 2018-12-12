@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 
-from model.NewPost import NewPost
+from model.NewPost import NewPost, InvalidMimeError
 from model.NewThread import NewThread
-from model.Post import Post, render_for_threads
+from model.Post import Post, render_for_threads, 
 from model.PostRemoval import PostRemoval
 from model.PostReplyPattern import url_for_post
 from model.Poster import Poster
@@ -29,6 +29,9 @@ def submit():
         return redirect(url_for("threads.view", thread_id=thread.id))
     except SubmissionError as e:
         flash(str(e.args[0]))
+        return redirect(url_for("threads.new", board_id=e.args[1]))
+    except InvalidMimeError as e:
+        flash("Can't post attachment with MIME type \"%s\" on this board!" % e.args[0])
         return redirect(url_for("threads.new", board_id=e.args[1]))
 
 
@@ -66,7 +69,11 @@ def new_post(thread_id):
 
 @threads_blueprint.route("/<int:thread_id>/new", methods=["POST"])
 def post_submit(thread_id):
-    NewPost().post(thread_id)
+    try:
+        NewPost().post(thread_id)
+    except InvalidMimeError as e:
+        flash("Can't post attachment with MIME type \"%s\" on this board!" % e.args[0])
+        return redirect(url_for("threads.new_post", thread_id=thread_id))
     return redirect(url_for("threads.view", thread_id=thread_id) + "#thread-bottom")
 
 

@@ -3,7 +3,7 @@ WORKDIR /maniwani
 # backend dependencies
 RUN pip install pipenv
 # dependencies for Pillow
-RUN apk add build-base jpeg-dev zlib-dev
+RUN apk add build-base jpeg-dev zlib-dev libwebp-dev
 # dependencies for psycopg2
 RUN apk add libpq postgresql-dev gcc python3-dev musl-dev
 RUN apk add ffmpeg
