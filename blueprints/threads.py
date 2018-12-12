@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 
 from model.NewPost import NewPost, InvalidMimeError
 from model.NewThread import NewThread
-from model.Post import Post, render_for_threads, 
+from model.Post import Post, render_for_threads
 from model.PostRemoval import PostRemoval
 from model.PostReplyPattern import url_for_post
 from model.Poster import Poster
