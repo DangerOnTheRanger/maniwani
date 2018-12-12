@@ -1,9 +1,9 @@
 {%- extends "base.html" %}
 {% block title %}
-board index
+	board index
 {% endblock %}
 {% block head %}
-<style>
+	<style>
 	 .board {
 		 margin: 0.1em;
 	 }
@@ -53,9 +53,9 @@ board index
 
 
 
-</style>
-<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+	</style>
+	<script src="{{ static_resource("imagesloaded/imagesloaded.pkgd.min.js") }}"></script>
+	<script src="{{ static_resource("masonry/masonry.pkgd.min.js") }}"></script>
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
