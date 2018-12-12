@@ -5,6 +5,7 @@ from PIL import Image
 from flask import current_app, request
 from flask_restful import reqparse, inputs
 
+from model.Board import Board
 from model.Media import Media, storage
 from model.Poster import Poster
 from model.Post import Post
@@ -41,6 +42,13 @@ class NewPost:
         media_id = None
         if "media" in request.files and request.files["media"].filename:
             uploaded_file = request.files["media"]
+            mimetype = uploaded_file.content_type
+            board_id = db.session.query(Thread).filter_by(id=thread_id).one().board
+            board = db.session.query(Board).filter_by(id=board_id).one()
+            expected_mimetypes = board.mimetypes
+            if re.match(expected_mimetypes, mimetype) is None:
+                db.session.rollback()
+                raise InvalidMimeException(mimetype)
             media = storage.save_attachment(uploaded_file)
             media_id = media.id
         post = Post(body=body, subject=args["subject"], thread=thread_id, poster=poster.id, media=media_id,
@@ -63,3 +71,8 @@ class NewPost:
             db.session.add(thread)
         db.session.flush()
         db.session.commit()
+
+
+class InvalidMimeError(Exception):
+    pass
+

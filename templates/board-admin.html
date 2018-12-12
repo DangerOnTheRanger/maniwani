@@ -18,6 +18,10 @@ administrate board
 			<label for="max-threads">Max threads</label>
 			<input type="text" id="max-threads" name="max-threads" class="form-control" value="{{ board.max_threads }}">
 		</div>
+		<div class="form-group">
+			<label for="mimetypes">Allowed MIME types</label>
+			<input type="text" id="mimetypes" name="mimetypes" class="form-control" value="{{ board.mimetypes | safe }}">
+		</div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

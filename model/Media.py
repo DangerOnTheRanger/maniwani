@@ -11,6 +11,7 @@ from shared import db, app
 class Media(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ext = db.Column(db.String(4), nullable=False)
+    mimetype = db.Column(db.String(255), nullable=False)
 
     def delete_attachment(self):
         storage.delete_attachment(self.id, self.ext)
@@ -20,7 +21,7 @@ class StorageBase:
     _FFMPEG_FLAGS = "-i pipe:0 -f mjpeg -frames:v 1 -vf scale=w=500:h=500:force_original_aspect_ratio=decrease pipe:1"
     def save_attachment(self, attachment_file):
         file_ext = attachment_file.filename.rsplit('.', 1)[1].lower()
-        media = Media(ext=file_ext)
+        media = Media(ext=file_ext, mimetype=attachment_file.content_type)
         db.session.add(media)
         db.session.flush()
         media_id = media.id
