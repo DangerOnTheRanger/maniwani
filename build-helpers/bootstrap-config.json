@@ -6,7 +6,8 @@
 			"name": "anime"
 		},
 		{
-			"name": "tech"
+			"name": "tech",
+			"extra_mimetypes": "text/*"
 		},
 		{
 			"name": "meta",

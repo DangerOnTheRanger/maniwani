@@ -3,7 +3,7 @@ import io
 import json
 import os
 import subprocess
-from PIL import Image
+from PIL import Image, ImageDraw
 from flask import send_from_directory, redirect
 from shared import db, app
 
@@ -27,15 +27,15 @@ class StorageBase:
         media_id = media.id
         attachment_buffer = io.BytesIO(attachment_file.read())
         self._write_attachment(attachment_buffer, media_id, file_ext)
-        self._write_thumbnail(self._make_thumbnail(attachment_file, media_id, file_ext), media_id)
+        self._write_thumbnail(self._make_thumbnail(attachment_file, media_id, attachment_file.content_type, file_ext), media_id)
         return media
     def bootstrap(self):
         pass
     def static_resource(self, path):
         raise NotImplementedError
-    def _make_thumbnail(self, attachment, media_id, file_ext):
-        if file_ext != "webm":
-            # non-webm thumbnail generation
+    def _make_thumbnail(self, attachment, media_id, mimetype, file_ext):
+        if mimetype.startswith("image"):
+            # image thumbnail generation
             thumb = Image.open(attachment)
             if thumb.mode in ("RGBA", "LA"):
                 background = Image.new(thumb.mode[:-1], thumb.size, (255, 255, 255))
@@ -57,7 +57,19 @@ class StorageBase:
             temp_buffer = io.BytesIO()
             thumb.save(temp_buffer, "JPEG")
             return io.BytesIO(temp_buffer.getvalue())
-        else:
+        elif mimetype.startswith("text"):
+            # text thumbnailing
+            thumb = Image.new("RGB", (500, 500), (255, 255, 255))
+            draw = ImageDraw.Draw(thumb)
+            font = draw.getfont()
+            fill_color = (0, 0, 0)
+            attachment.seek(0)
+            draw.multiline_text((0, 0), attachment.read(), font=font, fill=fill_color)
+            temp_buffer = io.BytesIO()
+            thumb.save(temp_buffer, "JPEG")
+            return io.BytesIO(temp_buffer.getvalue())
+        elif mimetype.startswith("video"):
+            # video thumbnailing
             ffmpeg_commandline = ("%s %s" % (self._get_ffmpeg_path(),
                                              self._FFMPEG_FLAGS)).split()
             attachment.seek(0)
