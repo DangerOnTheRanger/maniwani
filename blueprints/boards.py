@@ -62,6 +62,7 @@ def admin_update(board_id):
     parser.add_argument("name", type=str, required=True)
     parser.add_argument("rules", type=str, required=True)
     parser.add_argument("max-threads", type=int, required=True)
+    parser.add_argument("mimetypes", type=str, required=True)
     args = parser.parse_args()
     board.name = args["name"]
     board.rules = args["rules"]
