@@ -2,6 +2,7 @@ import datetime as _datetime
 from flask import url_for
 
 from markdown import markdown
+from werkzeug.utils import escape
 
 from model.PostReplyExtension import PostReplyExtension
 from model.Spoiler import SpoilerExtension
@@ -11,14 +12,14 @@ from shared import db
 
 def render_for_catalog(posts):
     for post in posts:
-        post["body"] = markdown(post["body"],
+        post["body"] = markdown(escape(post["body"]),
                                 extensions=[PostReplyExtension(),
                                             SpoilerExtension()])
 
 
 def render_for_threads(posts):
     for post in posts:
-        post["body"] = markdown(post["body"],
+        post["body"] = markdown(escape(post["body"]),
                                 extensions=[ThreadRootExtension(), PostReplyExtension(),
                                             SpoilerExtension()])
 
