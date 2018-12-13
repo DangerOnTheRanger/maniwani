@@ -1,6 +1,6 @@
 {
 	"default_threadlimit": 100,
-	"default_mimetypes": "image/jpg|image/png|image/gif|image/webp|video/webm",
+	"default_mimetypes": "image/jpeg|image/png|image/gif|image/webp|video/webm",
 	"boards": [
 		{
 			"name": "anime"
