@@ -1,6 +1,6 @@
 from shared import db
 
-REPLY_REGEXP = r">>([0-9]+)"
+REPLY_REGEXP = r"(>>|&gt;&gt;)([0-9]+)"
 
 
 class Reply(db.Model):

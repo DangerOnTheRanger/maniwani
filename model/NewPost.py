@@ -59,9 +59,9 @@ class NewPost:
         replies = set()
         if replying:
             for match in replying:
-                for raw_reply_id in match.groups():
-                    reply_id = int(raw_reply_id)
-                    replies.add(reply_id)
+                raw_reply_id = match.group(2)
+                reply_id = int(raw_reply_id)
+                replies.add(reply_id)
             for reply_id in replies:
                 reply = Reply(reply_from=post.id, reply_to=reply_id)
                 db.session.add(reply)
