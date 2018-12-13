@@ -48,7 +48,7 @@ class NewPost:
             expected_mimetypes = board.mimetypes
             if re.match(expected_mimetypes, mimetype) is None:
                 db.session.rollback()
-                raise InvalidMimeException(mimetype)
+                raise InvalidMimeError(mimetype)
             media = storage.save_attachment(uploaded_file)
             media_id = media.id
         post = Post(body=body, subject=args["subject"], thread=thread_id, poster=poster.id, media=media_id,
