@@ -22,7 +22,7 @@ services:
         depends_on:
             - maniwani
         volumes:
-            - ./build-helpers/nginx.conf:/etc/nginx/nginx.conf
+            - ./deploy-configs/nginx.conf:/etc/nginx/nginx.conf
     postgres:
         image: postgres
         restart: always

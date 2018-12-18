@@ -13,7 +13,7 @@ from shared import app, db
 
 
 MIGRATION_DIR = "./migrations"
-BOOTSTRAP_SETTINGS = "./build-helpers/bootstrap-config.json"
+BOOTSTRAP_SETTINGS = "./deploy-configs/bootstrap-config.json"
 SECRET_FILE = "./secret"
 
 
@@ -39,7 +39,7 @@ def setup_boards(json_settings):
         rule_file = board_info.get("rules")
         rules = ""
         if rule_file:
-            rules = open(os.path.join("build-helpers", rule_file)).read()
+            rules = open(os.path.join("deploy-configs", rule_file)).read()
         board = Board(name=name, max_threads=threadlimit, mimetypes=mimetypes, rules=rules)
         db.session.add(board)
 

@@ -30,6 +30,7 @@ RUN rm -rf node_modules
 COPY *.py /maniwani/
 COPY blueprints /maniwani/blueprints
 COPY build-helpers /maniwani/build-helpers
+COPY deploy-configs /maniwani/deploy-configs
 COPY model /maniwani/model
 COPY templates /maniwani/templates
 COPY ./build-helpers/docker-entrypoint.sh ./docker-entrypoint.sh
@@ -45,12 +46,12 @@ WORKDIR /maniwani
 # clean up dev image bootstrapping
 RUN rm test.db
 RUN rm -r uploads
-COPY ./build-helpers/config-template.cfg ./maniwani.cfg
+COPY ./deploy-configs/config-template.cfg ./maniwani.cfg
 ENV MANIWANI_CFG=./maniwani.cfg
 # workaround for uwsgi inexplicably not picking up /usr/local/lib even though
 # system python has it
 ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.6/site-packages
-COPY ./build-helpers/uwsgi.ini ./uwsgi.ini
+COPY ./deploy-configs/uwsgi.ini ./uwsgi.ini
 # chown and switch users for security purposes
 RUN adduser -D maniwani
 RUN chown -R maniwani:maniwani ./
