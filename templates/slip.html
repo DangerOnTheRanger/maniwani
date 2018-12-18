@@ -6,7 +6,7 @@ slip
 <div class="container">
     {% if get_slip() is none %}
     <div class="jumbotron">
-        <p class="lead">A <i>slip</i> is what Maniwani uses to keep track of user settings and permissions
+        <p class="lead">A <i>slip</i> is what {{ instance_name() }} uses to keep track of user settings and permissions
             in an anonymous manner.</p>
         <p>You can sign up for a slip using the form below, or log in
             to an existing slip. All that's required is a name and password for your slip - be sure not
