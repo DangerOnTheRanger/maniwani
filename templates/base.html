@@ -13,7 +13,7 @@
     <!-- Fontawesome -->
     <link rel="stylesheet" href="{{ static_resource("fontawesome/all.min.css") }}">
 	{% block head %}{% endblock %}
-    <title>Maniwani - {% block title %}{% endblock %}</title>
+    <title>{{ instance_name() }} - {% block title %}{% endblock %}</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top mb-2">
