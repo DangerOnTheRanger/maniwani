@@ -2,20 +2,9 @@
 {% block title %}home{% endblock %}
 {% block content %}
 {% if get_slip() is none %}
-<div class="container">
-    <div class="jumbotron">
-        <h1 class="display-4">Maniwani!</h1>
-            <p class="lead">An anonymous imageboard for the 21st century</p>
-            <hr class="my-4">
-            <p>If you're not sure what an imageboard is, or why you'd want to use one,
-                check out the <a href="{{ url_for("main.faq") + "#whats-an-imageboard" }}">FAQ</a>.
-                If you already know what an imageboard is, but aren't quite aware of what
-                Maniwani brings to the table, there's another <a href="{{ url_for("main.faq") + "#why-maniwani" }}">FAQ
-                entry</a>
-                that should help you out. If you want to dive right in, you can see the most
-                recently-updated threads on the site below.</p>
-    </div>
-</div>
+	<div class="container">
+		{{ greeting | safe }}
+	</div>
 {% endif %}
 {% import "catalog-view.html" as catalog_view with context %}
 {{ catalog_view.catalog_view(threads) }}

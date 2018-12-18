@@ -9,7 +9,8 @@ main_blueprint = Blueprint('main', __name__, template_folder='template')
 
 @main_blueprint.route("/")
 def index():
-    return render_template("index.html", threads=Firehose().get_impl())
+    greeting = open("deploy-configs/index-greeting.html").read()
+    return render_template("index.html", greeting=greeting, threads=Firehose().get_impl())
 
 
 @main_blueprint.route("/rules")
