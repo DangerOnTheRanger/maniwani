@@ -34,6 +34,11 @@ class NewPost:
             db.session.flush()
             # bump thread if the poster hasn't posted in this thread before
             should_bump = True
+        else:
+            # bump thread if this poster isn't the same as the one who posted last in the thread
+            last_post = db.session.query(Post).filter_by(thread=thread_id).order_by(Post.id.desc()).first()
+            if last_post.poster != poster.id:
+                should_bump = True
         if args.get("useslip") is True:
             slip = get_slip()
             if slip and (slip.is_admin or slip.is_mod):
