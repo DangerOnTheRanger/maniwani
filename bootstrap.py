@@ -36,7 +36,11 @@ def setup_boards(json_settings):
             extra_mimetypes = board_info.get("extra_mimetypes")
             if extra_mimetypes:
                 mimetypes = mimetypes + "|" + extra_mimetypes
-        board = Board(name=name, max_threads=threadlimit, mimetypes=mimetypes)
+        rule_file = board_info.get("rules")
+        rules = ""
+        if rule_file:
+            rules = open(os.path.join("build-helpers", rule_file)).read()
+        board = Board(name=name, max_threads=threadlimit, mimetypes=mimetypes, rules=rules)
         db.session.add(board)
 
 

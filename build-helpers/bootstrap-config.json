@@ -3,7 +3,8 @@
 	"default_mimetypes": "image/jpeg|image/png|image/gif|image/webp|video/webm",
 	"boards": [
 		{
-			"name": "anime"
+			"name": "anime",
+			"rules": "anime-rules.md"
 		},
 		{
 			"name": "tech",
