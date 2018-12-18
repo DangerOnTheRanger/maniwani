@@ -44,7 +44,7 @@
 					<h5 class="modal-title">Reply to thread</h5>
 				</div>
 				<div class="modal-body">
-					{% import "post-base.html" as post %}
+					{% import "post-base.html" as post with context %}
 					{{ post.post_form(url_for("threads.post_submit", thread_id=thread_id), "thread", thread_id, False) }}
 				</div>
 				<div class="modal-footer">

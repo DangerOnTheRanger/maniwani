@@ -5,7 +5,7 @@ new thread
 {% block navbar %}
 <a href="{{ url_for("boards.catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
 {% endblock %}
-{% import "post-base.html" as post %}
+{% import "post-base.html" as post with context %}
 {% block content %}
 <div class="container">
     {{ post.post_form(url_for("threads.submit"), "board", board_id, thread_op=True) }}

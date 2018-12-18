@@ -244,3 +244,12 @@ def static_handler():
         def static_resource(path):
             return storage.static_resource(path)
     return dict(static_resource=static_resource)
+
+
+@app.context_processor
+def upload_size():
+    def max_upload_size():
+        upload_byte_size = app.config["MAX_CONTENT_LENGTH"]
+        megabyte_size = upload_byte_size / (1024 ** 2)
+        return "%.1fMB" % megabyte_size
+    return dict(max_upload_size=max_upload_size)

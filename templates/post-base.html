@@ -31,6 +31,8 @@
     <div class="form-group">
         <label for="media">Media upload</label>
         <input type="file" id="media" name="media">
+		<small class="form-text text-muted">Maximum attachment size: {{ max_upload_size() }}. Check
+		the rules to see what kind of files can be uploaded.</small>
     </div>
     <input type="hidden" name="{{ hidden_name }}" value="{{ hidden_value }}">
     {% if embed_submit %}
