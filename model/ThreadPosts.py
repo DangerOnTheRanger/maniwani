@@ -43,9 +43,10 @@ class ThreadPosts:
             p_dict["subject"] = post.subject
             p_dict["media"] = post.media
             if post.media:
-                p_dict["media_ext"] = session.query(Media).filter(Media.id == post.media).one().ext
-            else:
-                p_dict["media_ext"] = None
+                media = session.query(Media).filter(Media.id == post.media).one()
+                p_dict["media_ext"] = media.ext
+                p_dict["mimetype"] = media.mimetype
+                p_dict["is_animated"] = media.is_animated
             p_dict["spoiler"] = post.spoiler
             p_dict["slip"] = poster.slip
             p_dict["replies"] = []

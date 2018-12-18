@@ -7,15 +7,10 @@ function clean() {
 	return del('static/**')
 }
 
-function bootstrap_css() {
-	return src('./node_modules/bootstrap/scss/bootstrap.scss').pipe(
-		sass({outputStyle: 'compressed'}).on('error', sass.logError)).pipe(
-			dest('./static/bootstrap/'))
-}
-
 function maniwani_css() {
-	return src('./scss/*.scss').pipe(
-		sass({outputStyle: 'compressed'}).on('error', sass.logError)).pipe(
+	return src('./scss/maniwani.scss').pipe(
+		sass({outputStyle: 'compressed',
+			  includePaths: './node_modules/bootstrap/scss'}).on('error', sass.logError)).pipe(
 			dest('./static/css/'))
 }
 
@@ -56,7 +51,7 @@ function fontawesome_webfonts() {
 
 
 exports.clean = clean
-exports.css = parallel(bootstrap_css, maniwani_css, fontawesome_css)
+exports.css = parallel(maniwani_css, fontawesome_css)
 exports.fonts = fontawesome_webfonts
 exports.js = parallel(popper, jquery, bootstrap_js, imagesloaded, masonry)
 exports.build = series(clean, parallel(exports.css, exports.js, exports.fonts))

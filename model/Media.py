@@ -12,6 +12,7 @@ class Media(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ext = db.Column(db.String(4), nullable=False)
     mimetype = db.Column(db.String(255), nullable=False)
+    is_animated = db.Column(db.Boolean, nullable=False)
 
     def delete_attachment(self):
         storage.delete_attachment(self.id, self.ext)
@@ -20,14 +21,18 @@ class Media(db.Model):
 class StorageBase:
     _FFMPEG_FLAGS = "-i pipe:0 -f mjpeg -frames:v 1 -vf scale=w=500:h=500:force_original_aspect_ratio=decrease pipe:1"
     def save_attachment(self, attachment_file):
-        file_ext = attachment_file.filename.rsplit('.', 1)[1].lower()
-        media = Media(ext=file_ext, mimetype=attachment_file.content_type)
+        file_ext = attachment_file.filename.rsplit(".", 1)[1].lower()
+        media = Media(ext=file_ext, mimetype=attachment_file.content_type, is_animated=False)
         db.session.add(media)
         db.session.flush()
         media_id = media.id
         attachment_buffer = io.BytesIO(attachment_file.read())
         self._write_attachment(attachment_buffer, media_id, file_ext)
-        self._write_thumbnail(self._make_thumbnail(attachment_file, media_id, attachment_file.content_type, file_ext), media_id)
+        thumbnail, is_animated = self._make_thumbnail(attachment_file,
+                                                      media_id,
+                                                      attachment_file.content_type, file_ext)
+        media.is_animated = is_animated
+        self._write_thumbnail(thumbnail, media_id)
         return media
     def bootstrap(self):
         pass
@@ -37,6 +42,11 @@ class StorageBase:
         if mimetype.startswith("image"):
             # image thumbnail generation
             thumb = Image.open(attachment)
+            is_animated = False
+            try:
+                is_animated = thumb.is_animated
+            except AttributeError:
+                pass
             if thumb.mode in ("RGBA", "LA"):
                 background = Image.new(thumb.mode[:-1], thumb.size, (255, 255, 255))
                 background.paste(thumb, thumb.split()[-1])
@@ -56,7 +66,7 @@ class StorageBase:
             # probably should be done in most cases, but we need an open file
             temp_buffer = io.BytesIO()
             thumb.save(temp_buffer, "JPEG")
-            return io.BytesIO(temp_buffer.getvalue())
+            return io.BytesIO(temp_buffer.getvalue()), is_animated
         elif mimetype.startswith("text"):
             # text thumbnailing
             thumb = Image.new("RGB", (500, 500), (255, 255, 255))
@@ -67,7 +77,7 @@ class StorageBase:
             draw.multiline_text((0, 0), attachment.read(), font=font, fill=fill_color)
             temp_buffer = io.BytesIO()
             thumb.save(temp_buffer, "JPEG")
-            return io.BytesIO(temp_buffer.getvalue())
+            return io.BytesIO(temp_buffer.getvalue()), False
         elif mimetype.startswith("video"):
             # video thumbnailing
             ffmpeg_commandline = ("%s %s" % (self._get_ffmpeg_path(),
@@ -77,7 +87,7 @@ class StorageBase:
             ffmpeg_result = subprocess.run(ffmpeg_commandline,
                                            input=temp_buffer.getvalue(),
                                            stdout=subprocess.PIPE)
-            return io.BytesIO(ffmpeg_result.stdout)
+            return io.BytesIO(ffmpeg_result.stdout), True
     def _write_attachment(self, attachment_file, media_id, media_ext):
         raise NotImplementedError
     def _write_thumbnail(self, thumbnail_bytes, media_id):

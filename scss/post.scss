@@ -1,0 +1,11 @@
+.post-container {
+	@extend .row;
+	@extend .pt-2;
+}
+
+.post-container:nth-child(odd) {
+	@extend .bg-light;
+}
+.post-container:nth-child(even) {
+	@extend .bg-white;
+}
