@@ -22,13 +22,14 @@ app.register_blueprint(slip_blueprint, url_prefix="/slip")
 if app.config["SERVE_STATIC"]:
     app.register_blueprint(slip_blueprint, url_prefix="/static")
 
-rest_api.add_resource(BoardListResource, "/api/v1/boards/")
-rest_api.add_resource(BoardCatalogResource, "/api/v1/board/<int:board_id>/catalog")
-rest_api.add_resource(ThreadPostsResource, "/api/v1/thread/<int:thread_id>")
-rest_api.add_resource(NewThreadResource, "/api/v1/thread/new")
-rest_api.add_resource(PostRemovalResource, "/api/v1/thread/post/<int:post_id>")
-rest_api.add_resource(NewPostResource, "/api/v1/thread/<int:thread_id>/new")
-rest_api.add_resource(FirehoseResource, "/api/v1/firehose")
+if app.config["SERVE_REST"]:
+    rest_api.add_resource(BoardListResource, "/api/v1/boards/")
+    rest_api.add_resource(BoardCatalogResource, "/api/v1/board/<int:board_id>/catalog")
+    rest_api.add_resource(ThreadPostsResource, "/api/v1/thread/<int:thread_id>")
+    rest_api.add_resource(NewThreadResource, "/api/v1/thread/new")
+    rest_api.add_resource(PostRemovalResource, "/api/v1/thread/post/<int:post_id>")
+    rest_api.add_resource(NewPostResource, "/api/v1/thread/<int:thread_id>/new")
+    rest_api.add_resource(FirehoseResource, "/api/v1/firehose")
 
 
 @app.errorhandler(404)
