@@ -182,9 +182,12 @@ class S3Storage(StorageBase):
         s3_thumb_key = self._s3_thumbnail_key(media_id)
         self._s3_remove_key(self._THUMBNAIL_BUCKET, s3_thumb_key)
     def bootstrap(self):
-        self._s3_client.create_bucket(Bucket=self._ATTACHMENT_BUCKET)
-        self._s3_client.create_bucket(Bucket=self._THUMBNAIL_BUCKET)
-        self._s3_client.create_bucket(Bucket=self._STATIC_BUCKET)
+        attachment_bucket_name = self._bucket_uuid + self._ATTACHMENT_BUCKET
+        self._s3_client.create_bucket(Bucket=attachment_bucket_name)
+        thumbnail_bucket_name = self._bucket_uuid + self._THUMBNAIL_BUCKET
+        self._s3_client.create_bucket(Bucket=thumbnail_bucket_name)
+        static_bucket_name = self._bucket_uuid + self._STATIC_BUCKET
+        self._s3_client.create_bucket(Bucket=static_bucket_name)
         static_bucket = self._get_bucket(self._STATIC_BUCKET)
         # copy over all static files
         for base, _, filenames in os.walk(self._STATIC_DIR):
