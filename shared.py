@@ -20,11 +20,11 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 rest_api = Api(app)
 
-
+SECRET_FILE = "./deploy-configs/secret"
 def get_secret():
-    return open("secret").read()
+    return open(SECRET_FILE).read()
 
-if os.path.exists("secret"):
+if os.path.exists(SECRET_FILE):
     app.secret_key = get_secret()
 
 

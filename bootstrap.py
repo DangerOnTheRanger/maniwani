@@ -14,7 +14,7 @@ from shared import app, db
 
 MIGRATION_DIR = "./migrations"
 BOOTSTRAP_SETTINGS = "./deploy-configs/bootstrap-config.json"
-SECRET_FILE = "./secret"
+SECRET_FILE = "./deploy-configs/secret"
 
 
 def initialize_db():
@@ -68,7 +68,7 @@ def setup_tags(json_settings):
 def write_secret():
     if os.path.exists(SECRET_FILE):
         os.remove(SECRET_FILE)
-    open("secret", "w+").write(str(os.urandom(16)))
+    open(SECRET_FILE, "w+").write(str(os.urandom(16)))
 
 
 def setup_storage():
