@@ -36,6 +36,11 @@ def page_not_found(e):
     return render_template("not-found.html"), 404
 
 
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template("internal-error.html"), 500
+
+
 @app.context_processor
 def get_instance_name():
     def instance_name():
