@@ -55,4 +55,6 @@ RUN adduser -D maniwani
 RUN chown -R maniwani:maniwani ./
 USER maniwani
 
+# expose uWSGI
+EXPOSE 3031
 ENTRYPOINT ["sh", "./docker-entrypoint.sh"]
