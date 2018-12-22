@@ -11,5 +11,5 @@ elif [ $1 = "migrate" ]; then
 	flask db upgrade
 # running normal production mode startup
 else
-	uwsgi --ini uwsgi.ini
+	uwsgi --ini ./deploy-configs/uwsgi.ini
 fi

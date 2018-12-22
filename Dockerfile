@@ -46,12 +46,10 @@ WORKDIR /maniwani
 # clean up dev image bootstrapping
 RUN rm test.db
 RUN rm -r uploads
-COPY ./deploy-configs/config-template.cfg ./maniwani.cfg
-ENV MANIWANI_CFG=./maniwani.cfg
+ENV MANIWANI_CFG=./deploy-configs/maniwani.cfg
 # workaround for uwsgi inexplicably not picking up /usr/local/lib even though
 # system python has it
 ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.6/site-packages
-COPY ./deploy-configs/uwsgi.ini ./uwsgi.ini
 # chown and switch users for security purposes
 RUN adduser -D maniwani
 RUN chown -R maniwani:maniwani ./
