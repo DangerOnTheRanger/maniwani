@@ -1,0 +1,121 @@
+{% macro render_post(post, thread_id, is_op) %}
+	<div class="post-container" id="{{ post["id"] }}">
+		{% if post["media"] %}
+			<div class="col">
+				<div class="img-thumbnail" style="display: inline-block;">
+					<a href="{{ url_for("upload.file", media_id=post["media"]) }}" class="media-container">
+						{% set ns = namespace(img_style="max-width: 15em; max-height: 20em;") %}
+						{% if post["spoiler"] == True %}
+							<span id="spoiler-label-{{ post["media"] }}" class="spoiler-label text-danger">!</span>
+							{% set ns.img_style = ns.img_style + " opacity: 0.025;" %}
+						{% endif %}
+						{% if post["mimetype"].startswith("image") and post["is_animated"] %}
+							<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" data-full="{{ url_for("upload.file",
+																										media_id=post["media"]) }}" data-thumb="{{ url_for("upload.thumb", media_id=post["media"]) }}" data-id="{{
+																																																				post["media"] }}" class="img-animated" style="{{ ns.img_style }}">
+						{% elif post["mimetype"].startswith("video") %}
+							<div data-id="{{ post["media"] }}" class="post-vid" style="display: inline-block;">
+								<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}" id="{{ "thumb-%d" % post["media"] }}">
+								<video loop preload="none" class="mb-0 pb-0" style="{{ "display: none; " + ns.img_style }}" id="{{ "vid-%d" % post["media"] }}">
+									<source src="{{ url_for("upload.file", media_id=post["media"]) }}" type="{{ post["mimetype"] }}">
+								</video>
+							</div>
+						{% else %}
+							<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}">
+						{% endif %}
+					</a>
+				</div>
+			</div>
+		{% endif %}
+		<div class="container-fluid">
+			{% if post["spoiler"] == True %}
+				<div class="row">
+					<div class="col">
+						<small class="text-danger">Media contains spoiler!</small>
+					</div>
+				</div>
+			{% endif %}
+			{% if post["is_animated"] %}
+				<div class="row">
+					<div class="col">
+						<noscript>
+							<small class="text-muted">Animated - click to play</small>
+						</noscript>
+						<script>
+						 document.write('<small class="text-muted">Animated - click or hover to play</small>')
+						</script>
+					</div>
+				</div>
+			{% endif %}
+			{% if post["subject"] %}
+				<div class="row">
+					<div class="col"><b>{{ post["subject"] }}</b></div>
+				</div>
+			{% endif %}
+			{% if post["tags"] %}
+				<div class="row">
+					<div class="col">
+						<small class="text-muted">Tags:</small>
+						{% for tag in post["tags"] %}
+							<small>{{ tag.name }}</small>
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+			<div class="row">
+				<div class="col-auto">
+					<small class="text-secondary">Posted by:</small>
+					<small class="text-info">{{ post["poster"] }}</small>
+					{% if post["slip"] %}
+						{% if slip_from_id(post["slip"]).is_admin %}
+							<span class="badge badge-danger">Admin</span>
+						{% elif slip_from_id(post["slip"]).is_mod %}
+							<span class="badge badge-success">Mod</span>
+						{% endif %}
+					{% endif %}
+				</div>
+				<div class="col-auto">
+					<small class="text-secondary">At:</small>
+					<small class="text-info">{{ post["datetime"].strftime("%b %d, %Y %H:%M") }}</small>
+				</div>
+				<div class="w-100 d-block d-md-none"></div>
+				<div class="col-auto">
+					<small><a class="badge badge-primary" href="#{{ post["id"] }}">Permalink</a></small>
+				</div>
+				<noscript>
+					<div class="col-auto">
+						<small><a class="badge badge-primary" href="#">ID: {{ post["id"] }}</a></small>
+					</div>
+				</noscript>
+				<script>
+				 document.write("<div class=\"col-auto\"><small><a class=\"badge badge-primary\" href=\"#\" data-post=\"{{ post["id"] }}\" data-toggle=\"modal\" data-target=\"#replyModal\">Reply</a></small></div>")
+
+
+
+				</script>
+				{% if get_slip() and get_slip().is_admin or get_slip().is_mod %}
+					<div class="col-auto">
+						{% set ns = namespace(delete_url=url_for("threads.delete_post", post_id=post["id"])) %}
+						{% if is_op %}
+							{% set ns.delete_url = url_for("threads.delete", thread_id=thread_id) %}
+						{% endif %}
+						<small><a class="badge badge-danger" href="{{ ns.delete_url }}">Delete</a></small>
+					</div>
+				{% endif %}
+			</div>
+			{% if post["replies"] %}
+				<div class="row">
+					<div class="col-auto">
+						<small class="text-secondary">Replies:</small>
+						{% for reply in post["replies"] %}
+							<a class="badge badge-secondary" href="{{ url_for_post(reply) }}">&gt;&gt;{{ reply }} </a>
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+			<div class="row">
+				{{ post["body"]|safe }}
+			</div>
+		</div>
+	</div>
+{% endmacro %}

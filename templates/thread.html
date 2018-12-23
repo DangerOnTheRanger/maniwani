@@ -68,7 +68,7 @@
 	<div class="container-fluid">
 		{% for post in posts %}
 			{% import "post-view.html" as post_view %}
-			{{ post_view.render_post(post, loop.first) }}
+			{{ post_view.render_post(post, thread_id, loop.first) }}
 		{% endfor %}
 		<a href="#" name="thread-bottom"></a>
 		<script>
