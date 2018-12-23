@@ -204,7 +204,7 @@ class S3Storage(StorageBase):
     def static_resource(self, path):
         return self._format_url(self._STATIC_BUCKET, path)
     def _format_url(self, bucket, path):
-        return "%s/%s/%s" % (self._endpoint, bucket, path)
+        return "%s/%s%s/%s" % (self._endpoint, self._bucket_uuid, bucket, path)
     def _get_bucket(self, bucket):
         return self._s3_client.Bucket(self._bucket_uuid + bucket)
     def _write_attachment(self, attachment_file, media_id, media_ext):
