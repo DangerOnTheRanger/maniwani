@@ -1,6 +1,7 @@
 import datetime
 import io
 import json
+import mimetypes
 import os
 import subprocess
 from PIL import Image, ImageDraw
@@ -195,7 +196,8 @@ class S3Storage(StorageBase):
                 # strip static/ 
                 s3_key = "/".join([base[len(self._STATIC_DIR + "/"):], filename])
                 full_path = os.path.join(self._STATIC_DIR, s3_key)
-                static_bucket.upload_file(full_path, s3_key)
+                mime = self._get_mimetype(s3_key)
+                static_bucket.upload_file(full_path, s3_key, ExtraArgs={"ContentType": mimetype})
         for bucket_name in (self._ATTACHMENT_BUCKET, self._THUMBNAIL_BUCKET, self._STATIC_BUCKET):
             bucket = self._get_bucket(bucket_name)
             formatted_policy = self._PUBLIC_READ_POLICY % (bucket.name)
@@ -210,11 +212,13 @@ class S3Storage(StorageBase):
     def _write_attachment(self, attachment_file, media_id, media_ext):
         s3_key = self._s3_attachment_key(media_id, media_ext)
         bucket = self._get_bucket(self._ATTACHMENT_BUCKET)
-        bucket.upload_fileobj(attachment_file, s3_key)
+        mimetype = self._get_mimetype(s3_key)
+        bucket.upload_fileobj(attachment_file, s3_key, ExtraArgs={"ContentType": mimetype})
     def _write_thumbnail(self, thumbnail_bytes, media_id):
         s3_key = self._s3_thumbnail_key(media_id)
         bucket = self._get_bucket(self._THUMBNAIL_BUCKET)
-        bucket.upload_fileobj(thumbnail_bytes, s3_key)
+        mimetype = self._get_mimetype(s3_key)
+        bucket.upload_fileobj(thumbnail_bytes, s3_key, ExtraArgs={"ContentType": mimetype})
     def _s3_remove_key(self, bucket_name, key):
         bucket = self._get_bucket(bucket_name)
         bucket.delete_key(key)
@@ -222,6 +226,9 @@ class S3Storage(StorageBase):
         return self._ATTACHMENT_KEY % (media_id, media_ext)
     def _s3_thumbnail_key(self, media_id):
         return self._THUMBNAIL_KEY % (media_id)
+    def _get_mimetype(self, path):
+        mimetype, _ = mimetypes.guess_type(path)
+        return mimetype
 
 
 def get_storage_provider():
