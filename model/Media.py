@@ -196,7 +196,7 @@ class S3Storage(StorageBase):
                 # strip static/ 
                 s3_key = "/".join([base[len(self._STATIC_DIR + "/"):], filename])
                 full_path = os.path.join(self._STATIC_DIR, s3_key)
-                mime = self._get_mimetype(s3_key)
+                mimetype = self._get_mimetype(s3_key)
                 static_bucket.upload_file(full_path, s3_key, ExtraArgs={"ContentType": mimetype})
         for bucket_name in (self._ATTACHMENT_BUCKET, self._THUMBNAIL_BUCKET, self._STATIC_BUCKET):
             bucket = self._get_bucket(bucket_name)
