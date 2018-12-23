@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 from flask import render_template, send_from_directory
 
 from blueprints.boards import boards_blueprint
@@ -39,6 +42,7 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def internal_server_error(e):
+    app.logger.error(traceback.format_exc())
     return render_template("internal-error.html"), 500
 
 
