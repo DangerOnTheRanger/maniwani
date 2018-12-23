@@ -23,7 +23,12 @@ class NewPost:
         parser.add_argument("useslip", type=inputs.boolean)
         parser.add_argument("spoiler", type=inputs.boolean)
         args = parser.parse_args()
-        ip = request.environ["REMOTE_ADDR"]
+        ip = None
+        # reverse proxy support
+        if 'X-Forwarded-For' in request.headers:
+            ip = request.headers.getlist("X-Forwarded-For")[0].rpartition(' ')[-1]
+        else:
+            ip = request.environ["REMOTE_ADDR"]
         poster = db.session.query(Poster).filter_by(thread=thread_id, ip_address=ip).first()
         body = args["body"]
         should_bump = False
