@@ -19,13 +19,8 @@ Features
 * Global WebM audio support, muted by default but user-configurable (user settings not yet done)
 
 
-
 Installation
 ------------
-
-Please note that Maniwani is currently pre-alpha software and not ready
-to be run in a production environment. Deploy to any Internet-facing servers at
-your own risk!
 
 ### With Docker - standalone development image
 
@@ -58,7 +53,8 @@ environment. If you ever want to remove all database and storage data, remove th
 `compose-data` directory, though you'll likely need root permissions to do so since
 some subdirectories are created by other users. At this point, you can use the normal
 `docker-compose start` and `docker-compose stop` to start and stop the production
-environment, navigating to http://127.0.0.1:5000 as per usual to view Maniwani.
+environment, navigating to http://127.0.0.1:5000 as per usual to view Maniwani. If you
+want additional info on deploying Maniwani in production, see `doc/deploying.md` for more.
 
 As a final sidenote, this method will run all of your computer's traffic through
 a local DNS proxy while active, as otherwise it would not be possible to view
