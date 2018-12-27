@@ -221,7 +221,7 @@ class S3Storage(StorageBase):
         bucket.upload_fileobj(thumbnail_bytes, s3_key, ExtraArgs={"ContentType": mimetype})
     def _s3_remove_key(self, bucket_name, key):
         bucket = self._get_bucket(bucket_name)
-        bucket.delete_key(key)
+        bucket.delete_objects(Delete={"Objects": [{"Key": key}]})
     def _s3_attachment_key(self, media_id, media_ext):
         return self._ATTACHMENT_KEY % (media_id, media_ext)
     def _s3_thumbnail_key(self, media_id):
