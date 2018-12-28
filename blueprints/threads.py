@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 
+from model.Board import Board
 from model.NewPost import NewPost, InvalidMimeError, RecaptchaError
 from model.NewThread import NewThread
 from model.Post import Post, render_for_threads
@@ -19,7 +20,8 @@ threads_blueprint.add_app_template_global(url_for_post)
 
 @threads_blueprint.route("/new/<int:board_id>")
 def new(board_id):
-    return render_template("new-thread.html", board_id=board_id)
+    board = db.session.query(Board).get(board_id)
+    return render_template("new-thread.html", board=board)
 
 
 @threads_blueprint.route("/new", methods=["POST"])
@@ -46,10 +48,10 @@ def view(thread_id):
     thread.views += 1
     db.session.add(thread)
     db.session.commit()
-    board_id = thread.board
+    board = db.session.query(Board).get(thread.board)
     num_posters = db.session.query(Poster).filter(Poster.thread == thread_id).count()
     num_media = thread.num_media()
-    return render_template("thread.html", thread_id=thread_id, board_id=board_id, posts=posts, num_views=thread.views,
+    return render_template("thread.html", thread_id=thread_id, board=board, posts=posts, num_views=thread.views,
                            num_media=num_media, num_posters=num_posters)
 
 
@@ -86,7 +88,7 @@ def post_submit(thread_id):
 @threads_blueprint.route("/post/<int:post_id>/delete")
 def delete_post(post_id):
     if not get_slip() or not (get_slip().is_admin or get_slip().is_mod):
-        flash("Only moderators and admins can delete threads!")
+        flash("Only moderators and admins can delete posts!")
         return redirect(url_for_post(post_id))
     thread = db.session.query(Thread).filter(Thread.posts.any(Post.id == post_id)).one()
     thread_id = thread.id
@@ -99,5 +101,5 @@ def delete_post(post_id):
 def view_gallery(thread_id):
     posts = ThreadPosts().retrieve(thread_id)
     thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
-    board_id = thread.board
-    return render_template("gallery.html", thread_id=thread_id, board_id=board_id, posts=posts)
+    board = db.session.query(Board).get(thread.board)
+    return render_template("gallery.html", thread_id=thread_id, board=board, posts=posts)

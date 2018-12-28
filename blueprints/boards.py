@@ -28,9 +28,10 @@ def list():
 @boards_blueprint.route("/<int:board_id>")
 def catalog(board_id):
     threads = BoardCatalog().retrieve(board_id)
-    board_name = db.session.query(Board).filter(Board.id == board_id).one().name
+    board = db.session.query(Board).get(board_id)
+    board_name = board.name
     render_for_catalog(threads)
-    return render_template("catalog.html", threads=threads, board_id=board_id, board_name=board_name)
+    return render_template("catalog.html", threads=threads, board=board, board_name=board_name)
 
 
 @boards_blueprint.route("/rules", defaults={'board_id': None})

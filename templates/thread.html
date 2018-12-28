@@ -32,7 +32,6 @@
 	 document.write("<a href=\"#\" class=\"nav-item nav-link\" data-toggle=\"modal\" data-target=\"#replyModal\">New post</a>")
 	</script>
 	<a href="{{ url_for("threads.view_gallery", thread_id=thread_id) }}" class="nav-item nav-link">Gallery</a>
-	<a href="{{ url_for("boards.catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
 {% endblock %}
 {% block navbar_right %}
 	<span class="navbar-item navbar-text">Views: <span class="text-light mr-1">{{ num_views }}</span></span>

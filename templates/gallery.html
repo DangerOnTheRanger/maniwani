@@ -37,16 +37,12 @@ media gallery
 {% endblock %}
 {% block navbar %}
 <a href="{{ url_for("threads.view", thread_id=thread_id) }}" class="nav-item nav-link">Back to thread</a>
-<a href="{{ url_for("boards.catalog", board_id=board_id) }}" class="nav-item nav-link">Catalog</a>
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
     <div id="grid" style="display: flex; flex-wrap: wrap;">
         <script>
 			 document.write('<div class="gallery-sizer"></div>')
-
-
-
         </script>
         {% for post in posts %}
         {% if post["media"] %}

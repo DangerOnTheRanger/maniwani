@@ -1,4 +1,4 @@
-{% macro catalog_view(threads) %}
+{% macro catalog_view(threads, display_board=False) %}
 	<style>
 	 @media (max-width: 575px) {
 		 .thread, .thread-sizer {
@@ -93,6 +93,9 @@
 				<div class="{{ "pt-1 border border-top-0 rounded-bottom " + ns.bg_style }}">
 					<a href="{{ url_for("threads.view", thread_id=thread["id"]) }}" class="btn btn-dark m-2">View thread</a>
 					<span class="{{ "mt-3 mr-2 float-right " + ns.text_style }}">
+						{% if display_board %}
+							<small>/{{ thread["board"] }}/</small>
+						{% endif %}
 						<i class="fas fa-comment"></i> {{ thread["num_replies"] }}
 						<i class="fas fa-image"></i> {{ thread["num_media"] }}
 					</span>
