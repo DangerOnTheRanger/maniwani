@@ -13,6 +13,7 @@ Flask-RESTful = "*"
 boto3 = "*"
 "psycopg2-binary" = "*"
 flask-migrate = "*"
+requests = "*"
 
 [dev-packages]
 

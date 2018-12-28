@@ -52,6 +52,12 @@ def get_instance_name():
         return app.config["INSTANCE_NAME"]
     return dict(instance_name=instance_name)
 
+
+@app.context_processor
+def share_config():
+    return dict(config=app.config)
+
+
 if app.config["SERVE_STATIC"]:
     @app.route("/static/<path:path>")
     def serve_static(path):
