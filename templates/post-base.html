@@ -36,7 +36,18 @@
     </div>
     <input type="hidden" name="{{ hidden_name }}" value="{{ hidden_value }}">
     {% if embed_submit %}
-    <button type="submit" class="btn btn-primary">Submit</button>
+		<button type="submit" class="btn btn-primary">Submit</button>
     {% endif %}
+	{% if config["USE_RECAPTCHA"] %}
+		<input type="hidden" name="recaptcha-token" id="recaptcha-token" value="">
+		<script src="https://www.google.com/recaptcha/api.js?render={{ config["RECAPTCHA_SITE_KEY"] }}"></script>
+		<script>
+		 grecaptcha.ready(function() {
+			 grecaptcha.execute('{{ config["RECAPTCHA_SITE_KEY"] }}', {action: 'post'}).then(function(token) {
+				 $("#recaptcha-token").val(token);
+			 });
+		 });
+		</script>
+	{% endif %}
 </form>
 {% endmacro %}

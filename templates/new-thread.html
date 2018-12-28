@@ -1,4 +1,9 @@
 {%- extends "base.html" %}
+{% block head %}
+	{% if config["USE_RECAPTCHA"] %}
+		<script src='https://www.google.com/recaptcha/api.js?render={{ config["RECAPTCHA_SITE_KEY"] }}'></script>
+	{% endif %}
+{% endblock %}
 {% block title %}
 new thread
 {% endblock %}

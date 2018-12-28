@@ -4,6 +4,7 @@ import re
 from PIL import Image
 from flask import current_app, request
 from flask_restful import reqparse, inputs
+import requests
 
 from model.Board import Board
 from model.Media import Media, storage
@@ -12,7 +13,7 @@ from model.Post import Post
 from model.Reply import Reply, REPLY_REGEXP
 from model.Thread import Thread
 from model.Slip import get_slip
-from shared import db, gen_poster_id
+from shared import app, db, gen_poster_id
 
 
 class NewPost:
@@ -22,6 +23,8 @@ class NewPost:
         parser.add_argument("body", type=str, required=True)
         parser.add_argument("useslip", type=inputs.boolean)
         parser.add_argument("spoiler", type=inputs.boolean)
+        if app.config["USE_RECAPTCHA"]:
+            parser.add_argument("recaptcha-token", type=str, required=True)
         args = parser.parse_args()
         ip = None
         # reverse proxy support
@@ -29,6 +32,16 @@ class NewPost:
             ip = request.headers.getlist("X-Forwarded-For")[0].rpartition(' ')[-1]
         else:
             ip = request.environ["REMOTE_ADDR"]
+        # check recaptcha
+        board_id = db.session.query(Thread).filter_by(id=thread_id).one().board
+        if app.config["USE_RECAPTCHA"]:
+            google_response = requests.post("https://www.google.com/recaptcha/api/siteverify",
+                                            data={"secret": app.config["RECAPTCHA_SECRET_KEY"],
+                                                  "response": args["recaptcha-token"]}).json()
+            if google_response["success"] is False:
+                raise RecaptchaError("Problem getting reCAPTCHA", board_id)
+            if google_response["score"] < app.config["RECAPTCHA_THRESHOLD"]:
+                raise RecaptchaError("reCAPTCHA threshold too low", board_id)
         poster = db.session.query(Poster).filter_by(thread=thread_id, ip_address=ip).first()
         body = args["body"]
         should_bump = False
@@ -53,12 +66,11 @@ class NewPost:
         if "media" in request.files and request.files["media"].filename:
             uploaded_file = request.files["media"]
             mimetype = uploaded_file.content_type
-            board_id = db.session.query(Thread).filter_by(id=thread_id).one().board
             board = db.session.query(Board).filter_by(id=board_id).one()
             expected_mimetypes = board.mimetypes
             if re.match(expected_mimetypes, mimetype) is None:
                 db.session.rollback()
-                raise InvalidMimeError(mimetype)
+                raise InvalidMimeError(mimetype, board_id)
             media = storage.save_attachment(uploaded_file)
             media_id = media.id
         post = Post(body=body, subject=args["subject"], thread=thread_id, poster=poster.id, media=media_id,
@@ -86,3 +98,6 @@ class NewPost:
 class InvalidMimeError(Exception):
     pass
 
+
+class RecaptchaError(Exception):
+    pass
