@@ -75,9 +75,9 @@ but a brief description of each follows:
 * `SERVE_STATIC` - this is a boolean that indicates whether Maniwani should serve up CSS/JS/other
   static non-attachment assets itself (if set to `True`) or let the S3 store handle it (if set
   to `False`). This should be set to `False` for a production deploymenet.
-* `SERVE_REST` - if `True`, REST endpoints will be served by Maniwani. At the time of writing,
-  Maniwani's REST API is entirely unsecured, and as there are several sensitive endpoints that
-  can delete content/modify board layout, this is best set to `False` for a production deployment.
+* `SERVE_REST` - if `True`, REST endpoints will be served by Maniwani. Note that ideally, the REST API for
+  your Maniwani installation is protected with HTTPS, since Maniwani uses HTTP Basic for authentication and
+  authorization.
 * `MAX_CONTENT_LENGTH` - this is an integer detailing the largest attachment Maniwani should accept
   in bytes. Note that your reverse proxy should be set up to not deny any requests smaller than this;
   if you're copying or following along with the `nginx.conf` bundled with Maniwani under the `deploy-configs`
