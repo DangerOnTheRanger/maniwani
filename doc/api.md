@@ -4,8 +4,9 @@ Maniwani REST API v1
 Basics
 ------
 
-As of the latest revision of Maniwani, no authentication of any kind is
-required to use the API. Simply point `curl` or your custom client at
+As of the latest revision of Maniwani, sensitive REST endpoints (those that allow adding/deleting
+site content) require HTTP Basic authentication, using slips as the credential; however,
+the majority of the endpoints can be freely accessed. Simply point `curl` or your custom client at
 the endpoint of your choice. If there's something on the website that you find you
 cannot accomplish with REST, submit an issue report (or better yet, a pull request) - one
 of the primary goals of Maniwani is 1:1 feature parity between the web and REST frontends.
