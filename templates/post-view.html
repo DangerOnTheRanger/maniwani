@@ -78,20 +78,16 @@
 					<small class="text-secondary">At:</small>
 					<small class="text-info">{{ post["datetime"].strftime("%b %d, %Y %H:%M") }}</small>
 				</div>
+				<div class="col-auto">
+					<small class="text-secondary">ID:</small>
+					<small class="text-info">{{ post["id"] }}</small>
+				</div>
 				<div class="w-100 d-block d-md-none"></div>
 				<div class="col-auto">
 					<small><a class="badge badge-primary" href="#{{ post["id"] }}">Permalink</a></small>
 				</div>
-				<noscript>
-					<div class="col-auto">
-						<small><a class="badge badge-primary" href="#">ID: {{ post["id"] }}</a></small>
-					</div>
-				</noscript>
 				<script>
 				 document.write("<div class=\"col-auto\"><small><a class=\"badge badge-primary\" href=\"#\" data-post=\"{{ post["id"] }}\" data-toggle=\"modal\" data-target=\"#replyModal\">Reply</a></small></div>")
-
-
-
 				</script>
 				{% if get_slip() and get_slip().is_admin or get_slip().is_mod %}
 					<div class="col-auto">
