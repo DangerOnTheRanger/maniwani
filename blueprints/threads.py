@@ -96,6 +96,17 @@ def delete_post(post_id):
     flash("Post deleted!")
     return redirect(url_for("threads.view", thread_id=thread_id))
 
+@threads_blueprint.route("/post/<int:post_id>")
+def render_post(post_id):
+    raw_post = db.session.query(Post).get(post_id)
+    thread_id = raw_post.thread
+    thread = db.session.query(Thread).get(thread_id)
+    dummy_array = ThreadPosts()._to_json([raw_post], thread)
+    render_for_threads(dummy_array)
+    post = dummy_array[0]
+    # TODO: properly set is_op, will be False most times, so set to that for now
+    is_op = False
+    return render_template("post-view-single.html", post=post, thread_id=thread_id, is_op=is_op)
 
 @threads_blueprint.route("/<int:thread_id>/gallery")
 def view_gallery(thread_id):

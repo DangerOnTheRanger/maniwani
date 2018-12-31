@@ -23,6 +23,13 @@ class PostReplyPattern(Pattern):
         try:
             link = etree.Element("a")
             link.attrib["href"] = url_for_post(reply_id)
+            link.attrib["class"] = "post-reply"
+            link.attrib["data-post-id"] = str(reply_id)
+            link.attrib["data-toggle"]  = "tooltip"
+            link.attrib["data-placement"] = "bottom"
+            link.attrib["data-html"] = "true"
+            link.attrib["title"] = "<i>Loading...</i>"
+            link.attrib["data-loaded"] = "false"
             link.text = "&gt;&gt;%s" % reply_id
             return link
         except NoResultFound:

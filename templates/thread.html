@@ -74,6 +74,41 @@
 		{% endfor %}
 		<a href="#" name="thread-bottom"></a>
 		<script>
+		 $(".post-reply").on("show.bs.tooltip", function() {
+			 var original_tooltip = $(this)
+			 if(original_tooltip.data("loaded") == "true") {
+				 return
+			 }
+			 var post_id = original_tooltip.data("post-id")
+			 var post = $("#" + post_id);
+			 if(post.length == 1) {
+				 original_tooltip.data("loaded", "true")
+				 original_tooltip.attr("title", post.find(".post-body").html())
+				 original_tooltip.tooltip("_fixTitle")
+				 original_tooltip.tooltip("show")
+			 } else {
+				 var xhr = new XMLHttpRequest()
+				 xhr.responseType = "document"
+				 xhr.onload = function() {
+					 original_tooltip.data("loaded", "true")
+					 var post_body = $(this.responseXML).find(".post-body").html()
+					 original_tooltip.attr("title", post_body)
+					 original_tooltip.tooltip("_fixTitle")
+					 original_tooltip.tooltip("show")
+				 }
+				 var loc = window.location
+				 var endpoint = loc.protocol + "//" + loc.hostname + (loc.port? ":" + loc.port : "") + "/threads/post/" + post_id
+				 xhr.open("GET", endpoint)
+				 xhr.send()
+			 }
+		 })
+		</script>
+		<script>
+		 $(function () {
+			 $('.post-reply').tooltip()
+		 })
+		</script>
+		<script>
 		 $(".img-animated").hover(function() {
 			 $(this).attr("src", $(this).data("full"))
 			 $(this).data("old-opacity", $(this).css("opacity"))

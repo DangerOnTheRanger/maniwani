@@ -228,7 +228,7 @@ class S3Storage(StorageBase):
         return self._THUMBNAIL_KEY % (media_id)
     def _get_mimetype(self, path):
         mimetype, _ = mimetypes.guess_type(path)
-        return mimetype
+        return mimetype or "application/octet-stream"
 
 
 def get_storage_provider():

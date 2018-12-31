@@ -9,3 +9,7 @@
 .post-container:nth-child(even) {
 	@extend .bg-white;
 }
+
+.reply-container {
+	@extend .bg-white;
+}
