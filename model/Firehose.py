@@ -1,7 +1,7 @@
 from flask.json import jsonify
 from sqlalchemy import desc
 
-from shared import db
+from shared import app, db
 from model.Board import Board
 from model.BoardListCatalog import BoardCatalog
 from model.Post import render_for_catalog
@@ -22,7 +22,8 @@ class Firehose:
         return threads
 
     def _get_threads(self):
-        raw_threads = db.session.query(Thread).order_by(desc(Thread.last_updated)).limit(10).all()
+        firehose_limit = app.config["FIREHOSE_LENGTH"]
+        raw_threads = db.session.query(Thread).order_by(desc(Thread.last_updated)).limit(firehose_limit).all()
         threads = BoardCatalog()._to_json(raw_threads)
         for thread in threads:
             db_thread = db.session.query(Thread).get(thread["id"])
