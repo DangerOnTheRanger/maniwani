@@ -2,6 +2,7 @@ Maniwani - an anonymous imageboard for the 21st century
 =======================================================
 
 Maniwani is a work-in-progress imageboard implementation using Flask.
+Come visit the project IRC channel `#maniwani` on `rizon.net`.
 
 Where does the name come from? I could tell you, but by that point
 you'd [have been torn to pieces.](https://wikipedia.org/wiki/Katanagatari)
