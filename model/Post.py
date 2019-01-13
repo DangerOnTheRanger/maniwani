@@ -1,27 +1,65 @@
 import datetime as _datetime
 from flask import url_for
 
+from bleach import clean
 from markdown import markdown
 from werkzeug.utils import escape
 
 from model.PostReplyExtension import PostReplyExtension
+from model.SpacingExtension import SpacingExtension
 from model.Spoiler import SpoilerExtension
 from model.ThreadRootExtension import ThreadRootExtension
 from outputmixin import OutputMixin
 from shared import db
 
+
+# adapted from https://github.com/Wenzil/mdx_bleach
+ALLOWED_TAGS = [
+    "ul",
+    "ol",
+    "li",
+    "p",
+    "pre",
+    "code",
+    "blockquote",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "br",
+    "strong",
+    "em",
+    "a",
+    "img",
+    "div"
+]
+# TODO: strip inline images, remove need to not strip div
+ALLOWED_ATTRIBUTES = {
+    "a": ["href", "title"],
+    "img": ["src", "title", "alt"],
+    "div": ["class"]
+}
+
+
 def render_for_catalog(posts):
     for post in posts:
-        post["body"] = markdown(escape(post["body"]),
-                                extensions=[PostReplyExtension(),
-                                            SpoilerExtension()])
+        post["body"] = clean(markdown(post["body"],
+                                      extensions=[PostReplyExtension(),
+                                                  SpoilerExtension(),
+                                                  SpacingExtension()]),
+                             ALLOWED_TAGS, ALLOWED_ATTRIBUTES)
 
 
 def render_for_threads(posts):
     for post in posts:
-        post["body"] = markdown(escape(post["body"]),
-                                extensions=[ThreadRootExtension(), PostReplyExtension(),
-                                            SpoilerExtension()])
+        post["body"] = clean(markdown(post["body"],
+                                      extensions=[ThreadRootExtension(), PostReplyExtension(),
+                                                  SpoilerExtension(),
+                                                  SpacingExtension()]),
+                             ALLOWED_TAGS, ALLOWED_ATTRIBUTES)
 
 
 class Post(OutputMixin, db.Model):
