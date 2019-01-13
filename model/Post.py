@@ -34,13 +34,16 @@ ALLOWED_TAGS = [
     "em",
     "a",
     "img",
-    "div"
+    "div",
+    "span"
 ]
 # TODO: strip inline images, remove need to not strip div
 ALLOWED_ATTRIBUTES = {
-    "a": ["href", "title"],
+    "a": ["href", "title", "class", "data-post-id", "data-toggle", "data-placement", "data-html",
+          "data-loaded"],
     "img": ["src", "title", "alt"],
-    "div": ["class"]
+    "div": ["class"],
+    "span": ["class"]
 }
 
 
