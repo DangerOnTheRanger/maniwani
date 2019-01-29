@@ -15,6 +15,7 @@ boto3 = "*"
 flask-migrate = "*"
 requests = "*"
 bleach = "*"
+gevent = "*"
 
 [dev-packages]
 
