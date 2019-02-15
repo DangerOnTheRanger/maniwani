@@ -37,6 +37,8 @@ class StorageBase:
         return media
     def bootstrap(self):
         pass
+    def update(self):
+        pass
     def static_resource(self, path):
         raise NotImplementedError
     def _make_thumbnail(self, attachment, media_id, mimetype, file_ext):
@@ -189,6 +191,8 @@ class S3Storage(StorageBase):
         self._s3_client.create_bucket(Bucket=thumbnail_bucket_name)
         static_bucket_name = self._bucket_uuid + self._STATIC_BUCKET
         self._s3_client.create_bucket(Bucket=static_bucket_name)
+        self.update()
+    def update(self):
         static_bucket = self._get_bucket(self._STATIC_BUCKET)
         # copy over all static files
         for base, _, filenames in os.walk(self._STATIC_DIR):
@@ -203,6 +207,7 @@ class S3Storage(StorageBase):
             formatted_policy = self._PUBLIC_READ_POLICY % (bucket.name)
             bucket.Policy().put(Policy=self._PUBLIC_READ_POLICY % bucket.name)
             bucket.Policy().reload()
+        
     def static_resource(self, path):
         return self._format_url(self._STATIC_BUCKET, path)
     def _format_url(self, bucket, path):
