@@ -27,6 +27,7 @@ RUN npm run gulp
 RUN apk del nodejs-npm nodejs
 RUN rm -rf node_modules
 # copy source files over
+COPY migrations /maniwani/migrations
 COPY *.py /maniwani/
 COPY blueprints /maniwani/blueprints
 COPY build-helpers /maniwani/build-helpers
