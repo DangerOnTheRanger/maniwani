@@ -42,7 +42,7 @@ EXPOSE 5000
 ENTRYPOINT ["sh", "./docker-entrypoint.sh", "devmode"]
 
 FROM dev AS prod
-RUN apk add uwsgi-python3 uwsgi-http
+RUN apk add uwsgi-python3 uwsgi-gevent3 uwsgi-http
 WORKDIR /maniwani
 # clean up dev image bootstrapping
 RUN rm test.db

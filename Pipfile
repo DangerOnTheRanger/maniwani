@@ -16,6 +16,7 @@ flask-migrate = "*"
 requests = "*"
 bleach = "*"
 gevent = "*"
+redis = "*"
 
 [dev-packages]
 
