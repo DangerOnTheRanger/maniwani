@@ -12,6 +12,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = "./uploads"
 app.config["THUMB_FOLDER"] = os.path.join(app.config["UPLOAD_FOLDER"], "thumbs")
 app.config["SERVE_STATIC"] = True
+app.config["SERVE_REST"] = True
 app.config["USE_RECAPTCHA"] = False
 app.config["FIREHOSE_LENGTH"] = 10
 if os.getenv("MANIWANI_CFG"):
