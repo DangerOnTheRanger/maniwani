@@ -11,8 +11,7 @@ you'd [have been torn to pieces.](https://wikipedia.org/wiki/Katanagatari)
 Features
 --------
 
-* Real-time content updates - watch as new threads pop up in the catalog, or as new posts roll into a
-  thread you're viewing.
+* Real-time content updates - watch as new posts roll into a thread you're viewing.
 * Fully-featured REST API - don't like the web frontend? ~~Submit a PR~~ Write your own client.
 * Full Markdown support - add any kind of formatting you like to your posts.
 * Excellent attachment support - attach text, every kind of video under the sun, and most image formats
@@ -56,7 +55,7 @@ serve as a quick and easily-replicated testbed.
 ### With Docker - production image and environment
 
 It is also possible through `docker-compose` to spin up an environment very similar
-to what one might use in production for Maniwani (uWSGI in addition to Postgres
+to what one might use in production for Maniwani (uWSGI in addition to Postgres, Redis,
 and Minio), though for the time being this setup is Linux-only and requires `docker-compose`.
 In this directory, type:
 
