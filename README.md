@@ -12,8 +12,7 @@ Features
 --------
 
 * Real-time content updates - watch as new threads pop up in the catalog, or as new posts roll into a
-  thread you're viewing. Push notifications are supported, too - get instantly notified when a new reply
-  is made to any post of your choice.
+  thread you're viewing.
 * Fully-featured REST API - don't like the web frontend? ~~Submit a PR~~ Write your own client.
 * Full Markdown support - add any kind of formatting you like to your posts.
 * Excellent attachment support - attach text, every kind of video under the sun, and most image formats
