@@ -1,5 +1,7 @@
 FROM python:3.6-alpine AS dev
 WORKDIR /maniwani
+# uwsgi and associated plugins
+RUN apk add uwsgi-python3 uwsgi-gevent3 uwsgi-http
 # backend dependencies
 RUN pip install pipenv
 # dependencies for Pillow
@@ -16,6 +18,8 @@ COPY Pipfile.lock /maniwani
 RUN pipenv install --system --deploy
 # remove backend build-time dependencies
 RUN apk del build-base gcc python3-dev musl-dev jpeg-dev zlib-dev
+# point MANIWANI_CFG to the devmode config file
+ENV MANIWANI_CFG=./deploy-configs/devmode.cfg
 # build static frontend files
 COPY package.json /maniwani
 COPY package-lock.json /maniwani
@@ -42,10 +46,9 @@ EXPOSE 5000
 ENTRYPOINT ["sh", "./docker-entrypoint.sh", "devmode"]
 
 FROM dev AS prod
-RUN apk add uwsgi-python3 uwsgi-gevent3 uwsgi-http
 WORKDIR /maniwani
 # clean up dev image bootstrapping
-RUN rm test.db
+RUN rm ./deploy-configs/test.db
 RUN rm -r uploads
 ENV MANIWANI_CFG=./deploy-configs/maniwani.cfg
 # workaround for uwsgi inexplicably not picking up /usr/local/lib even though

@@ -2,7 +2,9 @@
 
 # dev mode - file storage backend, sqlite, no wsgi/nginx, etc.
 if [ $1 = "devmode" ]; then
-	flask run -h 0.0.0.0
+	# start up internal pubsub server
+	python storestub.py
+	uwsgi --ini ./deploy-configs/uwsgi.ini
 # attempting to bootstrap a production environment?
 elif [ $1 = "bootstrap" ]; then
 	python3 bootstrap.py
