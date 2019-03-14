@@ -37,6 +37,8 @@ class KeystoreBackend:
         return self._values[key]
     def set(self, key, value):
         self._values[key] = value
+    def delete(self, key):
+        del self._values[key]
 
 
 class PubsubBackend:
@@ -113,6 +115,9 @@ def handle_keystore(keystore, sock, address):
             key = json_response["key"]
             value = json_response["value"]
             keystore.set(key, value)
+        elif json_response["cmd"] == KEYSTORE_DELETE:
+            key = json_response["key"]
+            keystore.delete(key)
 
 
 def handle_pubsub(pubsub, sock, address):
@@ -156,6 +161,9 @@ class KeystoreClient(ClientBase):
         return server_json["value"]
     def set(self, key, value):
         server_payload = {"cmd": KEYSTORE_SET, "key": key, "value": value}
+        self._send_dict(server_payload)
+    def delete(self, key):
+        server_payload = {"cmd": KEYSTORE_DELETE, "key": key}
         self._send_dict(server_payload)
 
 

@@ -1,3 +1,4 @@
+import json
 import os
 import re
 
@@ -6,6 +7,7 @@ from flask import current_app, request
 from flask_restful import reqparse, inputs
 import requests
 
+import keystore
 from model.Board import Board
 from model.Media import Media, storage
 from model.Poster import Poster
@@ -93,7 +95,10 @@ class NewPost:
             db.session.add(thread)
         db.session.flush()
         db.session.commit()
-
+        pubsub_client = keystore.Pubsub()
+        pubsub_client.publish("new-post", json.dumps({"thread": thread_id, "post": post.id}))
+        for reply_id in replies:
+            pubsub_client.publish("new-reply", json.dumps({"post": post.id, "thread": post.thread, "reply_to": reply_id}))
 
 class InvalidMimeError(Exception):
     pass

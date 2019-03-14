@@ -1,3 +1,5 @@
+import gevent.monkey
+gevent.monkey.patch_all()
 import sys
 import traceback
 
@@ -8,6 +10,7 @@ from blueprints.main import main_blueprint
 from blueprints.slip import slip_blueprint
 from blueprints.threads import threads_blueprint
 from blueprints.upload import upload_blueprint
+from blueprints.live import live_blueprint
 from model.BoardCatalogResource import BoardCatalogResource
 from model.BoardListResource import BoardListResource
 from model.FirehoseResource import FirehoseResource
@@ -33,6 +36,8 @@ if app.config["SERVE_REST"]:
     rest_api.add_resource(PostRemovalResource, "/api/v1/thread/post/<int:post_id>")
     rest_api.add_resource(NewPostResource, "/api/v1/thread/<int:thread_id>/new")
     rest_api.add_resource(FirehoseResource, "/api/v1/firehose")
+    app.register_blueprint(live_blueprint, url_prefix="/api/v1")
+    
 
 
 @app.errorhandler(404)

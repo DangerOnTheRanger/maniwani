@@ -39,6 +39,13 @@
 	<span class="navbar-item navbar-text">Posters: <span class="text-light mr-1">{{ num_posters }}</span></span>
 {% endblock %}
 {% block content %}
+	<div id="dummy-reply" class="row" style="display: none;">
+		<div class="col-auto">
+			<small class="text-secondary">Replies:</small>
+			<div class="post-replies">
+			</div>
+		</div>
+	</div>
 	<div class="modal fade" id="replyModal" tabindex="-1">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -67,14 +74,14 @@
 		 }
 	 })
 	</script>
-	<div class="container-fluid">
+	<div class="container-fluid" id="thread-container">
 		{% for post in posts %}
 			{% import "post-view.html" as post_view %}
 			{{ post_view.render_post(post, thread_id, loop.first) }}
 		{% endfor %}
-		<a href="#" name="thread-bottom"></a>
+		<a href="#" id="thread-bottom" name="thread-bottom"></a>
 		<script>
-		 $(".post-reply").on("show.bs.tooltip", function() {
+		 function load_tooltip() {
 			 var original_tooltip = $(this)
 			 if(original_tooltip.data("loaded") == "true") {
 				 return
@@ -101,7 +108,66 @@
 				 xhr.open("GET", endpoint)
 				 xhr.send()
 			 }
+		 }
+		</script>
+		<script>
+		 var firehose = new EventSource("/api/v1/live")
+		 firehose.addEventListener("new-client", function(e) {
+			 var client_id = e.data
+			 var raw_subscribe_data = {"client-id": client_id,
+									   "subscribe": {"thread": [ {{ thread_id }} ]}}
+			 var subscribe_data = JSON.stringify(raw_subscribe_data)
+			 $.ajax({
+				 type: "POST",
+				 url: "/api/v1/live",
+				 dataType: "json",
+				 data: subscribe_data,
+				 contentType: "application/json",
+				 success: function(_) {
+					 firehose.addEventListener("new-post", function(e) {
+						 var data = JSON.parse(e.data)
+						 var post_id = data.post
+						 $.get("/threads/post/" + post_id, function(raw_post_body) {
+							 var post_body = $.parseHTML(raw_post_body, null, true)
+							 $("#thread-bottom").before(post_body)
+							 $(post_body).find(".post-reply").tooltip()
+							 $(post_body).find(".post-reply").on("show.bs.tooltip", load_tooltip)
+						 })
+					 })
+					 firehose.addEventListener("new-reply", function(e) {
+						 var data = JSON.parse(e.data)
+						 var reply_to_id = data.reply_to
+						 var post_div = $("#" + reply_to_id)
+						 var reply_field = post_div.find(".post-replies")
+						 if(reply_field.length == 0) {
+							 var reply_template = $("#dummy-reply").clone()
+							 reply_template.attr("id", "")
+							 reply_template.css("display", "inline-block")
+							 post_div.find(".post-body").before(reply_template)
+						 }
+						 var new_reply = $("<a/>")
+						 new_reply.addClass("badge badge-secondary post-reply")
+						 var thread = data.thread
+						 var original_post_id = data.post
+						 new_reply.attr("href", "/threads/" + thread + "#" + original_post_id)
+						 new_reply.data("post-id", original_post_id)
+						 new_reply.data("toggle", "tooltip")
+						 new_reply.data("placement", "bottom")
+						 new_reply.data("html", true)
+						 new_reply.data("title", "<i>Loading...</i>")
+						 new_reply.data("loaded", "false")
+						 new_reply.html("&gt;&gt;" + original_post_id)
+						 reply_field = post_div.find(".post-replies")
+						 reply_field.append(new_reply)
+						 new_reply.tooltip()
+						 new_reply.on("show.bs.tooltip", load_tooltip)
+					 })
+				 }
+			 })
 		 })
+		</script>
+		<script>
+		 $(".post-reply").on("show.bs.tooltip", load_tooltip)
 		</script>
 		<script>
 		 $(function () {

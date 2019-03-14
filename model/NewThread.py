@@ -1,7 +1,10 @@
+import json
+
 from flask import request
 from flask_restful import reqparse
 from sqlalchemy import desc
 
+import keystore
 from model.Board import Board
 from model.NewPost import NewPost
 from model.SubmissionError import SubmissionError
@@ -42,4 +45,6 @@ class NewThread:
         db.session.add(thread)
         db.session.flush()
         NewPost().post(thread_id=thread.id)
+        pubsub_client = keystore.Pubsub()
+        pubsub_client.publish("new-thread", json.dumps({"thread": thread.id, "board": thread.board}))
         return thread
