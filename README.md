@@ -11,13 +11,29 @@ you'd [have been torn to pieces.](https://wikipedia.org/wiki/Katanagatari)
 Features
 --------
 
-* Per-thread auto-generated IDs, with avatars! (IDs done, avatars planned)
-* Markdown support in posts
-* Download all media files in a thread (planned)
-* Push notification support for new posts/threads with Javascript enabled (planned)
-* Graceful UI degradation if Javascript is *not* enabled
-* REST API for 3rd-party clients
-* Global WebM audio support, muted by default but user-configurable (user settings not yet done)
+* Real-time content updates - watch as new threads pop up in the catalog, or as new posts roll into a
+  thread you're viewing. Push notifications are supported, too - get instantly notified when a new reply
+  is made to any post of your choice.
+* Fully-featured REST API - don't like the web frontend? ~~Submit a PR~~ Write your own client.
+* Full Markdown support - add any kind of formatting you like to your posts.
+* Excellent attachment support - attach text, every kind of video under the sun, and most image formats
+  you can think of, WebP included. One day soon, you'll be able to attach and view rich text documents and
+  3D models inside the browser, too. Don't want people posting certain kinds of files to your site? Admins
+  can specify allowed MIME types on a per-board basis.
+* Will SQLite and flat files suffice for your deployment? Done. Or will nothing less than Postgres, S3,
+  and Redis do? Turn Maniwani on and it scales right up.
+* Turn-key setup and installation, thanks to Docker. Edit a couple plaintext config files, and
+  you're set - no more messing with system libraries, or manually clicking through a setup page after you
+  finally got everything booting. Updating to a new version of Maniwani is equally easy; no manual migrations required.
+* No Javascript? No problem - obviously you'll miss out on some stuff like real-time updates, though.
+
+### Planned
+
+* Randomized anime-styled avatars for everyone - no more keeping track of who is who in a thread with
+  only hard-to-differentiate hex IDs!
+* Theme support - use a night theme for late night browsing sessions, or set your own custom colors.
+* CDN support - because nobody's application server or object store deserves the pain of having to
+  serve up static files.
 
 
 Installation
