@@ -20,6 +20,9 @@ RUN pipenv install --system --deploy
 RUN apk del build-base gcc python3-dev musl-dev jpeg-dev zlib-dev
 # point MANIWANI_CFG to the devmode config file
 ENV MANIWANI_CFG=./deploy-configs/devmode.cfg
+# workaround for uwsgi inexplicably not picking up /usr/local/lib even though
+# system python has it
+ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.6/site-packages
 # build static frontend files
 COPY package.json /maniwani
 COPY package-lock.json /maniwani
@@ -51,9 +54,6 @@ WORKDIR /maniwani
 RUN rm ./deploy-configs/test.db
 RUN rm -r uploads
 ENV MANIWANI_CFG=./deploy-configs/maniwani.cfg
-# workaround for uwsgi inexplicably not picking up /usr/local/lib even though
-# system python has it
-ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.6/site-packages
 # chown and switch users for security purposes
 RUN adduser -D maniwani
 RUN chown -R maniwani:maniwani ./
