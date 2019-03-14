@@ -97,7 +97,8 @@ class NewPost:
         db.session.commit()
         pubsub_client = keystore.Pubsub()
         pubsub_client.publish("new-post", json.dumps({"thread": thread_id, "post": post.id}))
-
+        for reply_id in replies:
+            pubsub_client.publish("new-reply", json.dumps({"post": post.id, "thread": post.thread, "reply_to": reply_id}))
 
 class InvalidMimeError(Exception):
     pass

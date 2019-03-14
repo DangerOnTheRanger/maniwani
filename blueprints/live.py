@@ -8,6 +8,7 @@ import gevent.queue
 from flask import Blueprint, Response, request, stream_with_context, jsonify
 
 import keystore
+from model.Post import Post
 
 
 live_blueprint = Blueprint("live", __name__)
@@ -37,9 +38,11 @@ def live_firehose():
         pubsub = keystore.Pubsub()
         pubsub.subscribe("new-post")
         pubsub.subscribe("new-thread")
+        pubsub.subscribe("new-reply")
         sub_queue = gevent.queue.Queue()
         gevent.spawn(functools.partial(_aggregate_channel, pubsub, sub_queue, "new-post"))
         gevent.spawn(functools.partial(_aggregate_channel, pubsub, sub_queue, "new-thread"))
+        gevent.spawn(functools.partial(_aggregate_channel, pubsub, sub_queue, "new-reply"))
         try:
             while True:
                 try:
@@ -62,6 +65,14 @@ def live_firehose():
                     if message["board"] in subscribed_boards:
                         new_thread_message = SSEMessage(raw_message, "new-thread")
                         yield new_thread_message.encode()
+                elif channel == "new-reply":
+                    reply_to = message["reply_to"]
+                    reply_post = Post.query.get(reply_to)
+                    subscribed_threads = client_filter["threads"]
+                    for thread_id in subscribed_threads:
+                        if reply_post.thread == thread_id:
+                            new_reply_message = SSEMessage(raw_message, "new-reply")
+                            yield new_reply_message.encode()
         except GeneratorExit:
             # client closed connection
             keystore_client.delete(client_id)

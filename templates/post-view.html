@@ -108,9 +108,11 @@
 				<div class="row">
 					<div class="col-auto">
 						<small class="text-secondary">Replies:</small>
-						{% for reply in post["replies"] %}
-							<a class="badge badge-secondary post-reply" href="{{ url_for_post(reply) }}" data-post-id="{{ reply }}" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<i>Loading...</i>" data-loaded="false">&gt;&gt;{{ reply }} </a>
-						{% endfor %}
+						<div class="post-replies">
+							{% for reply in post["replies"] %}
+								<a class="badge badge-secondary post-reply" href="{{ url_for_post(reply) }}" data-post-id="{{ reply }}" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<i>Loading...</i>" data-loaded="false">&gt;&gt;{{ reply }} </a>
+							{% endfor %}
+						</div>
 					</div>
 				</div>
 			{% endif %}
