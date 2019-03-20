@@ -31,6 +31,10 @@ other pieces of software installed:
   located in `deploy-configs` - the one used when running the stack defined by the sample
   `docker-compose.yml` - should work with no modification if nginx and Maniwani live
   on the same machine.
+* If you want to use [captchouli](https://github.com/bakape/captchouli) for serving CAPTCHAs,
+  you'll need to have an instance of it running in a place Maniwani can access, ideally on the
+  same machine as Maniwani itself or otherwise hidden from public view - at present, captchouli
+  is not intended to be public-facing.
 
 
 Configuring Maniwani
@@ -82,6 +86,13 @@ but a brief description of each follows:
   in bytes. Note that your reverse proxy should be set up to not deny any requests smaller than this;
   if you're copying or following along with the `nginx.conf` bundled with Maniwani under the `deploy-configs`
   directory, you should be okay.
+* `CAPTCHA_METHOD` - this as an optional string indicating which CAPTCHA provider Maniwani should attempt to
+  use; valid values are `"RECAPTCHA"` and `"CAPTCHOULI"`.
+* `RECAPTCHA_SITE_KEY` - the site key that you can find on your reCAPTCHA dashboard.
+* `RECAPTCHA_SECRET_KEY` - the secret key that you can find on your reCAPTCHA dashboard. You don't need to
+  supply these options unless `CAPTCHA_METHOD` has been set to `"RECAPTCHA"`, obviously.
+* `CAPTCHOULI_URL` - an URL specifying where the captchouli server has been set up. Only required if
+  `CAPTCHA_METHOD` has been set to `"CAPTCHOULI"`.
 
 `bootstrap-config.json` is the file used upon bootstrapping Maniwani for the first time to set up any boards,
 configure any initial slips (usually admin/moderator roles, but they don't have to be) and set up any special
