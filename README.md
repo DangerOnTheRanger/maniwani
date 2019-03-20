@@ -56,18 +56,19 @@ serve as a quick and easily-replicated testbed.
 
 It is also possible through `docker-compose` to spin up an environment very similar
 to what one might use in production for Maniwani (uWSGI in addition to Postgres, Redis,
-and Minio), though for the time being this setup is Linux-only and requires `docker-compose`.
-In this directory, type:
+Minio, and captchouli), though for the time being this setup is Linux-only and
+requires `docker-compose`. In this directory, type:
 
 	docker-compose build
+	docker-compose run captchouli bootstrap
 	docker-compose up -d
 	docker-compose run maniwani bootstrap
 	
 The last command will only need to be run once per clean installation of the production
 environment. If you ever want to remove all database and storage data, remove the
-`compose-data` directory, though you'll likely need root permissions to do so since
-some subdirectories are created by other users. At this point, you can use the normal
-`docker-compose start` and `docker-compose stop` to start and stop the production
+`compose-data` and `compose-captchouli` directories, though you'll likely need root
+permissions to do so since some subdirectories are created by other users. At this point,
+you can use the normal `docker-compose start` and `docker-compose stop` to start and stop the production
 environment, navigating to http://127.0.0.1:5000 as per usual to view Maniwani. If you
 want additional info on deploying Maniwani in production, see `doc/deploying.md` for more.
 
