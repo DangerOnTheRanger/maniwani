@@ -7,6 +7,7 @@ from flask import current_app, request
 from flask_restful import reqparse, inputs
 import requests
 
+import captchouli
 import keystore
 from model.Board import Board
 from model.Media import Media, storage
@@ -25,8 +26,14 @@ class NewPost:
         parser.add_argument("body", type=str, required=True)
         parser.add_argument("useslip", type=inputs.boolean)
         parser.add_argument("spoiler", type=inputs.boolean)
-        if app.config["USE_RECAPTCHA"]:
+        if app.config.get("CAPTCHA_METHOD") == "RECAPTCHA":
             parser.add_argument("recaptcha-token", type=str, required=True)
+        elif app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+            parser.add_argument("captchouli-id", type=str, required=True)
+            for img_num in range(0, 9):
+                # don't bother validating too closely since captchouli takes care of
+                # that for us
+                parser.add_argument("captchouli-%d" % img_num, type=str, default=False)
         args = parser.parse_args()
         ip = None
         # reverse proxy support
@@ -34,16 +41,23 @@ class NewPost:
             ip = request.headers.getlist("X-Forwarded-For")[0].rpartition(' ')[-1]
         else:
             ip = request.environ["REMOTE_ADDR"]
-        # check recaptcha
+        # check captcha if necessary
         board_id = db.session.query(Thread).filter_by(id=thread_id).one().board
-        if app.config["USE_RECAPTCHA"]:
+        if app.config.get("CAPTCHA_METHOD") == "RECAPTCHA":
             google_response = requests.post("https://www.google.com/recaptcha/api/siteverify",
                                             data={"secret": app.config["RECAPTCHA_SECRET_KEY"],
                                                   "response": args["recaptcha-token"]}).json()
             if google_response["success"] is False:
-                raise RecaptchaError("Problem getting reCAPTCHA", board_id)
+                raise CaptchaError("Problem getting reCAPTCHA", board_id)
             if google_response["score"] < app.config["RECAPTCHA_THRESHOLD"]:
-                raise RecaptchaError("reCAPTCHA threshold too low", board_id)
+                raise CaptchaError("reCAPTCHA threshold too low", board_id)
+        elif app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+            captchouli_form = {"captchouli-id": args["captchouli-id"]}
+            for img_num in range(0, 9):
+                key = "captchouli-%d" % img_num
+                captchouli_form[key] = args[key]
+            if not captchouli.valid_solution(captchouli_form):
+                raise CaptchaError("Incorrect CAPTCHA response", board_id)
         poster = db.session.query(Poster).filter_by(thread=thread_id, ip_address=ip).first()
         body = args["body"]
         should_bump = False
@@ -100,9 +114,10 @@ class NewPost:
         for reply_id in replies:
             pubsub_client.publish("new-reply", json.dumps({"post": post.id, "thread": post.thread, "reply_to": reply_id}))
 
+
 class InvalidMimeError(Exception):
     pass
 
 
-class RecaptchaError(Exception):
+class CaptchaError(Exception):
     pass

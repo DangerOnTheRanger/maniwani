@@ -35,10 +35,29 @@
 		the rules to see what kind of files can be uploaded.</small>
     </div>
     <input type="hidden" name="{{ hidden_name }}" value="{{ hidden_value }}">
+	{% if config["CAPTCHA_METHOD"] == "CAPTCHOULI" %}
+		{% set captchouli_ns = namespace(captcha=get_captchouli()) %}
+		<small class="form-text text-muted">Select all images of <b>{{ captchouli_ns.captcha["character"] }}</b>:</small>
+		<input type="hidden" name="captchouli-id" value="{{ captchouli_ns.captcha["captcha_id"] }}">
+		<div class="container-fluid">
+			{% for image_name, image_data in captchouli_ns.captcha.images.items() %}
+				{% if loop.index0 % 3 == 0 %}
+		</div>
+		<div class="row">
+				{% endif %}
+				<div class="col flex-grow-0">
+					<label>
+						<input type="checkbox" class="captchouli-checkbox" name="{{ image_name }}">
+						<img class="captchouli-img" draggable="false" src="{{ image_data }}">
+					</label>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
     {% if embed_submit %}
 		<button type="submit" class="btn btn-primary">Submit</button>
     {% endif %}
-	{% if config["USE_RECAPTCHA"] %}
+	{% if config["CAPTCHA_METHOD"] == "RECAPTCHA" %}
 		<input type="hidden" name="recaptcha-token" id="recaptcha-token" value="">
 		<script src="https://www.google.com/recaptcha/api.js?render={{ config["RECAPTCHA_SITE_KEY"] }}"></script>
 		<script>

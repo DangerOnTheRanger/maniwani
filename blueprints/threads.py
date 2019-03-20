@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 
+import captchouli
 from model.Board import Board
-from model.NewPost import NewPost, InvalidMimeError, RecaptchaError
+from model.NewPost import NewPost, InvalidMimeError, CaptchaError
 from model.NewThread import NewThread
 from model.Post import Post, render_for_threads
 from model.PostRemoval import PostRemoval
@@ -11,11 +12,18 @@ from model.Slip import get_slip
 from model.SubmissionError import SubmissionError
 from model.Thread import Thread
 from model.ThreadPosts import ThreadPosts
-from shared import db
+from shared import db, app
 
 
 threads_blueprint = Blueprint('threads', __name__, template_folder='template')
 threads_blueprint.add_app_template_global(url_for_post)
+
+
+@app.context_processor
+def get_captchouli():
+    def _get_captchouli():
+        return captchouli.request_captcha()
+    return dict(get_captchouli=_get_captchouli)
 
 
 @threads_blueprint.route("/new/<int:board_id>")
@@ -35,8 +43,8 @@ def submit():
     except InvalidMimeError as e:
         flash("Can't post attachment with MIME type \"%s\" on this board!" % e.args[0])
         return redirect(url_for("threads.new", board_id=e.args[1]))
-    except RecaptchaError as e:
-        flash("reCAPTCHA error: %s" % e.args[0])
+    except CaptchaError as e:
+        flash("CAPTCHA error: %s" % e.args[0])
         return redirect(url_for("threads.new", board_id=e.args[1]))
 
 
@@ -79,8 +87,8 @@ def post_submit(thread_id):
     except InvalidMimeError as e:
         flash("Can't post attachment with MIME type \"%s\" on this board!" % e.args[0])
         return redirect(url_for("threads.new_post", thread_id=thread_id))
-    except RecaptchaError as e:
-        flash("reCAPTCHA error: %s" % e.args[0])
+    except CaptchaError as e:
+        flash("CAPTCHA error: %s" % e.args[0])
         return redirect(url_for("threads.new_post", thread_id=thread_id))
     return redirect(url_for("threads.view", thread_id=thread_id) + "#thread-bottom")
 

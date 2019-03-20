@@ -2,6 +2,14 @@ version: '3'
 services:
     maniwani:
         build: .
+    captchouli:
+        build: ./build-helpers/captchouli
+        hostname: captchouli
+        restart: always
+        environment:
+            - CAPTCHOULI_FLAGS=-e -t izayoi_sakuya,yakumo_yukari,hong_meiling
+        volumes:
+            - ./compose-captchouli:/home/captchouli/.captchouli
     minio:
         image: "minio/minio"
         hostname: minio
