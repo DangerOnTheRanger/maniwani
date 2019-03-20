@@ -7,7 +7,7 @@
 	{% endif %}
 {% endblock %}
 {% block head %}
-	{% if config["USE_RECAPTCHA"] %}
+	{% if config["CAPTCHA_METHOD"] == "RECAPTCHA" %}
 		<script src='https://www.google.com/recaptcha/api.js?render={{ config["RECAPTCHA_SITE_KEY"] }}'></script>
 	{% endif %}
 	<style>

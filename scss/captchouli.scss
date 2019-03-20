@@ -1,0 +1,13 @@
+.captchouli-checkbox {
+	display: none;
+}
+.captchouli-img {
+	/* ensure the image is not directly selectable */
+	user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-webkit-user-select: none;
+}
+.captchouli-checkbox:checked + .captchouli-img {
+			transform: scale(0.9);
+}
