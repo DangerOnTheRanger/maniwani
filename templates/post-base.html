@@ -39,10 +39,11 @@
 		{% set captchouli_ns = namespace(captcha=get_captchouli()) %}
 		<small class="form-text text-muted">Select all images of <b>{{ captchouli_ns.captcha["character"] }}</b>:</small>
 		<input type="hidden" name="captchouli-id" value="{{ captchouli_ns.captcha["captcha_id"] }}">
-		<div class="container-fluid">
 			{% for image_name, image_data in captchouli_ns.captcha.images.items() %}
 				{% if loop.index0 % 3 == 0 %}
-		</div>
+					{% if loop.first == False %}
+	</div>
+					{% endif %}
 		<div class="row">
 				{% endif %}
 				<div class="col flex-grow-0">
