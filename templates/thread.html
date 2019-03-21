@@ -33,11 +33,6 @@
 	</script>
 	<a href="{{ url_for("threads.view_gallery", thread_id=thread_id) }}" class="nav-item nav-link">Gallery</a>
 {% endblock %}
-{% block navbar_right %}
-	<span class="navbar-item navbar-text">Views: <span class="text-light mr-1">{{ num_views }}</span></span>
-	<span class="navbar-item navbar-text">Attachments: <span class="text-light mr-1">{{ num_media }}</span></span>
-	<span class="navbar-item navbar-text">Posters: <span class="text-light mr-1">{{ num_posters }}</span></span>
-{% endblock %}
 {% block content %}
 	<div id="dummy-reply" class="row" style="display: none;">
 		<div class="col-auto">
@@ -210,4 +205,11 @@
 		 })
 		</script>
 	</div>
+{% endblock %}
+{% block footer %}
+	<p class="text-center">
+		<span>Views: {{ num_views }}</span>
+		<span>Attachments: {{ num_media }}</span>
+		<span>Posters: {{ num_posters }}</span>
+	</p>
 {% endblock %}
