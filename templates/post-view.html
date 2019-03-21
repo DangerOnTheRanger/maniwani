@@ -2,12 +2,12 @@
 	<div class="post-container" id="{{ post["id"] }}">
 		{% if post["media"] %}
 			<div class="col">
-				<div class="img-thumbnail" style="display: inline-block;">
+				<div class="img-thumbnail" style="display: inline-block; overflow: hidden;">
 					<a href="{{ url_for("upload.file", media_id=post["media"]) }}" class="media-container">
 						{% set ns = namespace(img_style="max-width: 15em; max-height: 20em;") %}
 						{% if post["spoiler"] == True %}
 							<span id="spoiler-label-{{ post["media"] }}" class="spoiler-label text-danger">!</span>
-							{% set ns.img_style = ns.img_style + " opacity: 0.025;" %}
+							{% set ns.img_style = ns.img_style + " opacity: 0.3; filter: blur(12px);" %}
 						{% endif %}
 						{% if post["mimetype"].startswith("image") and post["is_animated"] %}
 							<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" data-full="{{ url_for("upload.file",

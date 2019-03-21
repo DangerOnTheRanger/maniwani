@@ -65,12 +65,12 @@
 					{% set ns.text_style = "text-light" %}
 				{% endif %}
 				<div class="thread border-top rounded">
-					<div class="border-left border-right" style="position: relative;">
+					<div class="border-left border-right" style="position: relative; overflow: hidden;">
 						<a href="{{ url_for("threads.view", thread_id=thread["id"]) }}">
 							{% set style_ns = namespace(extra_style="") %}
 							{% if thread["spoiler"] == True %}
 								<span id="spoiler-label-{{ thread["media"] }}" class="spoiler-label text-danger">!</span>
-								{% set style_ns.extra_style = "opacity: 0.025;" %}
+								{% set style_ns.extra_style = "opacity: 0.3; filter: blur(12px);" %}
 							{% endif %}
 							<img style="{{ style_ns.extra_style }}" class="w-100 rounded-top" src="{{ url_for("upload.thumb",
 																								   media_id=thread["media"]) }}">
