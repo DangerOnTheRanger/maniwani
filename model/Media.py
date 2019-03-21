@@ -147,6 +147,7 @@ class S3Storage(StorageBase):
     _THUMBNAIL_KEY = "%d.jpg"
     _THUMBNAIL_BUCKET = "thumbs"
     _STATIC_DIR = "static"
+    _CUSTOM_STATIC_DIR = "deploy-configs/custom-static"
     _STATIC_BUCKET = "static"
     _PUBLIC_READ_POLICY = json.dumps({"Version":"2012-10-17",
                                       "Statement":[
@@ -195,19 +196,26 @@ class S3Storage(StorageBase):
     def update(self):
         static_bucket = self._get_bucket(self._STATIC_BUCKET)
         # copy over all static files
-        for base, _, filenames in os.walk(self._STATIC_DIR):
-            for filename in filenames:
-                # strip static/ 
-                s3_key = "/".join([base[len(self._STATIC_DIR + "/"):], filename])
-                full_path = os.path.join(self._STATIC_DIR, s3_key)
-                mimetype = self._get_mimetype(s3_key)
-                static_bucket.upload_file(full_path, s3_key, ExtraArgs={"ContentType": mimetype})
+        static_dirs = [self._STATIC_DIR]
+        # check for custom static directory
+        if os.path.exists(self._CUSTOM_STATIC_DIR):
+            static_dirs.append(self._CUSTOM_STATIC_DIR)
+        for static_dir in static_dirs:
+            for base, _, filenames in os.walk(static_dir):
+                for filename in filenames:
+                    # strip the unecessary part of the path (static or deploy-configs/custom-static) 
+                    s3_key = "/".join([base[len(static_dir + "/"):], filename])
+                    # correctly handle files at the root of the directory
+                    if s3_key.startswith("/"):
+                        s3_key = s3_key[1:]
+                    full_path = os.path.join(static_dir, s3_key)
+                    mimetype = self._get_mimetype(s3_key)
+                    static_bucket.upload_file(full_path, s3_key, ExtraArgs={"ContentType": mimetype})
         for bucket_name in (self._ATTACHMENT_BUCKET, self._THUMBNAIL_BUCKET, self._STATIC_BUCKET):
             bucket = self._get_bucket(bucket_name)
             formatted_policy = self._PUBLIC_READ_POLICY % (bucket.name)
             bucket.Policy().put(Policy=self._PUBLIC_READ_POLICY % bucket.name)
-            bucket.Policy().reload()
-        
+            bucket.Policy().reload()        
     def static_resource(self, path):
         return self._format_url(self._STATIC_BUCKET, path)
     def _format_url(self, bucket, path):
