@@ -54,6 +54,7 @@ def setup_slips(json_settings):
         slip.is_admin = is_admin
         slip.is_mod = is_mod
         db.session.add(slip)
+        db.session.commit()
 
 
 def setup_tags(json_settings):

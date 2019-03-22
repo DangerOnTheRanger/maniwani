@@ -21,7 +21,9 @@ def register():
     name = request.form["name"]
     password = request.form["password"]
     slip = gen_slip(name, password)
+    db.session.flush()
     make_session(slip)
+    db.session.commit()
     return redirect(url_for("slip.landing"))
 
 
@@ -33,6 +35,7 @@ def login():
     if slip:
         if check_password_hash(slip.pass_hash, password):
             make_session(slip)
+            db.session.commit()
         else:
             flash("Incorrect username or password!")
     else:

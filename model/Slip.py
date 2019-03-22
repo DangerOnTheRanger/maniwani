@@ -11,7 +11,6 @@ def gen_slip(name, password):
     pass_hash = generate_password_hash(password)
     slip = Slip(name=name, pass_hash=pass_hash)
     db.session.add(slip)
-    db.session.commit()
     return slip
 
 
@@ -36,7 +35,6 @@ def make_session(slip):
     user_session = Session(id=session_id, slip_id=slip.id)
     session["session-id"] = user_session.id
     db.session.add(user_session)
-    db.session.commit()
     return user_session
 
 
