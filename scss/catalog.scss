@@ -1,0 +1,38 @@
+.thread {
+	@extend .border;
+	@extend .rounded;
+	width: 300px;
+	height: 300px;
+	position: relative;
+}
+.thread-body {
+	font-size: 0.8em;
+}
+.catalog-grid {
+	display: grid;
+	justify-content: center;
+	grid-gap: 30px;
+	grid-template-columns: repeat(auto-fill, 300px);
+}
+.catalog-media-container {
+	@extend .p-2;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.catalog-thumbnail {
+	width: auto;
+	height: 125px;
+}
+.view-thread-container {
+	position: absolute;
+	bottom: 0;
+}
+.thread-stats-container {
+	@extend .p-1;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
