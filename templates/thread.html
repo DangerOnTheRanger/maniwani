@@ -62,7 +62,7 @@
 		 }
 	 })
 	</script>
-	<div class="container-fluid" id="thread-container">
+	<div class="container" id="thread-container">
 		{% for post in posts %}
 			{% import "post-view.html" as post_view %}
 			{{ post_view.render_post(post, thread_id, loop.first) }}
