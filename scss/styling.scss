@@ -5,7 +5,17 @@
 .spoiler:hover {
 	color: var(--white);
 }
-
+.spoiler-label {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 6em;
+}
+.thumbnail-spoiler {
+	opacity: 0.3;
+	filter: blur(12px);
+}
 blockquote {
 	color: var(--green);
 }
