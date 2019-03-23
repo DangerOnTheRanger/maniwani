@@ -1,4 +1,5 @@
 from model.Board import Board
+from model.Media import Media
 from shared import db
 
 
@@ -14,7 +15,8 @@ class BoardList:
             for thread in board.threads:
                 op = thread.posts[0]
                 if op.media != None:
-                    b_dict["media"] = op.media
-                    break
+                    if op.spoiler is False:
+                        b_dict["media"] = op.media
+                        break
             boards.append(b_dict)
         return boards
