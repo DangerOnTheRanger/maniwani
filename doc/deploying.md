@@ -76,6 +76,11 @@ but a brief description of each follows:
   their service. This is an optional string that Maniwani will prepend to the names of the buckets
   it creates to ensure uniqueness. There is no set restriction on the contents of this string outside
   of what would constitute part of a valid URL.
+* `CDN_REWRITE` - this is an optional string that, if present, will be used as a template by the
+  S3 backend when outputting links to media. The [named placeholders](https://pyformat.info/#named_placeholders)
+  supplied by Maniwani are: `ENDPOINT`, `BUCKET_UUID`, `BUCKET`, and `PATH`. `PATH` is the path to the
+  resource (and does not begin with a `/`), while `BUCKET_UUID` is equal to `S3_UUID_PREFIX`, if it is
+  present.
 * `SERVE_STATIC` - this is a boolean that indicates whether Maniwani should serve up CSS/JS/other
   static non-attachment assets itself (if set to `True`) or let the S3 store handle it (if set
   to `False`). This should be set to `False` for a production deploymenet.

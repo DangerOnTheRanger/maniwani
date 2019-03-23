@@ -23,6 +23,8 @@ Features
 * Turn-key setup and installation, thanks to Docker. Edit a couple plaintext config files, and
   you're set - no more messing with system libraries, or manually clicking through a setup page after you
   finally got everything booting. Updating to a new version of Maniwani is equally easy; no manual migrations required.
+* CDN support - because nobody's application server or object store deserves the pain of having to
+  serve up static files. *CDN not included.*
 * No Javascript? No problem - obviously you'll miss out on some stuff like real-time updates, though.
 
 ### Planned
@@ -30,8 +32,6 @@ Features
 * Randomized anime-styled avatars for everyone - no more keeping track of who is who in a thread with
   only hard-to-differentiate hex IDs!
 * Theme support - use a night theme for late night browsing sessions, or set your own custom colors.
-* CDN support - because nobody's application server or object store deserves the pain of having to
-  serve up static files.
 
 
 Installation
