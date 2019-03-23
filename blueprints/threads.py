@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 
 import captchouli
+from model.Media import upload_size
 from model.Board import Board
 from model.NewPost import NewPost, InvalidMimeError, CaptchaError
 from model.NewThread import NewThread
