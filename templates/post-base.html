@@ -32,13 +32,16 @@
         <label for="media">Media upload</label>
         <input type="file" id="media" name="media">
 		<small class="form-text text-muted">Maximum attachment size: {{ max_upload_size() }}. Check
-		the rules to see what kind of files can be uploaded.</small>
+			the rules to see what kind of files can be uploaded.</small>
     </div>
     <input type="hidden" name="{{ hidden_name }}" value="{{ hidden_value }}">
 	{% if config["CAPTCHA_METHOD"] == "CAPTCHOULI" %}
 		{% set captchouli_ns = namespace(captcha=get_captchouli()) %}
-		<small class="form-text text-muted">Select all images of <b>{{ captchouli_ns.captcha["character"] }}</b>:</small>
 		<input type="hidden" name="captchouli-id" value="{{ captchouli_ns.captcha["captcha_id"] }}">
+		<details>
+			<summary>
+				<small class="text-muted">Select all images of <b>{{ captchouli_ns.captcha["character"] }}</b></small>
+			</summary>
 			{% for image_name, image_data in captchouli_ns.captcha.images.items() %}
 				{% if loop.index0 % 3 == 0 %}
 					{% if loop.first == False %}
@@ -54,6 +57,7 @@
 				</div>
 			{% endfor %}
 		</div>
+		</details>
 	{% endif %}
     {% if embed_submit %}
 		<button type="submit" class="btn btn-primary">Submit</button>
