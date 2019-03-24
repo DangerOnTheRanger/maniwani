@@ -93,6 +93,8 @@ but a brief description of each follows:
   directory, you should be okay.
 * `CAPTCHA_METHOD` - this as an optional string indicating which CAPTCHA provider Maniwani should attempt to
   use; valid values are `"RECAPTCHA"` and `"CAPTCHOULI"`.
+* `CAPTCHA_COOLDOWN` - if set, this is the time in seconds after successfully entering a CAPTCHA that a user
+  can submit posts without needing to enter another CAPTCHA.
 * `RECAPTCHA_SITE_KEY` - the site key that you can find on your reCAPTCHA dashboard.
 * `RECAPTCHA_SECRET_KEY` - the secret key that you can find on your reCAPTCHA dashboard. You don't need to
   supply these options unless `CAPTCHA_METHOD` has been set to `"RECAPTCHA"`, obviously.
