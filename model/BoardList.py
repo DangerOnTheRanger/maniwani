@@ -14,9 +14,8 @@ class BoardList:
             b_dict["media"] = None
             for thread in board.threads:
                 op = thread.posts[0]
-                if op.media != None:
-                    if op.spoiler is False:
-                        b_dict["media"] = op.media
-                        break
+                if op.media != None and op.spoiler != True:
+                    b_dict["media"] = op.media
+                    break
             boards.append(b_dict)
         return boards
