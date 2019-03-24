@@ -16,8 +16,8 @@ def make_redis():
 
 class Keystore:
     def __init__(self):
-        backend = app.config.get("STORE_PROVIDER") or "INTERNAL"
-        if backend == "REDIS":
+        self._backend = app.config.get("STORE_PROVIDER") or "INTERNAL"
+        if self._backend == "REDIS":
            self._client = make_redis()
         else:
             self._client = storestub.KeystoreClient()
@@ -25,7 +25,7 @@ class Keystore:
     def get(self, key):
         return self._client.get(key)
     def exists(self, key):
-        if backend == "REDIS":
+        if self._backend == "REDIS":
             return self._client.exists(key) != 0
         else:
             return self._client.get(key) != None
