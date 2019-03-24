@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import string
 
 from PIL import Image
 from flask import current_app, request
@@ -8,6 +9,7 @@ from flask_restful import reqparse, inputs
 import requests
 
 import captchouli
+import cooldown
 import keystore
 from model.Board import Board
 from model.Media import Media, storage
@@ -26,14 +28,18 @@ class NewPost:
         parser.add_argument("body", type=str, required=True)
         parser.add_argument("useslip", type=inputs.boolean)
         parser.add_argument("spoiler", type=inputs.boolean)
-        if app.config.get("CAPTCHA_METHOD") == "RECAPTCHA":
-            parser.add_argument("recaptcha-token", type=str, required=True)
-        elif app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
-            parser.add_argument("captchouli-id", type=str, required=True)
-            for img_num in range(0, 9):
-                # don't bother validating too closely since captchouli takes care of
-                # that for us
-                parser.add_argument("captchouli-%d" % img_num, type=str, default=False)
+        # check captcha cooldown
+        on_cooldown = cooldown.on_captcha_cooldown()
+        # only check of captcha if the client is not on cooldown
+        if on_cooldown is False:
+            if app.config.get("CAPTCHA_METHOD") == "RECAPTCHA":
+                parser.add_argument("recaptcha-token", type=str, required=True)
+            elif app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+                parser.add_argument("captchouli-id", type=str, required=True)
+                for img_num in range(0, 9):
+                    # don't bother validating too closely since captchouli takes care of
+                    # that for us
+                    parser.add_argument("captchouli-%d" % img_num, type=str, default=False)
         args = parser.parse_args()
         ip = None
         # reverse proxy support
@@ -43,21 +49,23 @@ class NewPost:
             ip = request.environ["REMOTE_ADDR"]
         # check captcha if necessary
         board_id = db.session.query(Thread).filter_by(id=thread_id).one().board
-        if app.config.get("CAPTCHA_METHOD") == "RECAPTCHA":
-            google_response = requests.post("https://www.google.com/recaptcha/api/siteverify",
-                                            data={"secret": app.config["RECAPTCHA_SECRET_KEY"],
-                                                  "response": args["recaptcha-token"]}).json()
-            if google_response["success"] is False:
-                raise CaptchaError("Problem getting reCAPTCHA", board_id)
-            if google_response["score"] < app.config["RECAPTCHA_THRESHOLD"]:
-                raise CaptchaError("reCAPTCHA threshold too low", board_id)
-        elif app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
-            captchouli_form = {"captchouli-id": args["captchouli-id"]}
-            for img_num in range(0, 9):
-                key = "captchouli-%d" % img_num
-                captchouli_form[key] = args[key]
-            if not captchouli.valid_solution(captchouli_form):
-                raise CaptchaError("Incorrect CAPTCHA response", board_id)
+        if on_cooldown is False:
+            if app.config.get("CAPTCHA_METHOD") == "RECAPTCHA":
+                google_response = requests.post("https://www.google.com/recaptcha/api/siteverify",
+                                                data={"secret": app.config["RECAPTCHA_SECRET_KEY"],
+                                                      "response": args["recaptcha-token"]}).json()
+                if google_response["success"] is False:
+                    raise CaptchaError("Problem getting reCAPTCHA", board_id)
+                if google_response["score"] < app.config["RECAPTCHA_THRESHOLD"]:
+                    raise CaptchaError("reCAPTCHA threshold too low", board_id)
+            elif app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+                captchouli_form = {"captchouli-id": args["captchouli-id"]}
+                for img_num in range(0, 9):
+                    key = "captchouli-%d" % img_num
+                    captchouli_form[key] = args[key]
+                if not captchouli.valid_solution(captchouli_form):
+                    raise CaptchaError("Incorrect CAPTCHA response", board_id)
+        cooldown.refresh_captcha_cooldown()
         poster = db.session.query(Poster).filter_by(thread=thread_id, ip_address=ip).first()
         body = args["body"]
         should_bump = False

@@ -24,6 +24,11 @@ class Keystore:
             self._client.connect()
     def get(self, key):
         return self._client.get(key)
+    def exists(self, key):
+        if backend == "REDIS":
+            return self._client.exists(key) != 0
+        else:
+            return self._client.get(key) != None
     def set(self, key, value):
         self._client.set(key, value)
     def delete(self, key):

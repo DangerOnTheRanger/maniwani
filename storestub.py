@@ -105,7 +105,10 @@ def handle_keystore(keystore, sock, address):
         client_payload = {}
         if json_response["cmd"] == KEYSTORE_GET:
             key = json_response["key"]
-            client_payload["value"] = keystore.get(key)
+            try:
+                client_payload["value"] = keystore.get(key)
+            except KeyError:
+                client_payload["value"] = None
             packed_payload = json.dumps(client_payload)
             try:
                 client.send(packed_payload)
