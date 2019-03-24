@@ -1,5 +1,6 @@
 import os
 import random
+import ipaddress
 from customjsonencoder import CustomJSONEncoder
 from flask import Flask
 from flask_migrate import Migrate
@@ -36,11 +37,9 @@ def gen_poster_id():
 
 
 def ip_to_int(ip_str):
-    # TODO: IPv6 support
-    segments = [int(s) for s in ip_str.split(".")]
-    segments.reverse()
-    ip_num = 0
-    for segment in segments:
-        ip_num = ip_num | segment
-        ip_num = ip_num << 8
-    return ip_num
+    # The old version of ip_to_int had a logical bug where it would always shift the
+    # final result to the left by 8. This is preserved with the `<< 8`.
+    return int.from_bytes(
+        ipaddress.ip_address(ip_str).packed,
+        byteorder="little"
+    ) << 8
