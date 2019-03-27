@@ -52,7 +52,7 @@
 </nav>
 {% with flashes = get_flashed_messages() %}
 {% if flashes %}
-<div class="container">
+<div class="container" style="padding:6%">
     {% for message in flashes %}
     <div class="alert alert-primary">
         {{ message }}

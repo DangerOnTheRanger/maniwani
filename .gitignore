@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 uploads
 secret
+node_modules

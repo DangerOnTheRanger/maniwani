@@ -41,9 +41,12 @@
 							{{ thread["body"]|safe|truncate(150) }}
 						</div>
 					</div>
+					<!--
 					<div class="view-thread-container">
 						<a href="{{ url_for("threads.view", thread_id=thread["id"]) }}" class="btn btn-dark m-2">View thread</a>
 					</div>
+					-->
+
 					<span class="thread-stats-container {{ ns.text_style }}">
 						{% if display_board %}
 							<small>/{{ thread["board"] }}/</small>
