@@ -52,10 +52,11 @@ function fontawesome_webfonts() {
 }
 
 function watch() {
-	browserSync.init({
+	browserSync.init
+	({
 		proxy: '127.0.0.1:5000',
 		port: 5000
-    });
+  });
 	gulp.watch('./scss/*.scss', maniwani_css ).on('change', browserSync.reload);
 	gulp.watch("./templates/*.html").on("change", browserSync.reload);
 }
