@@ -27,7 +27,7 @@
   "devDependencies": {
     "browser-sync": "^2.26.3",
     "del": "^3.0.0",
-    "gulp": "github:gulpjs/gulp",
+    "gulp": "^4.0.0",
     "gulp-sass": "^4.0.2",
     "node-sass": "^4.11.0"
   },
