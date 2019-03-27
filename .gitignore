@@ -5,3 +5,4 @@ __pycache__/
 uploads
 secret
 node_modules
+static
