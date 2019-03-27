@@ -59,7 +59,6 @@ function watch() {
 	gulp.watch('./scss/*.scss', maniwani_css ).on('change', browserSync.reload);
 	gulp.watch("./templates/*.html").on("change", browserSync.reload);
 }
-	
 
 exports.watch = watch
 exports.clean = clean
@@ -68,7 +67,3 @@ exports.fonts = fontawesome_webfonts
 exports.js = parallel(popper, jquery, bootstrap_js, imagesloaded, masonry)
 exports.build = series(clean, parallel(exports.css, exports.js, exports.fonts))
 exports.default = exports.build
-
-
-
-
