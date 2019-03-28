@@ -1,11 +1,11 @@
 #!/bin/sh
 
-# dev mode - file storage backend, sqlite, no wsgi/nginx, etc.
+# dev mode - file storage backend, sqlite, no nginx, etc.
 if [ $1 = "devmode" ]; then
 	# start up internal pubsub server
-	python storestub.py
-	uwsgi --ini ./deploy-configs/uwsgi.ini
-# attempting to bootstrap a production environment?
+	python storestub.py &
+	uwsgi --ini ./deploy-configs/uwsgi-devmode.ini
+# attempting to bootstrap?
 elif [ $1 = "bootstrap" ]; then
 	python3 bootstrap.py
 # version upgrade?
