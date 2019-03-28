@@ -8,6 +8,7 @@ import struct
 KEYSTORE_PORT = 5577
 KEYSTORE_GET = "get"
 KEYSTORE_SET = "set"
+KEYSTORE_DELETE = "delete"
 PUBSUB_PORT = 5578
 PUBSUB_SUBSCRIBE = "subscribe"
 PUBSUB_UNSUBSCRIBE = "unsubsribe"
