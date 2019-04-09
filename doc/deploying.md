@@ -96,6 +96,7 @@ but a brief description of each follows:
 * `CAPTCHA_COOLDOWN` - if set, this is the time in seconds after successfully entering a CAPTCHA that a user
   can submit posts without needing to enter another CAPTCHA.
 * `RECAPTCHA_SITE_KEY` - the site key that you can find on your reCAPTCHA dashboard.
+* `RECAPTCHA_THRESHOLD` - the minimum allowable value returned by reCAPTCHA that Maniwani will consider non-spam.
 * `RECAPTCHA_SECRET_KEY` - the secret key that you can find on your reCAPTCHA dashboard. You don't need to
   supply these options unless `CAPTCHA_METHOD` has been set to `"RECAPTCHA"`, obviously.
 * `CAPTCHOULI_URL` - an URL specifying where the captchouli server has been set up. Only required if
