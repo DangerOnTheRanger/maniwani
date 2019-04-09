@@ -6,6 +6,9 @@
 	position: relative;
 	overflow: hidden;
 }
+.thread:hover {
+	text-decoration: none !important;
+}
 .thread-body {
 	font-size: 0.7em;
 }
@@ -26,10 +29,6 @@
 .catalog-thumbnail {
 	width: auto;
 	height: 125px;
-}
-.view-thread-container {
-	position: absolute;
-	bottom: 0;
 }
 .thread-stats-container {
 	@extend .p-1;

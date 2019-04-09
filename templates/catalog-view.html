@@ -17,17 +17,14 @@
 					{% set ns.bg_style = "bg-success" %}
 					{% set ns.text_style = "text-light" %}
 				{% endif %}
-				<div class="thread {{ ns.bg_style }}">
+				<a href="{{ url_for("threads.view", thread_id=thread["id"]) }}" class="thread {{ ns.bg_style }}">
 					<div class="catalog-media-container">
-						<a href="{{ url_for("threads.view", thread_id=thread["id"]) }}">
-							{% set style_ns = namespace(extra_class="") %}
-							{% if thread["spoiler"] == True %}
-								<span id="spoiler-label-{{ thread["media"] }}" class="spoiler-label text-danger">!</span>
-								{% set style_ns.extra_class = "thumbnail-spoiler" %}
-							{% endif %}
-							<img class="catalog-thumbnail {{ style_ns.extra_class }}" src="{{ url_for("upload.thumb", media_id=thread["media"])}}" >
-							
-						</a>
+						{% set style_ns = namespace(extra_class="") %}
+						{% if thread["spoiler"] == True %}
+							<span id="spoiler-label-{{ thread["media"] }}" class="spoiler-label text-danger">!</span>
+							{% set style_ns.extra_class = "thumbnail-spoiler" %}
+						{% endif %}
+						<img class="catalog-thumbnail {{ style_ns.extra_class }}" src="{{ url_for("upload.thumb", media_id=thread["media"])}}" >
 					</div>
 					<div class="p-1">
 						{% if thread["subject"] %}
@@ -41,11 +38,6 @@
 							{{ thread["body"]|safe|truncate(150) }}
 						</div>
 					</div>
-
-					<div class="view-thread-container">
-						<a href="{{ url_for("threads.view", thread_id=thread["id"]) }}" class="btn btn-dark m-2">View thread</a>
-					</div>
-
 					<span class="thread-stats-container {{ ns.text_style }}">
 						{% if display_board %}
 							<small>/{{ thread["board"] }}/</small>
