@@ -98,10 +98,10 @@ You'll also want to initialize a database with some initial options; so run:
 
 	pipenv run python bootstrap.py
 	
-Next, to run the development server, type `pipenv run flask run` and point your web browser at
-http://127.0.0.1:5000 to view your new Maniwani installation. If you ever want to wipe the database
-clean, that's currently handled by removing `test.db` (and the `uploads` directory if you uploaded
-anything) and re-running the bootstrap.py script.
+Next, to run the development server, type `pipenv run python storestub.py &` followed by `pipenv run flask run`,
+and point your web browser at http://127.0.0.1:5000 to view your new Maniwani installation. If you ever want
+to wipe the database clean, that's currently handled by removing `test.db` (and the `uploads` directory if
+you uploaded anything) and re-running the bootstrap.py script.
 
 #### Notes on ffmpeg
 
