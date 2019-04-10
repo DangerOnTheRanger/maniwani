@@ -20,6 +20,7 @@
 }
 .catalog-media-container {
 	@extend .p-2;
+	@extend .mx-2;
 	position: relative;
 	overflow: hidden;
 	display: flex;
