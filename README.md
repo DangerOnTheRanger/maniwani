@@ -14,6 +14,7 @@ Features
 * Real-time content updates - watch as new posts roll into a thread you're viewing.
 * Fully-featured REST API - don't like the web frontend? ~~Submit a PR~~ Write your own client.
 * Full Markdown support - add any kind of formatting you like to your posts.
+* Theme support - use a night theme for late night browsing sessions, or set your own custom colors.
 * Excellent attachment support - attach text, every kind of video under the sun, and most image formats
   you can think of, WebP included. One day soon, you'll be able to attach and view rich text documents and
   3D models inside the browser, too. Don't want people posting certain kinds of files to your site? Admins
@@ -31,7 +32,6 @@ Features
 
 * Randomized anime-styled avatars for everyone - no more keeping track of who is who in a thread with
   only hard-to-differentiate hex IDs!
-* Theme support - use a night theme for late night browsing sessions, or set your own custom colors.
 
 
 Installation
