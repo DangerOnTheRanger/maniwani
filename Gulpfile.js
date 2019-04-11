@@ -10,9 +10,9 @@ function clean() {
 }
 
 function maniwani_css() {
-	return src('./scss/maniwani.scss').pipe(
+	return src('./scss/themes/*/theme-*.scss').pipe(
 		sass({outputStyle: 'compressed',
-			  includePaths: './node_modules/bootstrap/scss'}).on('error', sass.logError)).pipe(
+			  includePaths: ['./node_modules/bootstrap/scss', './scss/base']}).on('error', sass.logError)).pipe(
 			dest('./static/css/')).pipe(browserSync.stream())
 }
 
@@ -57,7 +57,7 @@ function watch() {
 		proxy: '127.0.0.1:5000',
 		port: 5000
   });
-	gulp.watch('./scss/*.scss', maniwani_css ).on('change', browserSync.reload);
+	gulp.watch('./scss/**/*.scss', maniwani_css ).on('change', browserSync.reload);
 	gulp.watch("./templates/*.html").on("change", browserSync.reload);
 }
 

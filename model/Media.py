@@ -5,7 +5,7 @@ import mimetypes
 import os
 import subprocess
 from PIL import Image, ImageDraw
-from flask import send_from_directory, redirect
+from flask import send_from_directory, redirect, session
 from shared import db, app
 
 
@@ -274,7 +274,22 @@ def static_handler():
     else:
         def static_resource(path):
             return storage.static_resource(path)
-    return dict(static_resource=static_resource)
+    def get_current_theme():
+        # TODO: extend to also keep theme preference in slips
+        theme_name = session.get("theme")
+        if theme_name is None:
+            theme_name = app.config.get("DEFAULT_THEME") or "stock"
+        return theme_name
+    def get_current_theme_path():
+        theme_name = get_current_theme()
+        theme_template = "css/{THEME_NAME}/theme-{THEME_NAME}.css"
+        return static_resource(theme_template.format(THEME_NAME=theme_name))
+    def get_themes():
+        return app.config.get("THEME_LIST") or ("stock", "harajuku", "wildride")
+    return dict(static_resource=static_resource,
+                get_current_theme=get_current_theme,
+                get_current_theme_path=get_current_theme_path,
+                get_themes=get_themes)
 
 
 @app.context_processor
