@@ -1,0 +1,13 @@
+$body-bg: #e5f2ff;
+$theme-colors: (
+	"primary": #b07274,
+	"info": #4f4f4f
+);
+$navbar-light-color: rgba(#0000, .8);
+$navbar-light-hover-color: rgba(#0000, .9);
+@import "bootstrap";
+@import "catalog";
+@import "post";
+@import "styling";
+@import "captchouli";
+@import "navbar";

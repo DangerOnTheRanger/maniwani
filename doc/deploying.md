@@ -87,6 +87,10 @@ but a brief description of each follows:
 * `SERVE_REST` - if `True`, REST endpoints will be served by Maniwani. Note that ideally, the REST API for
   your Maniwani installation is protected with HTTPS, since Maniwani uses HTTP Basic for authentication and
   authorization.
+* `DEFAULT_THEME` - this is an optional string representing the name of the theme Maniwani should use if
+  the user has not otherwise selected a theme to use. If not present, the stock theme will be used.
+* `THEME_LIST` - this is an optional list of strings representing the list of installed themes available.
+  If not present, Maniwani assumes the default themes normally bundled with Maniwani are available. 
 * `MAX_CONTENT_LENGTH` - this is an integer detailing the largest attachment Maniwani should accept
   in bytes. Note that your reverse proxy should be set up to not deny any requests smaller than this;
   if you're copying or following along with the `nginx.conf` bundled with Maniwani under the `deploy-configs`

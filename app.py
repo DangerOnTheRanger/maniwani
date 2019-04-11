@@ -8,6 +8,7 @@ from flask import render_template, send_from_directory
 from blueprints.boards import boards_blueprint
 from blueprints.main import main_blueprint
 from blueprints.slip import slip_blueprint
+from blueprints.theme import theme_blueprint
 from blueprints.threads import threads_blueprint
 from blueprints.upload import upload_blueprint
 from blueprints.live import live_blueprint
@@ -22,6 +23,7 @@ from shared import app, rest_api
 
 app.register_blueprint(main_blueprint, url_prefix="/")
 app.register_blueprint(boards_blueprint, url_prefix="/boards")
+app.register_blueprint(theme_blueprint, url_prefix="/theme")
 app.register_blueprint(threads_blueprint, url_prefix="/threads")
 app.register_blueprint(upload_blueprint, url_prefix="/upload")
 app.register_blueprint(slip_blueprint, url_prefix="/slip")
