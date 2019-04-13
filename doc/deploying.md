@@ -269,3 +269,17 @@ environment - whether you're using `docker-compose` or some other tool, etc. - b
 down to more or less running `docker run dangerontheranger/maniwani` while ensuring the other
 pieces of your stack are also executing. If you went with the directory mount option for your custom
 configuration files, don't forget to mount that with `--mount` or `-v` before running the container.
+
+
+Tips
+----
+
+### Running with file-based storage in production
+
+After putting `STORAGE_PROVIDER = "FOLDER"` into your configuration file, run the following once before
+bringing up the Maniwani container for the first time:
+
+	mkdir uploads && mkdir uploads/thumbs
+	chmod -R 757 uploads
+
+Taken from [issue #67](https://github.com/DangerOnTheRanger/maniwani/issues/67#issuecomment-477000278). 
