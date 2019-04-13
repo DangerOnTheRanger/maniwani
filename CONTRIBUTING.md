@@ -71,3 +71,15 @@ Maniwani uses Python-Markdown under the hood for parsing Markdown, so extending 
 capabilities follows the standard [Python-Markdown approach](https://python-markdown.github.io/extensions/api/);
 be sure to place your extension in the `model` directory. You'll then need to register your extension
 inside of `model/Post.py`.
+
+### Generating a migration
+
+Generating a new database migration - necessary when modifying the schema - is currently a mildly
+complicated process, unfortunately. You will need:
+* A database bootstrapped with the old database version, prior to your modifications. Re-using
+  `devmode.cfg` found under `deploy-configs/` can help with this.
+* A way to access the `migrations/` directory and save changes/new files made inside of it.
+  This is currently probably easiest by installing the Python prerequisites for Maniwani directly
+  on your development system via `pipenv`.
+After fulfilling the above requirements, run `pipenv run flask db migrate` to generate a new migration. You can
+then commit the new migration to Git.
