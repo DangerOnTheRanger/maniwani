@@ -1,0 +1,14 @@
+{%- extends "base.html" %}
+{% block title %}
+	move thread
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<form method="post" enctype="multipart/form-data" action="{{ url_for("threads.move_submit", thread_id=thread_id) }}"
+			<div class="form-group">
+				<label for="board">Move thread to board:</label>
+				<input type="text" id="board" name="board" class="form-control">
+			</div>
+		</form>
+	</div>
+{% endblock %}

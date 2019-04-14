@@ -22,3 +22,10 @@
 blockquote {
 	color: var(--green);
 }
+.mod-item {
+	display: block;
+	@extend .w-100;
+	@extend .my-1;
+	@extend .badge;
+	@extend .badge-primary;
+}
