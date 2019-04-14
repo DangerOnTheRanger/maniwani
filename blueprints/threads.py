@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 
 import captchouli
 import cooldown
@@ -76,6 +76,28 @@ def delete(thread_id):
     flash("Thread deleted!")
     return redirect(url_for("boards.catalog", board_id=board_id))
 
+
+@threads_blueprint.route("/<int:thread_id>/move")
+def move(thread_id):
+    if not get_slip() or not (get_slip().is_admin or get_slip().is_mod):
+        flash("Only moderators and admins can move threads!")
+        return redirect(url_for("threads.view", thread_id=thread_id))
+    return render_template("thread-move.html", thread_id=thread_id)
+
+
+@threads_blueprint.route("/<int:thread_id>/move", methods=["POST"])
+def move_submit(thread_id):
+    if not get_slip() or not (get_slip().is_admin or get_slip().is_mod):
+        flash("Only moderators and admins can move threads!")
+        return redirect(url_for("threads.view", thread_id=thread_id))
+    thread = Thread.query.get(thread_id)
+    board = Board.query.filter(Board.name == request.form["board"]).one()
+    thread.board = board.id
+    db.session.add(thread)
+    db.session.commit()
+    flash("Thread moved!")
+    return redirect(url_for("threads.view", thread_id=thread_id))
+    
 
 @threads_blueprint.route("/<int:thread_id>/new")
 def new_post(thread_id):

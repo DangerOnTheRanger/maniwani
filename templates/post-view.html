@@ -100,7 +100,13 @@
 						{% if is_op %}
 							{% set ns.delete_url = url_for("threads.delete", thread_id=thread_id) %}
 						{% endif %}
-						<small><a class="badge badge-danger" href="{{ ns.delete_url }}">Delete</a></small>
+						<details class="badge badge-danger">
+							<summary>Moderation</summary>
+							{% if is_op %}
+								<a class="mod-item" href="{{ url_for("threads.move", thread_id=thread_id) }}">Move</a>
+							{% endif %}
+							<a class="mod-item" href="{{ ns.delete_url }}">Delete</a>
+						</details>
 					</div>
 				{% endif %}
 			</div>
