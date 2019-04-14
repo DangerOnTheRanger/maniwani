@@ -10,7 +10,7 @@ reply to thread
 {% block navbar %}
 <a href="{{ url_for("threads.view", thread_id=thread_id) }}" class="nav-item nav-link">Back to thread</a>
 {% endblock %}
-{% import "post-base.html" as post %}
+{% import "post-base.html" as post with context %}
 {% block content %}
 {{ post.post_form(url_for("threads.post_submit", thread_id=thread_id), "thread", thread_id) }}
 {% endblock %}
