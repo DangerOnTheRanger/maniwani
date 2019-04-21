@@ -26,8 +26,10 @@ def unpack_data(sock, chunk_length=4096):
     length_remaining = struct.unpack("!I", response)[0]
     buf = ""
     while length_remaining > 0:
-        buf += str(sock.recv(chunk_length), "utf8")
-        length_remaining -= chunk_length
+        # ensure we don't accidentally grab data that may belong to a separate message
+        recv_amount = min(length_remaining, chunk_length)
+        buf += str(sock.recv(recv_amount), "utf8")
+        length_remaining -= recv_amount
     return buf
 
 
