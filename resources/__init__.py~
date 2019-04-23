@@ -1,4 +1,0 @@
-
-from .BoardCatalog import BoardCatalogResource
-
-BoardCatalogResource.
