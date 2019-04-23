@@ -6,3 +6,6 @@ uploads
 secret
 node_modules
 static
+
+# Emacs files
+*~

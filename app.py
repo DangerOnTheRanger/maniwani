@@ -12,13 +12,11 @@ from blueprints.theme import theme_blueprint
 from blueprints.threads import threads_blueprint
 from blueprints.upload import upload_blueprint
 from blueprints.live import live_blueprint
-from model.BoardCatalogResource import BoardCatalogResource
-from model.BoardListResource import BoardListResource
-from model.FirehoseResource import FirehoseResource
-from model.NewPostResource import NewPostResource
-from model.NewThreadResource import NewThreadResource
-from model.PostRemovalResource import PostRemovalResource
-from model.ThreadPostsResource import ThreadPostsResource
+from resources import (
+    BoardCatalogResource, BoardListResource, FirehoseResource,
+    NewPostResource, NewThreadResource, PostRemovalResource,
+    ThreadPostsResource,
+)
 from shared import app, rest_api
 
 app.register_blueprint(main_blueprint, url_prefix="/")
