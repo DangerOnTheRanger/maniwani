@@ -48,7 +48,7 @@ class ThreadPosts:
         if cached_posts:
             deserialized_posts = json.loads(cached_posts)
             for post in deserialized_posts:
-                post["datetime"] = datetime.date.fromtimestamp(post["datetime"])
+                post["datetime"] = datetime.datetime.utcfromtimestamp(post["datetime"])
             return deserialized_posts
         posts = self._json_friendly(thread.posts, thread)
         cache_connection.set(cache_key, json.dumps(posts, default=_datetime_handler))
