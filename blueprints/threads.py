@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+import gevent.pool
+from flask import Blueprint, render_template, redirect, url_for, flash, request, copy_current_request_context
 
 import captchouli
 import cooldown
@@ -61,8 +62,10 @@ def view(thread_id):
     board = db.session.query(Board).get(thread.board)
     num_posters = db.session.query(Poster).filter(Poster.thread == thread_id).count()
     num_media = thread.num_media()
-    return render_template("thread.html", thread_id=thread_id, board=board, posts=posts, num_views=thread.views,
-                           num_media=num_media, num_posters=num_posters)
+    reply_urls = _get_reply_urls(posts)
+    template = render_template("thread.html", thread_id=thread_id, board=board, posts=posts, num_views=thread.views,
+                               num_media=num_media, num_posters=num_posters, reply_urls=reply_urls)
+    return template
 
 
 @threads_blueprint.route("/<int:thread_id>/delete")
@@ -128,17 +131,20 @@ def delete_post(post_id):
     flash("Post deleted!")
     return redirect(url_for("threads.view", thread_id=thread_id))
 
+
 @threads_blueprint.route("/post/<int:post_id>")
 def render_post(post_id):
     raw_post = db.session.query(Post).get(post_id)
     thread_id = raw_post.thread
     thread = db.session.query(Thread).get(thread_id)
-    dummy_array = ThreadPosts()._to_json([raw_post], thread)
+    dummy_array = ThreadPosts()._json_friendly([raw_post], thread)
     render_for_threads(dummy_array)
     post = dummy_array[0]
+    reply_urls = _get_reply_urls([post])
     # TODO: properly set is_op, will be False most times, so set to that for now
     is_op = False
-    return render_template("post-view-single.html", post=post, thread_id=thread_id, is_op=is_op)
+    return render_template("post-view-single.html", post=post, thread_id=thread_id, is_op=is_op, reply_urls=reply_urls)
+
 
 @threads_blueprint.route("/<int:thread_id>/gallery")
 def view_gallery(thread_id):
@@ -146,3 +152,18 @@ def view_gallery(thread_id):
     thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
     board = db.session.query(Board).get(thread.board)
     return render_template("gallery.html", thread_id=thread_id, board=board, posts=posts)
+
+
+def _get_reply_urls(posts):
+    worker_pool = gevent.pool.Group()
+    reply_ids = set()
+    for post in posts:
+        for reply in post["replies"]:
+            reply_ids.add(reply)
+    reply_ids = list(reply_ids)
+    @copy_current_request_context
+    def _reply_url_worker(post_id):
+        return (post_id, url_for_post(post_id))
+    # TODO: allow configurable worker pool size
+    reply_urls = dict(worker_pool.imap_unordered(_reply_url_worker, reply_ids, maxsize=5))
+    return reply_urls

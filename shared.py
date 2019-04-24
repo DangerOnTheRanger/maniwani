@@ -6,8 +6,17 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
+from werkzeug.datastructures import ImmutableDict
 
-app = Flask(__name__, static_url_path='')
+import jinja_cache
+
+
+class ManiwaniApp(Flask):
+    jinja_options = ImmutableDict(extensions=["jinja2.ext.autoescape", "jinja2.ext.with_"],
+                                  bytecode_cache=jinja_cache.KeystoreCache())
+
+    
+app = ManiwaniApp(__name__, static_url_path='')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
