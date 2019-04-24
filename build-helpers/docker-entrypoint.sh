@@ -3,7 +3,7 @@
 # dev mode - file storage backend, sqlite, no nginx, etc.
 if [ $1 = "devmode" ]; then
 	# start up internal pubsub server
-	python storestub.py &
+	python3 storestub.py &
 	uwsgi --ini ./deploy-configs/uwsgi-devmode.ini
 # attempting to bootstrap?
 elif [ $1 = "bootstrap" ]; then

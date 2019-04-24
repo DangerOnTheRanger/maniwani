@@ -8,6 +8,7 @@ from flask import current_app, request
 from flask_restful import reqparse, inputs
 import requests
 
+import cache
 import captchouli
 import cooldown
 import keystore
@@ -17,6 +18,7 @@ from model.Poster import Poster
 from model.Post import Post
 from model.Reply import Reply, REPLY_REGEXP
 from model.Thread import Thread
+from model.ThreadPosts import thread_posts_cache_key
 from model.Slip import get_slip
 from shared import app, db, gen_poster_id
 
@@ -117,10 +119,14 @@ class NewPost:
             db.session.add(thread)
         db.session.flush()
         db.session.commit()
+        cache_connection = cache.Cache()
+        cache_connection.invalidate(thread_posts_cache_key(thread_id))
         pubsub_client = keystore.Pubsub()
         pubsub_client.publish("new-post", json.dumps({"thread": thread_id, "post": post.id}))
         for reply_id in replies:
             pubsub_client.publish("new-reply", json.dumps({"post": post.id, "thread": post.thread, "reply_to": reply_id}))
+            replied_post = db.session.query(Post).get(reply_id)
+            cache_connection.invalidate(thread_posts_cache_key(replied_post.thread))
 
 
 class InvalidMimeError(Exception):

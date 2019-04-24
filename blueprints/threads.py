@@ -133,7 +133,7 @@ def render_post(post_id):
     raw_post = db.session.query(Post).get(post_id)
     thread_id = raw_post.thread
     thread = db.session.query(Thread).get(thread_id)
-    dummy_array = ThreadPosts()._to_json([raw_post], thread)
+    dummy_array = ThreadPosts()._json_friendly([raw_post], thread)
     render_for_threads(dummy_array)
     post = dummy_array[0]
     # TODO: properly set is_op, will be False most times, so set to that for now

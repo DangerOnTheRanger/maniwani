@@ -5,13 +5,25 @@ from flask import url_for
 from markdown.util import etree
 from markdown.inlinepatterns import Pattern
 
+import cache
 from model.Reply import REPLY_REGEXP
 
 
+def post_url_cache_key(post_id):
+    return "post-url-%d" % post_id
+
+
 def url_for_post(post_id):
+    cache_key = post_url_cache_key(post_id)
+    cache_connection = cache.Cache()
+    cached_url = cache_connection.get(cache_key)
+    if cached_url:
+        return cached_url
     from model.Thread import Thread
     thread = Thread.query.filter(Thread.posts.any(id=post_id)).one()
-    return url_for("threads.view", thread_id=thread.id) + "#" + str(post_id)
+    post_url = url_for("threads.view", thread_id=thread.id) + "#" + str(post_id)
+    cache_connection.set(cache_key, post_url)
+    return post_url
 
 
 class PostReplyPattern(Pattern):
