@@ -160,10 +160,5 @@ def _get_reply_urls(posts):
     for post in posts:
         for reply in post["replies"]:
             reply_ids.add(reply)
-    reply_ids = list(reply_ids)
-    @copy_current_request_context
-    def _reply_url_worker(post_id):
-        return (post_id, url_for_post(post_id))
-    # TODO: allow configurable worker pool size
-    reply_urls = dict(worker_pool.imap_unordered(_reply_url_worker, reply_ids, maxsize=5))
+    reply_urls = dict(map(lambda i: (i, url_for_post(i)), reply_ids))
     return reply_urls
