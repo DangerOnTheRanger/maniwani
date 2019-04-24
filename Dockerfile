@@ -40,6 +40,7 @@ COPY blueprints /maniwani/blueprints
 COPY build-helpers /maniwani/build-helpers
 COPY deploy-configs /maniwani/deploy-configs
 COPY model /maniwani/model
+COPY resources /maniwani/resources
 COPY templates /maniwani/templates
 COPY ./build-helpers/docker-entrypoint.sh ./docker-entrypoint.sh
 # bootstrap dev image
