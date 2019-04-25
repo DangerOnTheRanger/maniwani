@@ -5,7 +5,7 @@ import captchouli
 import cooldown
 from model.Media import upload_size
 from model.Board import Board
-from model.NewPost import NewPost, InvalidMimeError, CaptchaError
+from model.NewPost import NewPost
 from model.NewThread import NewThread
 from model.Post import Post, render_for_threads
 from model.PostRemoval import PostRemoval
@@ -15,6 +15,7 @@ from model.Slip import get_slip
 from model.SubmissionError import SubmissionError
 from model.Thread import Thread
 from model.ThreadPosts import ThreadPosts
+from post import InvalidMimeError, CaptchaError
 from shared import db, app
 
 
@@ -38,7 +39,7 @@ def new(board_id):
 @threads_blueprint.route("/new", methods=["POST"])
 def submit():
     try:
-        thread = NewThread().post_impl()
+        thread = NewThread().post()
         return redirect(url_for("threads.view", thread_id=thread.id))
     except SubmissionError as e:
         flash(str(e.args[0]))
