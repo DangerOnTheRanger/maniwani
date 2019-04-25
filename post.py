@@ -67,7 +67,7 @@ def validate_captcha(board_id: int, args: dict) -> None:
             raise CaptchaError("reCAPTCHA score below threshold", board_id)
     elif captcha_method == "CAPTCHOULI":
         captchouli_args = {
-            k: v for k, v in args
+            k: v for k, v in args.items()
             if k.startswith("captchouli")
         }
         if not captchouli.valid_solution(captchouli_args):
