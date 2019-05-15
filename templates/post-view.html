@@ -3,25 +3,23 @@
 		{% if post["media"] %}
 			<div class="col">
 				<div class="img-thumbnail" style="display: inline-block; overflow: hidden;">
-					<a href="{{ url_for("upload.file", media_id=post["media"]) }}" class="media-container">
+					<a href="{{ get_media_url(post["media"], post["media_ext"]) }}" class="media-container">
 						{% set ns = namespace(img_style="max-width: 15em; max-height: 20em;") %}
 						{% if post["spoiler"] == True %}
 							<span id="spoiler-label-{{ post["media"] }}" class="spoiler-label text-danger">!</span>
 							{% set ns.img_style = ns.img_style + " opacity: 0.3; filter: blur(12px);" %}
 						{% endif %}
 						{% if post["mimetype"].startswith("image") and post["is_animated"] %}
-							<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" data-full="{{ url_for("upload.file",
-																										media_id=post["media"]) }}" data-thumb="{{ url_for("upload.thumb", media_id=post["media"]) }}" data-id="{{
-																																																				post["media"] }}" class="img-animated" style="{{ ns.img_style }}">
+							<img src="{{ get_thumb_url(post["media"]) }}" data-full="{{ get_media_url(post["media"], post["media_ext"]) }}" data-thumb="{{ get_thumb_url(post["media"]) }}" data-id="{{post["media"] }}" class="img-animated" style="{{ ns.img_style }}">
 						{% elif post["mimetype"].startswith("video") %}
 							<div data-id="{{ post["media"] }}" class="post-vid" style="display: inline-block;">
-								<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}" id="{{ "thumb-%d" % post["media"] }}">
+								<img src="{{ get_thumb_url(post["media"]) }}" style="{{ ns.img_style }}" id="{{ "thumb-%d" % post["media"] }}">
 								<video loop preload="none" class="mb-0 pb-0" style="{{ "display: none; " + ns.img_style }}" id="{{ "vid-%d" % post["media"] }}">
-									<source src="{{ url_for("upload.file", media_id=post["media"]) }}" type="{{ post["mimetype"] }}">
+									<source src="{{ get_media_url(post["media"], post["media_ext"]) }}" type="{{ post["mimetype"] }}">
 								</video>
 							</div>
 						{% else %}
-							<img src="{{ url_for("upload.thumb", media_id=post["media"]) }}" style="{{ ns.img_style }}">
+							<img src="{{ get_thumb_url(post["media"]) }}" style="{{ ns.img_style }}">
 						{% endif %}
 					</a>
 				</div>

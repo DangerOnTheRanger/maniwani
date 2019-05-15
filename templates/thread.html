@@ -64,7 +64,7 @@
 	</script>
 	<div class="container" id="thread-container">
 		{% for post in posts %}
-			{% import "post-view.html" as post_view %}
+			{% import "post-view.html" as post_view with context %}
 			{{ post_view.render_post(post, thread_id, loop.first, reply_urls) }}
 		{% endfor %}
 		<a href="#" id="thread-bottom" name="thread-bottom"></a>

@@ -5,7 +5,7 @@ import mimetypes
 import os
 import subprocess
 from PIL import Image, ImageDraw
-from flask import send_from_directory, redirect, session
+from flask import send_from_directory, redirect, session, url_for
 from shared import db, app
 
 
@@ -41,6 +41,10 @@ class StorageBase:
         pass
     def static_resource(self, path):
         raise NotImplementedError
+    def get_media_url(self, media_id, media_ext):
+        return url_for("upload.file", media_id=media_id)
+    def get_thumb_url(self, media_id):
+        return url_for("upload.thumb", media_id=media_id)
     def _make_thumbnail(self, attachment, media_id, mimetype, file_ext):
         if mimetype.startswith("image"):
             # image thumbnail generation
@@ -173,13 +177,16 @@ class S3Storage(StorageBase):
     def get_attachment(self, media_id):
         media = db.session.query(Media).filter(Media.id == media_id).one()
         media_ext = media.ext
-        s3_key = self._s3_attachment_key(media_id, media_ext)
-        media_url = self._format_url(self._ATTACHMENT_BUCKET, s3_key)
-        return redirect(media_url)
+        return redirect(self.get_media_url(media_id, media_ext))
     def get_thumbnail(self, media_id):
+        return redirect(self.get_thumb_url(media_id))
+    def get_media_url(self, media_id, media_ext):
+        s3_key = self._s3_attachment_key(media_id, media_ext)
+        return self._format_url(self._ATTACHMENT_BUCKET, s3_key)
+    def get_thumb_url(self, media_id):
         s3_key = self._s3_thumbnail_key(media_id)
         thumb_url = self._format_url(self._THUMBNAIL_BUCKET, s3_key)
-        return redirect(thumb_url)
+        return thumb_url
     def delete_attachment(self, media_id, media_ext):
         s3_attach_key = self._s3_attachment_key(media_id, media_ext)
         self._s3_remove_key(self._ATTACHMENT_BUCKET, s3_attach_key)
@@ -299,3 +306,8 @@ def upload_size():
         megabyte_size = upload_byte_size / (1024 ** 2)
         return "%.1fMB" % megabyte_size
     return dict(max_upload_size=max_upload_size)
+
+
+@app.context_processor
+def upload_urls():
+    return dict(get_media_url=storage.get_media_url, get_thumb_url=storage.get_thumb_url)
