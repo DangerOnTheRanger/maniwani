@@ -1,4 +1,3 @@
-import gevent.pool
 from flask import Blueprint, render_template, redirect, url_for, flash, request, copy_current_request_context
 
 import captchouli
@@ -156,7 +155,6 @@ def view_gallery(thread_id):
 
 
 def _get_reply_urls(posts):
-    worker_pool = gevent.pool.Group()
     reply_ids = set()
     for post in posts:
         for reply in post["replies"]:
