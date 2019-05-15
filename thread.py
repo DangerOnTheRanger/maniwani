@@ -17,7 +17,7 @@ from shared import db
 def get_tags(args: dict) -> List[Tag]:
     "Returns a list of Tag objects from the given tag list."
     if not args["tags"]:
-        return
+        return []
 
     tags = list(map(lambda s: s.strip(), args["tags"].split(",")))
     ret = []
