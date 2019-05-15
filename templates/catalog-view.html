@@ -24,7 +24,7 @@
 							<span id="spoiler-label-{{ thread["media"] }}" class="spoiler-label text-danger">!</span>
 							{% set style_ns.extra_class = "thumbnail-spoiler" %}
 						{% endif %}
-						<img class="catalog-thumbnail {{ style_ns.extra_class }}" src="{{ url_for("upload.thumb", media_id=thread["media"])}}" >
+						<img class="catalog-thumbnail {{ style_ns.extra_class }}" src="{{ get_thumb_url(thread["media"])}}" >
 					</div>
 					<div class="p-1">
 						{% if thread["subject"] %}
