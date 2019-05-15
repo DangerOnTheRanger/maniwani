@@ -1,12 +1,11 @@
 import datetime
 import json
 
-import gevent
-import gevent.queue
 from flask.json import jsonify
 
 import cache
 from model.Media import Media
+from model.Post import Post
 from model.Poster import Poster
 from model.Reply import Reply
 from model.Thread import Thread
@@ -55,46 +54,39 @@ class ThreadPosts:
         return posts
 
     def _json_friendly(self, posts, thread):
-        greenlet_pool = []
-        result_queue = gevent.queue.PriorityQueue()
-        post_queue = gevent.queue.Queue()
+        poster_subquery = db.session.query(Post.poster).filter(Post.thread == thread.id).subquery()
+        unkeyed_posters = db.session.query(Poster).filter(Poster.id.in_(poster_subquery)).all()
+        keyed_posters = {p.id: p for p in unkeyed_posters}
+        media_subquery = db.session.query(Post.media).filter(Post.thread == thread.id).subquery()
+        unkeyed_media = db.session.query(Media).filter(Media.id.in_(media_subquery)).all()
+        keyed_media = {m.id: m for m in unkeyed_media}
+        reply_subquery = db.session.query(Post.id).filter(Post.thread == thread.id).subquery()
+        unkeyed_replies = db.session.query(Reply).filter(Reply.reply_to.in_(reply_subquery)).all()
+        keyed_replies = {}
+        for reply in unkeyed_replies:
+            if keyed_replies.get(reply.reply_to) is None:
+                keyed_replies[reply.reply_to] = []
+            keyed_replies[reply.reply_to].append(reply.reply_from)
+        denormalized_posts = []
         for index, post in enumerate(posts):
-            post_queue.put((index, post))
-        # TODO: allow worker pool size to be configurable
-        for x in range(5):
-            worker = gevent.spawn(post_denormalize_worker, thread, post_queue, result_queue)
-            greenlet_pool.append(worker)
-        gevent.joinall(greenlet_pool)
-        sorted_results = list()
-        while not result_queue.empty():
-            _, post = result_queue.get()
-            sorted_results.append(post)
-        return sorted_results
-
-
-def post_denormalize_worker(thread, post_queue, result_queue):
-    while not post_queue.empty():
-        index, post = post_queue.get()
-        p_dict = dict()
-        p_dict["body"] = post.body
-        p_dict["datetime"] = post.datetime
-        p_dict["id"] = post.id
-        if index == 0:
-            p_dict["tags"] = thread.tags
-        session = db.session
-        poster = session.query(Poster).filter(Poster.id == post.poster).one()
-        p_dict["poster"] = poster.hex_string
-        p_dict["subject"] = post.subject
-        p_dict["media"] = post.media
-        if post.media:
-            media = session.query(Media).filter(Media.id == post.media).one()
-            p_dict["media_ext"] = media.ext
-            p_dict["mimetype"] = media.mimetype
+            p_dict = dict()
+            p_dict["body"] = post.body
+            p_dict["datetime"] = post.datetime
+            p_dict["id"] = post.id
+            if index == 0:
+                p_dict["tags"] = thread.tags
+            poster = keyed_posters[post.poster]
+            p_dict["poster"] = poster.hex_string
+            p_dict["subject"] = post.subject
+            p_dict["media"] = post.media
+            if post.media:
+                media = keyed_media[post.media]
+                p_dict["media_ext"] = media.ext
+                p_dict["mimetype"] = media.mimetype
             p_dict["is_animated"] = media.is_animated
-        p_dict["spoiler"] = post.spoiler
-        p_dict["slip"] = poster.slip
-        p_dict["replies"] = []
-        replies = session.query(Reply).filter(Reply.reply_to == post.id).all()
-        for reply in replies:
-            p_dict["replies"].append(reply.reply_from)
-        result_queue.put((index, p_dict))
+            p_dict["spoiler"] = post.spoiler
+            p_dict["slip"] = poster.slip
+            replies = keyed_replies.get(post.id)
+            p_dict["replies"] = replies or list()
+            denormalized_posts.append(p_dict)
+        return denormalized_posts
