@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, copy_current_request_context
+from flask import Blueprint, render_template, redirect, url_for, flash, request, copy_current_request_context, session
 
 import cache
 import captchouli
@@ -68,12 +68,12 @@ def view(thread_id):
         cached_views = int(cached_views)
     if fetch_from_cache and (thread.views / cached_views) >= app.config.get("CACHE_VIEW_RATIO", 0):
         fetch_from_cache = False
-    response_cache_key = "thread-%d-%d-render" % (thread_id, get_slip_bitmask())
+    current_theme = session.get("theme") or app.config.get("DEFAULT_THEME") or "stock"
+    response_cache_key = "thread-%d-%d-%s-render" % (thread_id, get_slip_bitmask(), current_theme)
     if fetch_from_cache:
         cache_response_body = cache_connection.get(response_cache_key)
         if cache_response_body is not None:
             return cache_response_body
-        else:
     posts = ThreadPosts().retrieve(thread_id)
     render_for_threads(posts)
     board = db.session.query(Board).get(thread.board)

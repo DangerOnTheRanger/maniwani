@@ -182,9 +182,11 @@ def invalidate_posts(thread: Thread, replies: List[Reply]):
     cache = Cache()
     cache.invalidate(thread_posts_cache_key(thread.id))
     slip_bitmasks = 0, 1, 3, 7
+    theme_list = app.config.get("THEME_LIST") or ("stock", "harajuku", "wildride")
     for bitmask in slip_bitmasks:
-        render_cache_key = "thread-%d-%d-render" % (thread.id, bitmask)
-        cache.invalidate(render_cache_key)
+        for theme in theme_list:
+            render_cache_key = "thread-%d-%d-%s-render" % (thread.id, bitmask, theme)
+            cache.invalidate(render_cache_key)
 
     reply_ids = list(map(lambda r: r.reply_to, replies))
     thread_ids = (
