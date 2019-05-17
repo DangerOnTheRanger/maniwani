@@ -26,6 +26,18 @@ def get_slip():
     return None
 
 
+def get_slip_bitmask():
+    slip = get_slip()
+    if slip is None:
+        return 0
+    bitmask = 1
+    if slip.is_admin:
+        bitmask |= 2
+    if slip.is_mod:
+        bitmask |= 4
+    return bitmask
+
+
 def slip_from_id(slip_id):
     return db.session.query(Slip).filter(Slip.id == slip_id).one()
 

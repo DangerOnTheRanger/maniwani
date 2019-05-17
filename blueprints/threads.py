@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, copy_current_request_context
+from flask import Blueprint, render_template, redirect, url_for, flash, request, copy_current_request_context, session
 
+import cache
 import captchouli
 import cooldown
 from model.Media import upload_size
@@ -10,7 +11,7 @@ from model.Post import Post, render_for_threads
 from model.PostRemoval import PostRemoval
 from model.PostReplyPattern import url_for_post
 from model.Poster import Poster
-from model.Slip import get_slip
+from model.Slip import get_slip, get_slip_bitmask
 from model.SubmissionError import SubmissionError
 from model.Thread import Thread
 from model.ThreadPosts import ThreadPosts
@@ -53,18 +54,36 @@ def submit():
 
 @threads_blueprint.route("/<int:thread_id>")
 def view(thread_id):
-    posts = ThreadPosts().retrieve(thread_id)
-    render_for_threads(posts)
     thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
     thread.views += 1
     db.session.add(thread)
     db.session.commit()
+    cache_connection = cache.Cache()
+    view_key = "thread-%d-views" % thread_id
+    cached_views = cache_connection.get(view_key)
+    fetch_from_cache = True
+    if cached_views is None:
+        fetch_from_cache = False
+    else:
+        cached_views = int(cached_views)
+    if fetch_from_cache and (thread.views / cached_views) >= app.config.get("CACHE_VIEW_RATIO", 0):
+        fetch_from_cache = False
+    current_theme = session.get("theme") or app.config.get("DEFAULT_THEME") or "stock"
+    response_cache_key = "thread-%d-%d-%s-render" % (thread_id, get_slip_bitmask(), current_theme)
+    if fetch_from_cache:
+        cache_response_body = cache_connection.get(response_cache_key)
+        if cache_response_body is not None:
+            return cache_response_body
+    posts = ThreadPosts().retrieve(thread_id)
+    render_for_threads(posts)
     board = db.session.query(Board).get(thread.board)
     num_posters = db.session.query(Poster).filter(Poster.thread == thread_id).count()
     num_media = thread.num_media()
     reply_urls = _get_reply_urls(posts)
     template = render_template("thread.html", thread_id=thread_id, board=board, posts=posts, num_views=thread.views,
                                num_media=num_media, num_posters=num_posters, reply_urls=reply_urls)
+    cache_connection.set(view_key, str(thread.views))
+    cache_connection.set(response_cache_key, template)
     return template
 
 
