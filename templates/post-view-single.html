@@ -1,2 +1,2 @@
-{% import "post-view.html" as post_view %}
-{{ post_view.render_post(post, thread_id, is_op) }}
+{% import "post-view.html" as post_view with context %}
+{{ post_view.render_post(post, thread_id, is_op, reply_urls) }}

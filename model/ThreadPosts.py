@@ -83,7 +83,7 @@ class ThreadPosts:
                 media = keyed_media[post.media]
                 p_dict["media_ext"] = media.ext
                 p_dict["mimetype"] = media.mimetype
-            p_dict["is_animated"] = media.is_animated
+                p_dict["is_animated"] = media.is_animated
             p_dict["spoiler"] = post.spoiler
             p_dict["slip"] = poster.slip
             replies = keyed_replies.get(post.id)
