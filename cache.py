@@ -11,5 +11,6 @@ class Cache:
     def set(self, key, value):
         self._keystore.set(key, value)
     def invalidate(self, key):
-        self._keystore.delete(key)
+        if self._keystore.exists(key):
+            self._keystore.delete(key)
 
