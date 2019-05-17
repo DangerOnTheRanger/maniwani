@@ -77,7 +77,7 @@ def live_firehose():
             # client closed connection
             keystore_client.delete(client_id)
     response = Response(client_pump(), mimetype="text/event-stream")
-    response.headers["Cache-Control"] = "no-cache"
+    response.headers["Cache-Control"] = "no-store"
     # prevent reverse proxy from buffering messages
     response.headers["X-Accel-Buffering"] = "no"
     return response

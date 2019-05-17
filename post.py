@@ -236,5 +236,9 @@ def create_post(thread: Thread, args: dict) -> Post:
 
     publish_thread(thread, post, replies)
     invalidate_posts(thread, replies)
+    # import here to prevent a circular import
+    # TODO: fix circular import with NewPost
+    from thread import invalidate_board_cache
+    invalidate_board_cache(board_id)
 
     return post
