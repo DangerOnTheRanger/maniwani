@@ -105,7 +105,7 @@ but a brief description of each follows:
   supply these options unless `CAPTCHA_METHOD` has been set to `"RECAPTCHA"`, obviously.
 * `CAPTCHOULI_URL` - an URL specifying where the captchouli server has been set up. Only required if
   `CAPTCHA_METHOD` has been set to `"CAPTCHOULI"`.
-* `CACHE_VIEW_RATIO` - an optional integer that Maniwani will check when caching threads. If set, Maniwani will cache
+* `CACHE_VIEW_RATIO` - an optional number that Maniwani will check when caching threads. If set, Maniwani will cache
   a pre-rendered copy of a thread until the real view count divided by the view count in the cached render is greater
   than this number. If not set, Maniwani will not attempt to fetch any fully-rendered threads from the cache. Set this
   if site performance proves to be an issue; a good initial value is `1.15`.
