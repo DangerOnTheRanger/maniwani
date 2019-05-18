@@ -78,15 +78,16 @@ def view(thread_id):
     etag_cache_key = "%s-etag" % response_cache_key
     if fetch_from_cache:
         etag_header = request.headers.get("If-None-Match")
+        current_etag = cache_connection.get(etag_cache_key)
         if etag_header:
             parsed_etag = parse_etags(etag_header)
-            current_etag = cache_connection.get(etag_cache_key)
             if parsed_etag.contains_weak(current_etag):
                  return make_response("", 304)
         cache_response_body = cache_connection.get(response_cache_key)
         if cache_response_body is not None:
             cached_response = make_response(cache_response_body)
-            cached_response.set_etag(etag_value, weak=True)
+            cached_response.set_etag(current_etag, weak=True)
+            cached_response.headers["Cache-Control"] = "public,must-revalidate"
             return cached_response
     posts = ThreadPosts().retrieve(thread_id)
     render_for_threads(posts)
@@ -98,6 +99,7 @@ def view(thread_id):
                                num_media=num_media, num_posters=num_posters, reply_urls=reply_urls)
     uncached_response = make_response(template)
     uncached_response.set_etag(etag_value, weak=True)
+    uncached_response.headers["Cache-Control"] = "public,must-revalidate"
     cache_connection.set(view_key, str(thread.views))
     cache_connection.set(response_cache_key, template)
     cache_connection.set(etag_cache_key, etag_value)

@@ -10,5 +10,5 @@
 {% endblock %}
 {% block content %}
 {% import "catalog-view.html" as catalog_view with context %}
-{{ catalog_view.catalog_view(threads) }}
+{{ catalog_view.catalog_view(threads, tag_styles) }}
 {% endblock %}

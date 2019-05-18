@@ -1,4 +1,4 @@
-{% macro catalog_view(threads, display_board=False) %}
+{% macro catalog_view(threads, tag_styles, display_board=False) %}
 	<div class="container-fluid">
 		<div class="catalog-grid">
 			{% for thread in threads %}	
@@ -6,11 +6,13 @@
 				{% set ns = namespace(bg_style="bg-light", text_style="text-body") %}	
 				{% if thread.tags %}
 					{% set ns.main_tag = thread.tags[0].name %}
-					{% if style_for_tag(ns.main_tag).get("bg_style") %}
-						{% set ns.bg_style = style_for_tag(ns.main_tag).get("bg_style") %}
-					{% endif %}
-					{% if style_for_tag(ns.main_tag).get("text_style") %}
-						{% set ns.text_style = style_for_tag(ns.main_tag).get("text_style") %}
+					{% if tag_styles.get(ns.main_tag) is not none %}
+						{% if tag_styles[ns.main_tag].get("bg_style") is not none %}
+							{% set ns.bg_style = tag_styles[ns.main_tag]["bg_style"] %}
+						{% endif %}
+						{% if tag_styles[ns.main_tag].get("text_style") is not none %}
+							{% set ns.text_style = tag_styles[ns.main_tag]["text_style"] %}
+						{% endif %}
 					{% endif %}
 				{% endif %}
 				{% if thread.admin_post %}

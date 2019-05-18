@@ -15,13 +15,23 @@ from model.Tag import Tag
 from shared import db, app
 
 
-def style_for_tag(tag_name):
-    tag = db.session.query(Tag).filter(Tag.name == tag_name).one()
-    return {"bg_style": tag.bg_style, "text_style": tag.text_style}
+def get_tags(threads):
+    tag_names = set()
+    for thread in threads:
+        for tag in thread["tags"]:
+            tag_names.add(tag)
+    tag_styles = {}
+    found_tags = Tag.query.filter(Tag.name.in_(tag_names)).all()
+    for tag in found_tags:
+        tag_styles[tag.name] = {}
+        if tag.bg_style:
+            tag_styles[tag.name]["bg_style"] = tag.bg_style
+        if tag.text_style:
+            tag_styles[tag.name]["text_style"] = tag.text_style
+    return tag_styles
 
 
 boards_blueprint = Blueprint('boards', __name__, template_folder='template')
-boards_blueprint.add_app_template_global(style_for_tag)
 
 
 @boards_blueprint.route("/")
@@ -39,21 +49,24 @@ def catalog(board_id):
     etag_cache_key = "%s-etag" % response_cache_key
     if cached_response_body:
         etag_header = request.headers.get("If-None-Match")
+        current_etag = cache_connection.get(etag_cache_key)
         if etag_header:
             parsed_etag = parse_etags(etag_header)
-            current_etag = cache_connection.get(etag_cache_key)
             if parsed_etag.contains_weak(current_etag):
                 return make_response("", 304)
         cached_response = make_response(cached_response_body)
-        cached_response.set_etag(etag_value, weak=True)
+        cached_response.set_etag(current_etag, weak=True)
+        cached_response.headers["Cache-Control"] = "public,must-revalidate"
         return cached_response
     threads = BoardCatalog().retrieve(board_id)
     board = db.session.query(Board).get(board_id)
     board_name = board.name
     render_for_catalog(threads)
-    template = render_template("catalog.html", threads=threads, board=board, board_name=board_name)
+    tag_styles = get_tags(threads)
+    template = render_template("catalog.html", threads=threads, board=board, board_name=board_name, tag_styles=tag_styles)
     uncached_response = make_response(template)
     uncached_response.set_etag(etag_value, weak=True)
+    uncached_response.headers["Cache-Control"] = "public,must-revalidate"
     cache_connection.set(response_cache_key, template)
     cache_connection.set(etag_cache_key, etag_value)
     return uncached_response
