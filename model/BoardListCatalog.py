@@ -1,4 +1,8 @@
+import pickle
+
 from flask.json import jsonify
+
+import cache
 from shared import db
 from model.Board import Board
 
@@ -9,9 +13,18 @@ class BoardCatalog:
 
     def retrieve(self, board_id):
         session = db.session
+        cache_connection = cache.Cache()
+        board_cache_key = "board-%d-threads" % board_id
+        cached_threads = cache_connection.get(board_cache_key)
+        if cached_threads:
+            deserialized_threads = pickle.loads(bytes(cached_threads))
+            return deserialized_threads
         board = session.query(Board).filter(Board.id == board_id).one()
         thread_list = board.threads
-        return self._to_json(thread_list)
+        json_friendly = self._to_json(thread_list)
+        cache_friendly = str(pickle.dumps(json_friendly))
+        cache_connection.set(board_cache_key, cache_friendly)
+        return json_friendly
 
     def _to_json(self, threads):
         result = []

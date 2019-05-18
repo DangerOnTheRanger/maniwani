@@ -1,14 +1,18 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+import time
+
+from flask import Blueprint, render_template, redirect, url_for, flash, request, make_response, session
 from flask_restful import reqparse
 from markdown import markdown
+from werkzeug.http import parse_etags
 
+import cache
 from model.Board import Board
 from model.BoardList import BoardList
 from model.BoardListCatalog import BoardCatalog
 from model.Post import render_for_catalog
-from model.Slip import get_slip
+from model.Slip import get_slip, get_slip_bitmask
 from model.Tag import Tag
-from shared import db
+from shared import db, app
 
 
 def style_for_tag(tag_name):
@@ -27,11 +31,32 @@ def list():
 
 @boards_blueprint.route("/<int:board_id>")
 def catalog(board_id):
+    current_theme = session.get("theme") or app.config.get("DEFAULT_THEME") or "stock"
+    response_cache_key = "board-%d-%d-%s-render" % (board_id, get_slip_bitmask(), current_theme)
+    cache_connection = cache.Cache()
+    cached_response_body = cache_connection.get(response_cache_key)
+    etag_value = "%s-%f" % (response_cache_key, time.time())
+    etag_cache_key = "%s-etag" % response_cache_key
+    if cached_response_body:
+        etag_header = request.headers.get("If-None-Match")
+        if etag_header:
+            parsed_etag = parse_etags(etag_header)
+            current_etag = cache_connection.get(etag_cache_key)
+            if parsed_etag.contains_weak(current_etag):
+                return make_response("", 304)
+        cached_response = make_response(cached_response_body)
+        cached_response.set_etag(etag_value, weak=True)
+        return cached_response
     threads = BoardCatalog().retrieve(board_id)
     board = db.session.query(Board).get(board_id)
     board_name = board.name
     render_for_catalog(threads)
-    return render_template("catalog.html", threads=threads, board=board, board_name=board_name)
+    template = render_template("catalog.html", threads=threads, board=board, board_name=board_name)
+    uncached_response = make_response(template)
+    uncached_response.set_etag(etag_value, weak=True)
+    cache_connection.set(response_cache_key, template)
+    cache_connection.set(etag_cache_key, etag_value)
+    return uncached_response
 
 
 @boards_blueprint.route("/rules", defaults={'board_id': None})

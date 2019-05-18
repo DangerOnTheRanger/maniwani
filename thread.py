@@ -5,13 +5,14 @@ from flask import request
 from flask_restful import reqparse
 from sqlalchemy import desc
 
+import cache
 import keystore
 from model.Board import Board
 from model.NewPost import NewPost
 from model.SubmissionError import SubmissionError
 from model.Tag import Tag
 from model.Thread import Thread
-from shared import db
+from shared import app, db
 
 
 def get_tags(args: dict) -> List[Tag]:
@@ -35,6 +36,7 @@ def get_tags(args: dict) -> List[Tag]:
         ret.append(Tag(name=tag))
 
     return ret
+
 
 
 def slide_last_thread(board_id: int):
@@ -96,3 +98,23 @@ def create_thread(args: dict) -> Thread:
     publish_new_thread(thread)
 
     return thread
+
+
+def invalidate_board_cache(board_id: int):
+    """Invalidates the cache for the given board in addition to the firehose."""
+    cache_connection = cache.Cache()
+    slip_bitmasks = 0, 1, 3, 7
+    theme_list = app.config.get("THEME_LIST") or ("stock", "harajuku", "wildride")
+    # invalidate full-page renders
+    for bitmask in slip_bitmasks:
+        for theme in theme_list:
+            catalog_render_key = "board-%d-%d-%s-render" % (board_id, bitmask, theme)
+            cache_connection.invalidate(catalog_render_key)
+            firehose_render_key = "firehose-%d-%s-render" % (bitmask, theme)
+            cache_connection.invalidate(firehose_render_key)
+    # invalidate retrieved thread listings
+    catalog_thread_key = "board-%d-threads" % board_id
+    cache_connection.invalidate(catalog_thread_key)
+    # invalidate firehose listing
+    firehose_thread_key = "firehose-threads"
+    cache_connection.invalidate(firehose_thread_key)

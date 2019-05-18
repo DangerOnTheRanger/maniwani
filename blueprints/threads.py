@@ -1,4 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, copy_current_request_context, session
+import time
+
+from flask import Blueprint, render_template, redirect, url_for, flash, request, copy_current_request_context, session, make_response
+from werkzeug.http import parse_etags
 
 import cache
 import captchouli
@@ -17,6 +20,7 @@ from model.Thread import Thread
 from model.ThreadPosts import ThreadPosts
 from post import InvalidMimeError, CaptchaError
 from shared import db, app
+from thread import invalidate_board_cache
 
 
 threads_blueprint = Blueprint('threads', __name__, template_folder='template')
@@ -58,6 +62,8 @@ def view(thread_id):
     thread.views += 1
     db.session.add(thread)
     db.session.commit()
+    current_theme = session.get("theme") or app.config.get("DEFAULT_THEME") or "stock"
+    response_cache_key = "thread-%d-%d-%s-render" % (thread_id, get_slip_bitmask(), current_theme)
     cache_connection = cache.Cache()
     view_key = "thread-%d-views" % thread_id
     cached_views = cache_connection.get(view_key)
@@ -68,12 +74,20 @@ def view(thread_id):
         cached_views = int(cached_views)
     if fetch_from_cache and (thread.views / cached_views) >= app.config.get("CACHE_VIEW_RATIO", 0):
         fetch_from_cache = False
-    current_theme = session.get("theme") or app.config.get("DEFAULT_THEME") or "stock"
-    response_cache_key = "thread-%d-%d-%s-render" % (thread_id, get_slip_bitmask(), current_theme)
+    etag_value = "%s-%f" % (response_cache_key, time.time())
+    etag_cache_key = "%s-etag" % response_cache_key
     if fetch_from_cache:
+        etag_header = request.headers.get("If-None-Match")
+        if etag_header:
+            parsed_etag = parse_etags(etag_header)
+            current_etag = cache_connection.get(etag_cache_key)
+            if parsed_etag.contains_weak(current_etag):
+                 return make_response("", 304)
         cache_response_body = cache_connection.get(response_cache_key)
         if cache_response_body is not None:
-            return cache_response_body
+            cached_response = make_response(cache_response_body)
+            cached_response.set_etag(etag_value, weak=True)
+            return cached_response
     posts = ThreadPosts().retrieve(thread_id)
     render_for_threads(posts)
     board = db.session.query(Board).get(thread.board)
@@ -82,9 +96,12 @@ def view(thread_id):
     reply_urls = _get_reply_urls(posts)
     template = render_template("thread.html", thread_id=thread_id, board=board, posts=posts, num_views=thread.views,
                                num_media=num_media, num_posters=num_posters, reply_urls=reply_urls)
+    uncached_response = make_response(template)
+    uncached_response.set_etag(etag_value, weak=True)
     cache_connection.set(view_key, str(thread.views))
     cache_connection.set(response_cache_key, template)
-    return template
+    cache_connection.set(etag_cache_key, etag_value)
+    return uncached_response
 
 
 @threads_blueprint.route("/<int:thread_id>/delete")
@@ -95,6 +112,7 @@ def delete(thread_id):
     thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
     board_id = thread.board
     ThreadPosts().delete(thread_id)
+    invalidate_board_cache(board_id)
     flash("Thread deleted!")
     return redirect(url_for("boards.catalog", board_id=board_id))
 
@@ -113,10 +131,13 @@ def move_submit(thread_id):
         flash("Only moderators and admins can move threads!")
         return redirect(url_for("threads.view", thread_id=thread_id))
     thread = Thread.query.get(thread_id)
-    board = Board.query.filter(Board.name == request.form["board"]).one()
-    thread.board = board.id
+    old_board = thread.board
+    new_board = Board.query.filter(Board.name == request.form["board"]).one()
+    thread.board = new_board.id
     db.session.add(thread)
     db.session.commit()
+    invalidate_board_cache(old_board)
+    invalidate_board_cache(new_board)
     flash("Thread moved!")
     return redirect(url_for("threads.view", thread_id=thread_id))
     
