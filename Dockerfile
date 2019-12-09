@@ -1,7 +1,7 @@
-FROM python:3.6-alpine AS dev
+FROM python:3.7-alpine AS dev
 WORKDIR /maniwani
 # uwsgi and associated plugins
-RUN apk add uwsgi-python3 uwsgi-gevent3 uwsgi-http
+RUN apk add uwsgi-python3 uwsgi-gevent3 uwsgi-gevent py3-gevent uwsgi-http
 # backend dependencies
 RUN pip install pipenv
 # dependencies for Pillow
@@ -22,7 +22,7 @@ RUN apk del build-base gcc python3-dev musl-dev jpeg-dev zlib-dev
 ENV MANIWANI_CFG=./deploy-configs/devmode.cfg
 # workaround for uwsgi inexplicably not picking up /usr/local/lib even though
 # system python has it
-ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.6/site-packages
+ENV PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.7/site-packages
 # build static frontend files
 COPY package.json /maniwani
 COPY package-lock.json /maniwani
