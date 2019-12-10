@@ -61,6 +61,11 @@
 			</details>
 		{% endif %}
 	{% endif %}
+    {% if on_captcha_cooldown() == False %}
+        {% if config["CAPTCHA_METHOD"] == "CAPTCHA" %}
+
+        {% endif %}
+    {% endif %}
     {% if embed_submit %}
 		<button type="submit" class="btn btn-primary">Submit</button>
     {% endif %}

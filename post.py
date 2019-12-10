@@ -72,6 +72,9 @@ def validate_captcha(board_id: int, args: dict) -> None:
         }
         if not captchouli.valid_solution(captchouli_args):
             raise CaptchaError("Incorrect CAPTCHA solution", board_id)
+    elif captcha_method == "CAPTCHA":
+        # TODO: Actual implementation of CAPTCHA, without 3rd party services.
+        raise NotImplementedError
     else:
         # TODO is this supposed to be nothing at all? raise exception?
         pass

@@ -17,6 +17,7 @@ requests = "*"
 bleach = "*"
 gevent = "*"
 redis = "*"
+captcha = "*"
 
 [dev-packages]
 
