@@ -35,7 +35,7 @@
     "@fortawesome/fontawesome-free": "^5.6.0",
     "bootstrap": "^4.3.1",
     "imagesloaded": "^4.1.4",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "masonry-layout": "^4.2.2",
     "popper.js": "^1.14.7"
   }
