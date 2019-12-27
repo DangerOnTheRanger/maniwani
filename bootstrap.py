@@ -1,18 +1,16 @@
 from gevent import monkey
 monkey.patch_all()
 
-import json
-import os
-
 from alembic import command
 from alembic.config import Config
 from flask.cli import with_appcontext
-
 from model.Board import Board
 from model.Slip import gen_slip
 from model.Tag import Tag
 from model.Media import storage
 from shared import app, db
+import json
+import os
 
 
 MIGRATION_DIR = "./migrations"

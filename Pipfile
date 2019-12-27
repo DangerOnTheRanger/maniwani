@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 Flask = "*"
 Flask-SQLAlchemy = "*"
+Flask-Captcha-New = "*"
 Markdown = "*"
 Pillow = "*"
 SQLAlchemy = "*"

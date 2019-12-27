@@ -1,10 +1,6 @@
 import gevent.monkey
 gevent.monkey.patch_all()
-import sys
-import traceback
-
 from flask import render_template, send_from_directory
-
 from blueprints.boards import boards_blueprint
 from blueprints.main import main_blueprint
 from blueprints.slip import slip_blueprint
@@ -18,6 +14,13 @@ from resources import (
     ThreadPostsResource,
 )
 from shared import app, rest_api
+from flask_captcha import Captcha
+from flask_captcha.views import captcha_blueprint
+from flask_captcha.models import CaptchaStore, CaptchaSequenceCache
+import sys
+import traceback
+
+app_captcha = Captcha()
 
 app.register_blueprint(main_blueprint, url_prefix="/")
 app.register_blueprint(boards_blueprint, url_prefix="/boards")
@@ -37,7 +40,6 @@ if app.config["SERVE_REST"]:
     rest_api.add_resource(NewPostResource, "/api/v1/thread/<int:thread_id>/new")
     rest_api.add_resource(FirehoseResource, "/api/v1/firehose")
     app.register_blueprint(live_blueprint, url_prefix="/api/v1")
-    
 
 
 @app.errorhandler(404)
