@@ -25,17 +25,17 @@
   },
   "homepage": "https://github.com/DangerOnTheRanger/maniwani#readme",
   "devDependencies": {
-    "browser-sync": "^2.26.3",
+    "browser-sync": "^2.26.7",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-sass": "^4.0.2",
-    "node-sass": "^4.11.0"
+    "node-sass": "^4.14.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.6.0",
     "bootstrap": "^4.3.1",
     "imagesloaded": "^4.1.4",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.0",
     "masonry-layout": "^4.2.2",
     "popper.js": "^1.14.7"
   }
