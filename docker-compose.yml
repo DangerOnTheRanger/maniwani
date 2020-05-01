@@ -2,6 +2,9 @@ version: '3'
 services:
     maniwani:
         build: .
+    maniwani-frontend:
+        build: ./frontend
+        hostname: maniwani-frontend
     captchouli:
         build: ./build-helpers/captchouli
         hostname: captchouli

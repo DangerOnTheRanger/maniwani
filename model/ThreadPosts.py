@@ -74,7 +74,7 @@ class ThreadPosts:
             p_dict["datetime"] = post.datetime
             p_dict["id"] = post.id
             if index == 0:
-                p_dict["tags"] = thread.tags
+                p_dict["tags"] = [tag.name for tag in thread.tags]
             poster = keyed_posters[post.poster]
             p_dict["poster"] = poster.hex_string
             p_dict["subject"] = post.subject

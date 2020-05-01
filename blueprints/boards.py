@@ -6,6 +6,7 @@ from markdown import markdown
 from werkzeug.http import parse_etags
 
 import cache
+import renderer
 from model.Board import Board
 from model.BoardList import BoardList
 from model.BoardListCatalog import BoardCatalog
@@ -63,7 +64,16 @@ def catalog(board_id):
     board_name = board.name
     render_for_catalog(threads)
     tag_styles = get_tags(threads)
-    template = render_template("catalog.html", threads=threads, board=board, board_name=board_name, tag_styles=tag_styles)
+    catalog_data = {}
+    catalog_data["tag_styles"] = tag_styles
+    catalog_data["display_board"] = False
+    for thread in threads:
+        thread["thread_url"] = url_for("threads.view", thread_id=thread["id"])
+        thread["thumb_url"] = url_for("upload.thumb", media_id=thread["media"])
+        del thread["last_updated"]
+    catalog_data["threads"] = threads
+    #template = render_template("catalog.html", threads=threads, board=board, board_name=board_name, tag_styles=tag_styles)
+    template = renderer.render_catalog(catalog_data, board_name, board_id)
     uncached_response = make_response(template)
     uncached_response.set_etag(etag_value, weak=True)
     uncached_response.headers["Cache-Control"] = "public,must-revalidate"

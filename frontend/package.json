@@ -1,0 +1,26 @@
+{
+  "name": "maniwani-frontend",
+  "version": "1.0.0",
+  "description": "Express/React-based frontend for Maniwani",
+  "main": "main.js",
+  "scripts": {
+    "gulp": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kermit Alexander II",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "express": "^4.17.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-timeago": "^4.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.7.5",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0"
+  }
+}
