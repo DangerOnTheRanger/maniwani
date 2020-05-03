@@ -3,7 +3,7 @@ WORKDIR /maniwani
 # uwsgi and associated plugins
 RUN apk add uwsgi-python3 uwsgi-gevent3 py3-gevent uwsgi-http
 # backend dependencies
-RUN pip install pipenv
+RUN pip install pipenv && apk add libffi-dev
 # dependencies for Pillow
 RUN apk add build-base jpeg-dev zlib-dev libwebp-dev
 # dependencies for psycopg2
