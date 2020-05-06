@@ -16,7 +16,7 @@ boto3 = "*"
 flask-migrate = "*"
 requests = "*"
 bleach = "*"
-gevent = "*"
+gevent = "==1.5.0"
 redis = "*"
 captcha = "*"
 
