@@ -1,7 +1,7 @@
 FROM python:3.7-alpine AS dev
 WORKDIR /maniwani
 # uwsgi and associated plugins
-RUN apk add uwsgi-python3 uwsgi-gevent3 uwsgi-gevent py3-gevent uwsgi-http
+RUN apk add uwsgi-python3 uwsgi-gevent3 py3-gevent uwsgi-http
 # backend dependencies
 RUN pip install pipenv
 # dependencies for Pillow
