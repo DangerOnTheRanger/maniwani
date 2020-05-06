@@ -1,4 +1,5 @@
 import gevent.monkey
+
 gevent.monkey.patch_all()
 from flask import render_template, send_from_directory
 from blueprints.boards import boards_blueprint
@@ -14,13 +15,7 @@ from resources import (
     ThreadPostsResource,
 )
 from shared import app, rest_api
-from flask_captcha import Captcha
-from flask_captcha.views import captcha_blueprint
-from flask_captcha.models import CaptchaStore, CaptchaSequenceCache
-import sys
 import traceback
-
-app_captcha = Captcha()
 
 app.register_blueprint(main_blueprint, url_prefix="/")
 app.register_blueprint(boards_blueprint, url_prefix="/boards")
@@ -57,6 +52,7 @@ def internal_server_error(e):
 def get_instance_name():
     def instance_name():
         return app.config["INSTANCE_NAME"]
+
     return dict(instance_name=instance_name)
 
 
