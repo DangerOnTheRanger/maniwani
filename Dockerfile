@@ -28,9 +28,19 @@ COPY Gulpfile.js /maniwani
 COPY scss /maniwani/scss
 RUN npm run gulp
 # remove frontend build-time dependencies
-RUN apt-get -y autoremove npm nodejs
 RUN rm -rf node_modules
+# build react render sidecar
+WORKDIR /maniwani-frontend
+COPY frontend/package.json /maniwani-frontend
+COPY frontend/package-lock.json /maniwani-frontend
+RUN npm install
+COPY frontend/src /maniwani-frontend/src
+COPY frontend/Gulpfile.js /maniwani-frontend
+RUN npm run gulp
+RUN cp -r build/* /maniwani-frontend/
+COPY frontend/devmode-entrypoint.sh /maniwani-frontend
 # copy source files over
+WORKDIR /maniwani
 COPY migrations /maniwani/migrations
 COPY *.py /maniwani/
 COPY blueprints /maniwani/blueprints
@@ -51,6 +61,7 @@ WORKDIR /maniwani
 # clean up dev image bootstrapping
 RUN rm ./deploy-configs/test.db
 RUN rm -r uploads
+RUN apt-get -y autoremove npm nodejs
 ENV MANIWANI_CFG=./deploy-configs/maniwani.cfg
 # chown and switch users for security purposes
 RUN adduser --disabled-login maniwani
