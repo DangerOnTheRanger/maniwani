@@ -11,10 +11,8 @@ const port = 3000;
 
 
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/health-check', (req, res) => res.send('OK'));
 app.post('/render/catalog', function (req, res) {
-    console.log("req.body:");
-    console.log(req.body);
     const catalog = req.body.data;
     const template = req.body.template;
     return res.send(template.replace('TEMPLATE_CONTENT', ReactDOMServer.renderToString(<Catalog {...catalog}/>)));
@@ -30,4 +28,4 @@ app.post('/render/post', function (req, res) {
     return res.send(template.replace('TEMPLATE_CONTENT', ReactDOMServer.renderToString(<Post {...post}/>)));
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`Render server started on port ${port}`));
