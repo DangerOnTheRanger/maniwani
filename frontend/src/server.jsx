@@ -15,12 +15,14 @@ app.get('/health-check', (req, res) => res.send('OK'));
 app.post('/render/catalog', function (req, res) {
     const catalog = req.body.data;
     const template = req.body.template;
-    return res.send(template.replace('TEMPLATE_CONTENT', ReactDOMServer.renderToString(<Catalog {...catalog}/>)));
+    const template_with_data = template.replace('CATALOG_DATA', JSON.stringify(catalog)); 
+    return res.send(template_with_data.replace('TEMPLATE_CONTENT', ReactDOMServer.renderToString(<Catalog {...catalog}/>)));
 });
 app.post('/render/thread', function (req, res) {
     const thread = req.body.data;
     const template = req.body.template;
-    return res.send(template.replace('TEMPLATE_CONTENT', ReactDOMServer.renderToString(<Thread {...thread}/>)));
+    const template_with_data = template.replace('THREAD_DATA', JSON.stringify(thread));
+    return res.send(template_with_data.replace('TEMPLATE_CONTENT', ReactDOMServer.renderToString(<Thread {...thread}/>)));
 });
 app.post('/render/post', function (req, res) {
     const post = req.body.data;

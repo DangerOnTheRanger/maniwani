@@ -43,7 +43,7 @@ function ThreadThumbnail(props) {
 
 export default function Catalog(props) {
     return (
-        <div className="container-fluid">
+        <div className="container-fluid" id="catalog-root">
           <div className="catalog-grid">
             {props.threads.map((thread, i) => {
                 return <ThreadThumbnail {...thread} display_board={props.display_board} tag_styles={props.tag_styles}/>;

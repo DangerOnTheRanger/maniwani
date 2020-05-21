@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import TimeAgo from 'react-timeago';
 
 function getThumbClass(spoiler) {
-    return spoiler? "thread-thumbnail thread-thumbnail-spoiler" : "thread-thumbnail";
+    return spoiler? "thread-thumbnail thumbnail-spoiler" : "thread-thumbnail";
 }
 
 function GenericThumbnail(props) {
@@ -12,17 +12,15 @@ function GenericThumbnail(props) {
 }
 
 function AnimatedImageThumbnail(props) {
-    const [thumbClass, setThumbClass] = useState(props.spoiler? "thread-thumbnail thread-thumbnail-spoiler" : "thread-thumbnail");
+    const [thumbClass, setThumbClass] = useState(getThumbClass(props.spoiler));
     const [currentSource, setThumbSource] = useState(props.thumb_url);
     function mouseEnterHandler(e) {
         setThumbSource(props.media_url);
-        setThumbClass("thread-thumbnail");
+        setThumbClass(getThumbClass(false));
     }
     function mouseLeaveHandler(e) {
         setThumbSource(props.thumb_url);
-        if(props.spoiler) {
-            setThumbClass("thread-thumbnail thread-thumbnail-spoiler");
-        }
+        setThumbClass(props.spoiler);
     }
     return (
         <img className={thumbClass} src={currentSource} onMouseEnter={mouseEnterHandler} onMouseLeave={mouseLeaveHandler}/>
@@ -30,24 +28,22 @@ function AnimatedImageThumbnail(props) {
 }
 
 function VideoThumbnail(props) {
-    const [playStatus, setPlayStatus] = useState(false);
-    const [videoRef, setVideoRef] = useState(null);
+    const [thumbClass, setThumbClass] = useState(getThumbClass(props.spoiler));
     function mouseEnterHandler(e) {
-        videoRef.play();
+        setThumbClass(getThumbClass(false));
+        e.target.play();
     }
     function mouseLeaveHandler(e) {
-        videoRef.pause();
-        videoRef.currentTime = 0;
-    }
-    function onPlayHandler(e) {
-        setPlayStatus(true);
+        e.target.pause();
+        e.target.currentTime = 0;
+        setThumbClass(getThumbClass(props.spoiler));
     }
     return (
-        <div className="thread-video-thumbnail" onMouseEnter={mouseEnterHandler} onMouseLeave={mouseLeaveHandler}>
-          {!playStatus && <img className={props.spoiler? "thread-thumbnail-spoiler" : null}/>}
-          {playStatus && <video className="thread-video" loop="true" preload="metadata" onPlay={onPlayHandler}>
-                          <source src={props.media_url} type={props.mimetype}/>
-                         </video>}
+        <div className={thumbClass}>
+          <video className={thumbClass} loop={true} preload="metadata"
+                 onMouseEnter={mouseEnterHandler} onMouseLeave={mouseLeaveHandler} poster={props.thumb_url}>
+            <source src={props.media_url} type={props.mimetype}/>
+          </video>
         </div>
     );
 }
@@ -80,24 +76,25 @@ function PostThumbnail(props) {
     }
     return (
         <div className="col">
-          <div className="post-thumbnail" onMouseEnter={mouseEnterHandler} onMouseLeave={mouseLeaveHandler}>
-            <a className="media-container" href={props.media_url}>
-              {props.spoiler && showSpoilerLabel && <span className="spoiler-label">!</span>}
-              {thumbnailImpl}
-              {props.spoiler && <div className="row">
-                                 <div className="col">
-                                   <small className="text-danger">Media contains spoilers!</small>
-                                 </div>
-                               </div>}
-              {props.is_animated && <div className="row">
-                                     <noscript>
-                                       <small className="text-muted">Animated - click to play</small>
-                                     </noscript>
-               {animatedTextStatus && <small className="text-muted">Animated - click or hover to play</small>} 
-                                   </div>}
-
-            </a>
+          <div className="row">
+            <div className="post-thumbnail" onMouseEnter={mouseEnterHandler} onMouseLeave={mouseLeaveHandler}>
+              <a className="media-container" href={props.media_url}>
+                {props.spoiler && showSpoilerLabel && <span className="spoiler-label text-danger">!</span>}
+                {thumbnailImpl}
+              </a>
+            </div>
           </div>
+          {props.spoiler && <div className="col">
+                             <div className="row">
+                               <small className="text-danger">Media contains spoilers!</small>
+                             </div>
+                           </div>}
+          {props.is_animated && <div className="row">
+                                 <noscript>
+                                   <small className="text-muted">Animated - click to play</small>
+                                 </noscript>
+                                 {animatedTextStatus && <small className="text-muted">Animated - click or hover to play</small>} 
+                               </div>}
         </div>
     );
 }
@@ -123,7 +120,7 @@ export default function Post(props) {
           <div className="container-fluid">
             {props.subject && <div className="row">
                                 <div className="col"><b>{props.subject}</b></div></div>}
-            {props.tags && <div className="row">
+            {props.tags && props.tags.length > 0 && <div className="row">
                          <div className="col">
                            <small className="text-muted">Tags: </small>
                            <small>{props.tags.join(", ")}</small>

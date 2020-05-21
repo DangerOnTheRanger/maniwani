@@ -39,6 +39,9 @@ COPY frontend/Gulpfile.js /maniwani-frontend
 RUN npm run gulp
 RUN cp -r build/* /maniwani-frontend/
 COPY frontend/devmode-entrypoint.sh /maniwani-frontend
+# TODO: how do we do this when running/deploying without docker?
+RUN mkdir -p /maniwani/static/js
+RUN cp /maniwani-frontend/build/client-bundle/*.js /maniwani/static/js/
 # copy source files over
 WORKDIR /maniwani
 COPY migrations /maniwani/migrations

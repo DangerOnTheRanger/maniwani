@@ -100,7 +100,7 @@ def view(thread_id):
     #                           num_media=num_media, num_posters=num_posters, reply_urls=reply_urls)
     thread_data = {}
     for post in posts:
-        post["datetime"] = post["datetime"].strftime("%a, %d %b %Y %H:%M:%S %Z")
+        post["datetime"] = post["datetime"].strftime("%a, %d %b %Y %H:%M:%S UTC")
         if "media" in post:
             post["thumb_url"] = url_for("upload.thumb", media_id=post["media"])
             post["media_url"] = url_for("upload.file", media_id=post["media"])
