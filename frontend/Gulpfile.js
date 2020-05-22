@@ -16,8 +16,11 @@ function compile_jsx() {
         })).
         pipe(gulp.dest('build/'));
 }
-function copy_js() {
-	return gulp.src('src/**/*.js').pipe(gulp.dest('build/'));
+function compile_js() {
+	return gulp.src('src/**/*.js').
+		pipe(babel({
+			presets: ['@babel/env']})). 
+		pipe(gulp.dest('build/'));
 }
 function compile_client() {
 	return gulp.src('build/client/*.js').
@@ -31,7 +34,7 @@ function compile_client() {
 }
 
 exports.jsx = compile_jsx;
-exports.js = copy_js;
+exports.js = compile_js;
 exports.build = series(parallel(exports.jsx, exports.js), compile_client);
 exports.default = exports.build;
 

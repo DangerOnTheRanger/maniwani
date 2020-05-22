@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 function ThreadThumbnail(props) {
     var bgStyle = "bg-light";
@@ -41,7 +42,12 @@ function ThreadThumbnail(props) {
     );
 }
 
-export default function Catalog(props) {
+function mapStateToProps(state) {
+    return {threads: state.threads, display_board: state.catalogInfo.board,
+            tag_styles: state.catalogInfo.styles};
+}
+
+function Catalog(props) {
     return (
         <div className="container-fluid" id="catalog-root">
           <div className="catalog-grid">
@@ -52,3 +58,5 @@ export default function Catalog(props) {
         </div>
     );
 }
+
+export default connect(mapStateToProps)(Catalog);

@@ -52,7 +52,7 @@ function PostThumbnail(props) {
     let thumbnailImpl;
     if(props.mimetype.startsWith("video")) {
         thumbnailImpl = <VideoThumbnail spoiler={props.spoiler} thumb_url={props.thumb_url} media_url={props.media_url}/>;
-    } else if(props.mimetype.startsWith("image")) {
+    } else if(props.mimetype.startsWith("image") && props.is_animated) {
         thumbnailImpl = <AnimatedImageThumbnail spoiler={props.spoiler} thumb_url={props.thumb_url} media_url={props.media_url}/>;
     } else {
         thumbnailImpl = <GenericThumbnail spoiler={props.spoiler} thumb_url={props.thumb_url}/>;

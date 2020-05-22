@@ -1,7 +1,12 @@
 import React from 'react';
 import Post from './Post';
+import { connect } from 'react-redux';
 
-export default function Thread(props) {
+function mapStateToProps(state) {
+    return {posts: state.posts};
+}
+
+function Thread(props) {
     return (
         <div className="container" id="thread-container">
           {props.posts.map((post, i) => {
@@ -10,3 +15,5 @@ export default function Thread(props) {
         </div>
     );
 }
+
+export default connect(mapStateToProps)(Thread);
