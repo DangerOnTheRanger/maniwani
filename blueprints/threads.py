@@ -101,7 +101,7 @@ def view(thread_id):
     thread_data = {}
     for post in posts:
         post["datetime"] = post["datetime"].strftime("%a, %d %b %Y %H:%M:%S UTC")
-        if "media" in post:
+        if "media" in post and post["media"] is not None:
             post["thumb_url"] = url_for("upload.thumb", media_id=post["media"])
             post["media_url"] = url_for("upload.file", media_id=post["media"])
             post["media"] = True

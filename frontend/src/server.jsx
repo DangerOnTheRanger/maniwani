@@ -15,14 +15,16 @@ const port = 3000;
 
 app.get('/health-check', (req, res) => res.send('OK'));
 function serveCatalog(req, res) {
-    const catalog = req.body.data;
+    const catalog = req.body.data.catalog;
+    const boardId = req.body.data.board_id;
     const initialState = Object.assign({}, DEFAULT_STATE, {threads: catalog.threads});
     const store = createStore(reducer, initialState);
     store.dispatch(setBoard(catalog.display_board));
     store.dispatch(setStyles(catalog.tag_styles));
     const template = req.body.template;
     const template_with_data = template.replace('STORE_DATA',
-                                                JSON.stringify(store.getState()));
+                                                JSON.stringify(store.getState())).
+          replace('BOARD_ID', boardId);
     var serverDOM = ReactDOMServer.renderToString(<Provider store={store}>
                                                     <Catalog />
                                                   </Provider>);
@@ -30,12 +32,14 @@ function serveCatalog(req, res) {
 }
 app.post('/render/catalog', serveCatalog);
 function serveThread(req, res) {
-    const thread = req.body.data;
+    const thread = req.body.data.thread;
+    const threadId = req.body.data.thread_id;
     const initialState = Object.assign({}, DEFAULT_STATE, {posts: thread.posts});
     const store = createStore(reducer, initialState);
     const template = req.body.template;
     const template_with_data = template.replace('STORE_DATA',
-                                                JSON.stringify(store.getState()));
+                                                JSON.stringify(store.getState())).
+          replace('THREAD_ID', threadId);
     var serverDOM = ReactDOMServer.renderToString(<Provider store={store}>
                                                     <Thread />
                                                   </Provider>);

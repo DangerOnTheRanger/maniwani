@@ -21,9 +21,9 @@ def render_react_template(template, renderer_path, data):
 
 def render_catalog(catalog, board_name, board_id):
     base_template = render_template(CATALOG_TEMPLATE, board_name=board_name, board_id=board_id)
-    return render_react_template(base_template, CATALOG_RENDER_URL, catalog)
+    return render_react_template(base_template, CATALOG_RENDER_URL, {"catalog": catalog, "board_id": board_id})
 
 
 def render_thread(thread, thread_id):
     base_template = render_template(THREAD_TEMPLATE, subject=thread["posts"][0].get("subject") or "", thread_id=thread_id) 
-    return render_react_template(base_template, THREAD_RENDER_URL, thread)
+    return render_react_template(base_template, THREAD_RENDER_URL, {"thread": thread, "thread_id": thread_id})
