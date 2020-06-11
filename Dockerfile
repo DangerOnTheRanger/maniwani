@@ -3,16 +3,18 @@ WORKDIR /maniwani
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 # backend dependencies
-RUN apt-get -y install python3 python3-pip pipenv 
+RUN apt-get -y --no-install-recommends install python3 python3-pip pipenv 
 # uwsgi, python and associated plugins
 RUN apt-get -y install uwsgi-core uwsgi-plugin-python3 python3-gevent
 # dependencies for Pillow
 RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libwebp-dev
-# dependencies for psycopg2
-RUN apt-get -y install libpq5 libpq-dev postgresql-server-dev-12 gcc-9 libpython3-dev libc6-dev
-RUN apt-get -y install ffmpeg
+# install static build of ffmpeg
+COPY build-helpers/ffmpeg_bootstrap.py /maniwani/build-helpers/
+WORKDIR /maniwani/build-helpers
+RUN python3 ffmpeg_bootstrap.py
+WORKDIR /maniwani
 # frontend dependencies
-RUN apt-get -y install nodejs npm
+RUN apt-get -y --no-install-recommends install nodejs npm
 COPY Pipfile /maniwani
 COPY Pipfile.lock /maniwani
 RUN pipenv install --system --deploy
@@ -34,7 +36,7 @@ RUN rm -rf node_modules
 COPY migrations /maniwani/migrations
 COPY *.py /maniwani/
 COPY blueprints /maniwani/blueprints
-COPY build-helpers /maniwani/build-helpers
+COPY build-helpers/docker-entrypoint.sh /maniwani/build-helpers/
 COPY deploy-configs /maniwani/deploy-configs
 COPY model /maniwani/model
 COPY resources /maniwani/resources
