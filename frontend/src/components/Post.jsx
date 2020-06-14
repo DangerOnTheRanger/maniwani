@@ -116,7 +116,7 @@ function ReplyList(props) {
 export default function Post(props) {
     return (
         <div className="post-container" id={props.post_id}>
-          {props.media && <PostThumbnail mimetype={props.mimetype} spoiler={props.spoiler} thumb_url={props.thumb_url} media_url={props.media_url}/>}
+          {props.media && <PostThumbnail mimetype={props.mimetype} is_animated={props.is_animated} spoiler={props.spoiler} thumb_url={props.thumb_url} media_url={props.media_url}/>}
           <div className="container-fluid">
             {props.subject && <div className="row">
                                 <div className="col"><b>{props.subject}</b></div></div>}
