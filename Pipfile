@@ -17,6 +17,7 @@ requests = "*"
 bleach = "*"
 gevent = "==1.5.0"
 redis = "*"
+psycogreen = "*"
 
 [dev-packages]
 
