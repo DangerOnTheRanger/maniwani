@@ -3,7 +3,7 @@ WORKDIR /maniwani
 ENV DEBIAN_FRONTEND=noninteractive
 # backend dependencies/frontend depndencies/uwsgi, python and associated plugins
 RUN apt-get update && apt-get -y --no-install-recommends install python3 python3-pip \
-	pipenv uwsgi-core uwsgi-plugin-python3 python3-gevent nodejs npm && \
+	pipenv uwsgi-core uwsgi-plugin-python3 uwsgi-plugin-gevent-python3 python3-gevent nodejs npm && \
 	rm -rf /var/lib/apt/lists/*
 # install static build of ffmpeg
 COPY build-helpers/ffmpeg_bootstrap.py /maniwani/build-helpers/
