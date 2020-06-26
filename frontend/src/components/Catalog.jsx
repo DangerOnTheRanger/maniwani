@@ -49,7 +49,7 @@ function mapStateToProps(state) {
 
 function Catalog(props) {
     return (
-        <div className="container-fluid" id="catalog-root">
+        <div className="container-fluid">
           <div className="catalog-grid">
             {props.threads.map((thread, i) => {
                 return <ThreadThumbnail {...thread} display_board={props.display_board} tag_styles={props.tag_styles}/>;

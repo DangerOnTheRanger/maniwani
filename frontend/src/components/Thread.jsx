@@ -8,7 +8,7 @@ function mapStateToProps(state) {
 
 function Thread(props) {
     return (
-        <div className="container" id="thread-container">
+        <div className="container">
           {props.posts.map((post, i) => {
               return <Post {...post}/>;
           })}

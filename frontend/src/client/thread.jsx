@@ -15,14 +15,14 @@ async function fetchPost(postId) {
     let response = await axios.get(endpoint);
     console.log('response:');
     console.log(response);
-    var postData = response.data;
+    let postData = response.data;
     return postData;
 }
 
 async function eventLoop() {
     if(!!window.SharedWorker) {
         let workerUrl = window._LIVE_PROXY;
-        var liveProxy = new SharedWorker(workerUrl);
+        let liveProxy = new SharedWorker(workerUrl);
         
         liveProxy.port.onmessage = async function(e) {
             let data = e.data;

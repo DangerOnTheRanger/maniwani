@@ -42,6 +42,7 @@ function handleThreadSubscribe(e, port, params) {
 }
 function handleBoardSubscribe(e, port, params) {
 	if(boardSubscriptions.has(params.board) == false) {
+		console.log("performing initial board subscription setup");
 		let serverParams = {"client-id": clientId,
 							"subscribe": {"board": [params.board]}
 						   };
@@ -49,6 +50,8 @@ function handleBoardSubscribe(e, port, params) {
 		boardSubscriptions.set(params.board, new Array());
 	}
 	boardSubscriptions.get(params.board).push(port);
+	console.log("added subscription - boardSubscriptions now:");
+	console.log(boardSubscriptions);
 }
 
 function handleNewReply(e) {
@@ -64,7 +67,6 @@ function handleNewPost(e) {
 	let threadId = eventData.thread;
 	console.log("got new post");
 	console.log(eventData.post);
-	//console.log(threadSubscriptions[threadId]);
 	console.log("eventData:");
 	console.log(eventData);
 	console.log("THREADSUBSCRIPTIONS:");
@@ -79,7 +81,14 @@ function handleNewThread(e) {
 	let eventData = JSON.parse(e.data);
 	let threadId = eventData.thread;
 	let boardId = eventData.board;
-	boardSubscriptions[boardId].forEach(function(port) {
+	console.log("got new thread");
+	console.log(threadId);
+	console.log("board:");
+	console.log(boardId);
+	console.log("boardSubscriptions:");
+	console.log(boardSubscriptions);
+	boardSubscriptions.get(boardId).forEach(function(port) {
+		console.log("sending update");
 		port.postMessage({"message": "new-thread", "thread": threadId, "board": boardId});
 	});
 }
@@ -98,6 +107,7 @@ function sendServerMessage(data) {
 onconnect = function(e) {
 	console.log("got connection");
 	if(eventPump == null) {
+		console.log("initializing pump");
 		initPump();
 	}
 	let port = e.ports[0];
@@ -111,6 +121,9 @@ onconnect = function(e) {
 			break;
 		case "subscribe-board":
 			handleBoardSubscribe(e, port, data);
+			break;
+		default:
+			port.postMessage({"message": "debug", "content": 'invalid message "' + data.message + '"'});
 			break;
 		}
 	};

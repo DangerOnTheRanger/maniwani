@@ -68,8 +68,6 @@ def catalog(board_id):
     catalog_data["tag_styles"] = tag_styles
     catalog_data["display_board"] = False
     for thread in threads:
-        thread["thread_url"] = url_for("threads.view", thread_id=thread["id"])
-        thread["thumb_url"] = url_for("upload.thumb", media_id=thread["media"])
         del thread["last_updated"]
     catalog_data["threads"] = threads
     #template = render_template("catalog.html", threads=threads, board=board, board_name=board_name, tag_styles=tag_styles)
