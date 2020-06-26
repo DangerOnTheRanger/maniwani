@@ -96,15 +96,9 @@ def view(thread_id):
     num_posters = db.session.query(Poster).filter(Poster.thread == thread_id).count()
     num_media = thread.num_media()
     reply_urls = _get_reply_urls(posts)
-    #template = render_template("thread.html", thread_id=thread_id, board=board, posts=posts, num_views=thread.views,
-    #                           num_media=num_media, num_posters=num_posters, reply_urls=reply_urls)
     thread_data = {}
     for post in posts:
         post["datetime"] = post["datetime"].strftime("%a, %d %b %Y %H:%M:%S UTC")
-        if "media" in post and post["media"] is not None:
-            post["thumb_url"] = url_for("upload.thumb", media_id=post["media"])
-            post["media_url"] = url_for("upload.file", media_id=post["media"])
-            post["media"] = True
     thread_data["posts"] = posts
     template = renderer.render_thread(thread_data, thread_id)
     uncached_response = make_response(template)
