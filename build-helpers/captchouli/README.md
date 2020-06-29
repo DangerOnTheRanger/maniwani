@@ -10,6 +10,14 @@ Quickstart
 	docker build . -t captchouli
 	docker run -p 8512:8512 captchouli
 
+If you have [docker-slim](https://github.com/docker-slim/docker-slim) installed you can also run
+the following, assuming you passed `-t captchouli` to `docker build`:
+
+	./build-slim.sh captchouli
+	
+This will generate a significantly smaller image named `captchouli.slim`, around 300MB compared
+to the 1.5GB image created by `docker build`.
+
 There is also a `bootstrap` option that waits for captchouli to build an initial database before
 stopping the container, which can prove very useful; building the database for the first time can potentially
 take a while:
