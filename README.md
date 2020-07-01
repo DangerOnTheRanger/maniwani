@@ -43,6 +43,11 @@ Features
 Installation
 ------------
 
+NOTE: If you build Maniwani with Docker, then it is recommended to use [docker-slim](https://github.com/docker-slim/docker-slim)
+on the resulting container image, which can net approximately a 3x decrease in image size. The `build-slim.sh` script included
+in the repository contains the flags needed to successfuly run a slimmed-down container; invoke it instead of using `docker-slim`
+directly.
+
 ### With Docker - standalone development image
 
 In this directory, run the following to build a development Docker image:
