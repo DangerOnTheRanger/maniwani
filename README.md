@@ -8,6 +8,12 @@ Where does the name come from? I could tell you, but by that point
 you'd [have been torn to pieces.](https://wikipedia.org/wiki/Katanagatari)
 
 
+Sponsors
+--------
+
+<a href="https://github.com/samip5"><img src="https://avatars3.githubusercontent.com/u/1703002?s=60&amp;v=4" alt="@samip5" width="45" height="45"></a>
+
+
 Features
 --------
 
