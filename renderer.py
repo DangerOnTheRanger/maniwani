@@ -6,6 +6,8 @@ import requests
 from shared import app
 
 
+FIREHOSE_TEMPLATE = "react-index.html"
+FIREHOSE_RENDER_URL = "/render/firehose"
 CATALOG_TEMPLATE = "react-catalog.html"
 CATALOG_RENDER_URL = "/render/catalog"
 THREAD_TEMPLATE = "react-thread.html"
@@ -17,6 +19,11 @@ def render_react_template(template, renderer_path, data):
     payload = {"template": template, "data": data}
     response = requests.post(renderer_url, json=payload)
     return response.text
+
+
+def render_firehose(firehose, greeting):
+    base_template = render_template(FIREHOSE_TEMPLATE, greeting=greeting)
+    return render_react_template(base_template, FIREHOSE_RENDER_URL, {"firehose": firehose})
 
 
 def render_catalog(catalog, board_name, board_id):

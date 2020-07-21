@@ -1,0 +1,23 @@
+{%- extends "base.html" %}
+{% block title %}
+	/{{ board_name }}/ catalog
+{% endblock %}
+{% block head %}
+	<script>
+	 window._STORE = STORE_DATA;
+	 window._BOARD = BOARD_ID;
+	 window._LIVE_PROXY = '{{ static_resource("js/live-proxy.js") }}';
+	</script>
+{% endblock %}
+{% block navbar %}
+	<a href="{{ url_for("threads.new", board_id=board_id) }}" class="nav-item nav-link">New thread</a>
+	{% if get_slip() and get_slip().is_admin %}
+		<a href="{{ url_for("boards.admin", board_id=board_id) }}" class="nav-item nav-link">Admin</a>
+	{% endif %}
+{% endblock %}
+{% block content %}
+	<div id="catalog-root">
+		TEMPLATE_CONTENT
+	</div>
+	<script src="{{ static_resource("js/catalog.js") }}"></script>
+{% endblock %}

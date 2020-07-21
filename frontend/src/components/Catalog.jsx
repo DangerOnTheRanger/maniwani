@@ -16,6 +16,7 @@ function ThreadThumbnail(props) {
         }
     }
     var imageClass = props.spoiler? "catalog-thumbnail thumbnail-spoiler" : "catalog-thumbnail";
+    // TODO: use CSS to space the board display instead of a space character
     return (
         <a href={props.thread_url} className={"thread " + bgStyle}>
           <div className="catalog-media-container">
@@ -33,7 +34,7 @@ function ThreadThumbnail(props) {
           <span className={"thread-stats-container " + textStyle}>
             {props.display_board && <small>/</small>}
             {props.display_board && <small>{props.board}</small>}
-            {props.display_board && <small>/</small> && ' '}
+            {props.display_board && (<small>/ </small>)}
             <i className="fas fa-comment"></i>{props.num_replies}
             &nbsp;
             <i className="fas fa-image"></i>{props.num_media}
@@ -43,8 +44,7 @@ function ThreadThumbnail(props) {
 }
 
 function mapStateToProps(state) {
-    return {threads: state.threads, display_board: state.catalogInfo.board,
-            tag_styles: state.catalogInfo.styles};
+    return {threads: state.threads, tag_styles: state.catalogInfo.styles};
 }
 
 function Catalog(props) {

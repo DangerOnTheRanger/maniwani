@@ -1,0 +1,10 @@
+{%- extends "base.html" %}
+{% block title %}home{% endblock %}
+{% block content %}
+	<div class="container">
+		{{ greeting | safe }}
+	</div>
+	<div id="firehose-root">
+		TEMPLATE_CONTENT
+	</div>
+{% endblock %}

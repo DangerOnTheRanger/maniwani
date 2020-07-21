@@ -11,6 +11,14 @@ const initialState = window._STORE;
 const store = createStore(reducer, initialState);
 
 async function fetchCatalog(boardId) {
+    // why do we fetch the entire catalog every single time?
+    // this avoids having to figure out on the client which thread got
+    // bumped off the catalog (duplicating server-side logic) and avoids
+    // ugly potential bugs where the client removes the wrong thread
+    // due to race conditions triggered by the oldest thread on the board
+    // updating just in time (thus the 2nd-oldest thread should be removed instead)
+    // fetching the entire catalog is more bandwidth-intensive,
+    // but much simpler and less error-prone
     let endpoint = '/api/v1/board/' + boardId + '/catalog';
     let response = await axios.get(endpoint);
     console.log('response:');

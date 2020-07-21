@@ -66,7 +66,6 @@ def catalog(board_id):
     tag_styles = get_tags(threads)
     catalog_data = {}
     catalog_data["tag_styles"] = tag_styles
-    catalog_data["display_board"] = False
     for thread in threads:
         del thread["last_updated"]
     catalog_data["threads"] = threads

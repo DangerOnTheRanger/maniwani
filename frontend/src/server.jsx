@@ -19,14 +19,13 @@ function serveCatalog(req, res) {
     const boardId = req.body.data.board_id;
     const initialState = Object.assign({}, DEFAULT_STATE, {threads: catalog.threads});
     const store = createStore(reducer, initialState);
-    store.dispatch(setBoard(catalog.display_board));
     store.dispatch(setStyles(catalog.tag_styles));
     const template = req.body.template;
     const template_with_data = template.replace('STORE_DATA',
                                                 JSON.stringify(store.getState())).
           replace('BOARD_ID', boardId);
     var serverDOM = ReactDOMServer.renderToString(<Provider store={store}>
-                                                    <Catalog />
+                                                    <Catalog display_board={false} />
                                                   </Provider>);
     return res.send(template_with_data.replace('TEMPLATE_CONTENT', serverDOM));
 }
@@ -50,6 +49,17 @@ app.post('/render/post', function (req, res) {
     const post = req.body.data;
     const template = req.body.template;
     return res.send(template.replace('TEMPLATE_CONTENT', ReactDOMServer.renderToString(<Post {...post}/>)));
+});
+app.post('/render/firehose', function (req, res) {
+    const firehose = req.body.data.firehose;
+    const initialState = Object.assign({}, DEFAULT_STATE, {threads: firehose.threads});
+    const store = createStore(reducer, initialState);
+    store.dispatch(setStyles(firehose.tag_styles));
+    const template = req.body.template;
+    var serverDOM = ReactDOMServer.renderToString(<Provider store={store}>
+                                                    <Catalog display_board={true} />
+                                                  </Provider>);
+    return res.send(template.replace('TEMPLATE_CONTENT', serverDOM));
 });
 
 app.listen(port, () => console.log(`Render server started on port ${port}`));
