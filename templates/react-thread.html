@@ -30,53 +30,13 @@
 	</script>
 {% endblock %}
 {% block navbar %}
-	<noscript>
-		<a href="{{ url_for("threads.new_post", thread_id=thread_id) }}" class="nav-item nav-link">New post</a>
-	</noscript>
-	<script>
-	 document.write("<a href=\"#\" class=\"nav-item nav-link\" data-toggle=\"modal\" data-target=\"#replyModal\">New post</a>")
-	</script>
+	<a id="newPostLink" href="{{ url_for("threads.new_post", thread_id=thread_id) }}" class="nav-item nav-link">New post</a>
 	<a href="{{ url_for("threads.view_gallery", thread_id=thread_id) }}" class="nav-item nav-link">Gallery</a>
 {% endblock %}
 {% block content %}
-	<div id="dummy-reply" class="row" style="display: none;">
-		<div class="col-auto">
-			<small class="text-secondary">Replies:</small>
-			<div class="post-replies">
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="replyModal" tabindex="-1">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Reply to thread</h5>
-				</div>
-				<div class="modal-body">
-					{% import "post-base.html" as post with context %}
-					{{ post.post_form(url_for("threads.post_submit", thread_id=thread_id), "thread", thread_id, False) }}
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-primary" form="postForm">Submit</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script>
-	 $("#replyModal").on("show.bs.modal", function(event) {
-		 var href = $(event.relatedTarget)
-		 if(href.attr("data-post")) {
-			 var postId = href.data("post")
-			 var modal = $(this)
-			 var oldText = $("#form-body").val()
-			 $("#form-body").val(oldText + ">>" + postId)
-		 }
-	 })
-	</script>
 	<div class="container-fluid">
 		<div id="thread-container">
-			TEMPLATE_CONTENT
+TEMPLATE_CONTENT
 		</div>
 		<a href="#" id="thread-bottom" name="thread-bottom"></a>
 		<script>

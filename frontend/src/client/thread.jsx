@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import regeneratorRuntime from 'regenerator-runtime';
+import NewPostModal from '../components/NewPostModal';
 import Thread from '../components/Thread';
 import { reducer, newPost, DEFAULT_STATE } from '../state';
 import { createStore } from 'redux';
@@ -9,6 +10,7 @@ import { Provider } from 'react-redux';
 
 const initialState = window._STORE;
 const store = createStore(reducer, initialState);
+
 
 async function fetchPost(postId) {
     let endpoint = '/api/v1/post/' + postId;
@@ -45,6 +47,9 @@ async function eventLoop() {
     }
 }
 eventLoop();
-ReactDOM.hydrate(<Provider store={store}>
-                   <Thread />
-                 </Provider>, document.getElementById('thread-container'));
+ReactDOM.hydrate(<React.Fragment>
+                   <NewPostModal thread_id={window._THREAD} embed_submit={true}/>
+                   <Provider store={store}>
+                     <Thread />
+                   </Provider>
+                 </React.Fragment>, document.getElementById('thread-container'));

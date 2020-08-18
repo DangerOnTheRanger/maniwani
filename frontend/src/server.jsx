@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import Catalog from './components/Catalog';
+import NewPostModal from './components/NewPostModal';
 import Post from './components/Post';
 import Thread from './components/Thread';
 import { reducer, setBoard, setStyles, DEFAULT_STATE } from './state';
@@ -39,9 +40,12 @@ function serveThread(req, res) {
     const template_with_data = template.replace('STORE_DATA',
                                                 JSON.stringify(store.getState())).
           replace('THREAD_ID', threadId);
-    var serverDOM = ReactDOMServer.renderToString(<Provider store={store}>
-                                                    <Thread />
-                                                  </Provider>);
+    var serverDOM = ReactDOMServer.renderToString(<React.Fragment>
+                                                    <NewPostModal thread_id={threadId} embed_submit={true}/>
+                                                    <Provider store={store}>
+                                                      <Thread />
+                                                    </Provider>
+                                                  </React.Fragment>);
     return res.send(template_with_data.replace('TEMPLATE_CONTENT', serverDOM));
 }
 app.post('/render/thread', serveThread);
