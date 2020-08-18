@@ -93,6 +93,8 @@ but a brief description of each follows:
 * `SERVE_REST` - if `True`, REST endpoints will be served by Maniwani. Note that ideally, the REST API for
   your Maniwani installation is protected with HTTPS, since Maniwani uses HTTP Basic for authentication and
   authorization.
+* `RENDERER_HOST` - this is a required string indicating the URL of the Maniwani frontend. For a production
+  deployment, this should be simply be the URL of the Express/React frontend container.
 * `DEFAULT_THEME` - this is an optional string representing the name of the theme Maniwani should use if
   the user has not otherwise selected a theme to use. If not present, the stock theme will be used.
 * `THEME_LIST` - this is an optional list of strings representing the list of installed themes available.
