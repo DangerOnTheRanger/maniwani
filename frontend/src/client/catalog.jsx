@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import regeneratorRuntime from 'regenerator-runtime';
 import Catalog from '../components/Catalog';
+import NewThreadModal from '../components/NewThreadModal';
 import { reducer, newThread, deleteThread, DEFAULT_STATE } from '../state';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
@@ -76,6 +77,9 @@ async function eventLoop() {
     }
 }
 eventLoop();
-ReactDOM.hydrate(<Provider store={store}>
-                   <Catalog />
-                 </Provider>, document.getElementById('catalog-root'));
+ReactDOM.hydrate(<React.Fragment>
+                   <NewThreadModal board_id={window._BOARD} embed_submit={true}/>
+                   <Provider store={store}>
+                     <Catalog />
+                   </Provider>
+                 </React.Fragment>, document.getElementById('catalog-root'));

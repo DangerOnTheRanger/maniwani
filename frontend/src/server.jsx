@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import Catalog from './components/Catalog';
 import NewPostModal from './components/NewPostModal';
+import NewThreadModal from './components/NewThreadModal';
 import Post from './components/Post';
 import Thread from './components/Thread';
 import { reducer, setBoard, setStyles, DEFAULT_STATE } from './state';
@@ -26,6 +27,7 @@ function serveCatalog(req, res) {
                                                 JSON.stringify(store.getState())).
           replace('BOARD_ID', boardId);
     var serverDOM = ReactDOMServer.renderToString(<Provider store={store}>
+                                                    <NewThreadModal board_id={boardId} embed_submit={true}/>
                                                     <Catalog display_board={false} />
                                                   </Provider>);
     return res.send(template_with_data.replace('TEMPLATE_CONTENT', serverDOM));
