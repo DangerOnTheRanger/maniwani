@@ -20,7 +20,7 @@ function AnimatedImageThumbnail(props) {
     }
     function mouseLeaveHandler(e) {
         setThumbSource(props.thumb_url);
-        setThumbClass(props.spoiler);
+        setThumbClass(getThumbClass(props.spoiler));
     }
     return (
         <img className={thumbClass} src={currentSource} onMouseEnter={mouseEnterHandler} onMouseLeave={mouseLeaveHandler}/>
