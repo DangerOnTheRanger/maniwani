@@ -48,8 +48,8 @@ async function eventLoop() {
 }
 eventLoop();
 ReactDOM.hydrate(<React.Fragment>
-                   <NewPostModal thread_id={window._THREAD} embed_submit={true}/>
                    <Provider store={store}>
+                     <NewPostModal thread_id={window._THREAD} embed_submit={true}/>
                      <Thread />
                    </Provider>
                  </React.Fragment>, document.getElementById('thread-container'));

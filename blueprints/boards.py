@@ -6,6 +6,7 @@ from markdown import markdown
 from werkzeug.http import parse_etags
 
 import cache
+import captchouli
 import renderer
 from model.Board import Board
 from model.BoardList import BoardList
@@ -69,8 +70,10 @@ def catalog(board_id):
     for thread in threads:
         del thread["last_updated"]
     catalog_data["threads"] = threads
-    #template = render_template("catalog.html", threads=threads, board=board, board_name=board_name, tag_styles=tag_styles)
-    template = renderer.render_catalog(catalog_data, board_name, board_id)
+    extra_data = {}
+    if app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+        extra_data = renderer.captchouli_to_json(captchouli.request_captcha())
+    template = renderer.render_catalog(catalog_data, board_name, board_id, extra_data)
     uncached_response = make_response(template)
     uncached_response.set_etag(etag_value, weak=True)
     uncached_response.headers["Cache-Control"] = "public,must-revalidate"

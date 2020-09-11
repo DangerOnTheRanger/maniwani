@@ -1,3 +1,15 @@
+.captchouli-container {
+	display: grid;
+	grid-template-rows: 200px 200px 200px;
+	grid-template-columns: 200px 200px 200px;
+}
+
+.captchouli-input {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .captchouli-checkbox {
 	display: none;
 }

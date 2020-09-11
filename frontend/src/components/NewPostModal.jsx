@@ -1,9 +1,15 @@
 import React, { useState, useEffect }  from 'react';
+import { connect } from 'react-redux';
 import ModalBase from './ModalBase';
 import { NewPostForm } from './PostForm';
 
+
 function buildAction(threadId) {
     return '/threads/' + threadId + '/new';
+}
+
+function mapStateToProps(state) {
+    return {...state.captcha};
 }
 
 function NewPostModal(props) {
@@ -14,4 +20,4 @@ function NewPostModal(props) {
     );
 }
 
-export default NewPostModal;
+export default connect(mapStateToProps)(NewPostModal);

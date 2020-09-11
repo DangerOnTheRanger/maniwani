@@ -100,7 +100,10 @@ def view(thread_id):
     for post in posts:
         post["datetime"] = post["datetime"].strftime("%a, %d %b %Y %H:%M:%S UTC")
     thread_data["posts"] = posts
-    template = renderer.render_thread(thread_data, thread_id)
+    extra_data = {}
+    if app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+        extra_data = renderer.captchouli_to_json(captchouli.request_captcha())
+    template = renderer.render_thread(thread_data, thread_id, extra_data)
     uncached_response = make_response(template)
     uncached_response.set_etag(etag_value, weak=True)
     uncached_response.headers["Cache-Control"] = "public,must-revalidate"

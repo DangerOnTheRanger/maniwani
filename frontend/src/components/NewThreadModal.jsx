@@ -1,6 +1,12 @@
 import React, { useState, useEffect }  from 'react';
+import { connect } from 'react-redux';
 import ModalBase from './ModalBase';
 import { NewThreadForm } from './PostForm';
+
+
+function mapStateToProps(state) {
+    return {...state.captcha};
+}
 
 function NewThreadModal(props) {
     return (
@@ -10,4 +16,4 @@ function NewThreadModal(props) {
     );
 }
 
-export default NewThreadModal;
+export default connect(mapStateToProps)(NewThreadModal);

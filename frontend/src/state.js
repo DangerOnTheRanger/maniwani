@@ -3,7 +3,8 @@ const NEW_THREAD = 'NEW_THREAD';
 const DELETE_THREAD = 'DELETE_THREAD';
 const SET_BOARD = 'SET_BOARD';
 const SET_STYLES = 'SET_STYLES';
-const DEFAULT_STATE = {posts: [], threads: [], catalogInfo: {board: "", styles: []}};
+const SET_CAPTCHA = 'SET_CAPTCHA';
+const DEFAULT_STATE = {posts: [], threads: [], captcha: {}, catalogInfo: {board: "", styles: []}};
 
 function reducer(state = DEFAULT_STATE, action) {
 	switch(action.type) {
@@ -35,6 +36,8 @@ function reducer(state = DEFAULT_STATE, action) {
 				styles: action.styles,
 				board: state.board
 			}});
+	case SET_CAPTCHA:
+		return Object.assign({}, state, {captcha: action.captcha});
 	default:
 		return state;
 	}
@@ -55,5 +58,8 @@ function setBoard(board) {
 function setStyles(styles) {
 	return {type: SET_STYLES, styles};
 }
+function setCaptcha(captcha) {
+	return {type: SET_CAPTCHA, captcha};
+}
 
-export { newPost, newThread, deleteThread, setBoard, setStyles, reducer, DEFAULT_STATE};
+export { newPost, newThread, deleteThread, setBoard, setStyles, setCaptcha, reducer, DEFAULT_STATE};

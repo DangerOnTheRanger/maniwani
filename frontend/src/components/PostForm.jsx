@@ -39,8 +39,8 @@ function PostFormBase(props) {
             <small className="form-text text-muted">Maximum attachment size: { props.max_upload_size }. Check
               the rules to see what kind of files can be uploaded.</small>
           </div>
-          {props.use_captcha && props.captcha_method == "captchouli" &&
-           <Captchouli captchouli_id={props.captcha_id} character={props.captchouli_character} images={props.captchouli_images}/>}
+          {props.captcha_method === 'CAPTCHOULI' &&
+           <Captchouli captchouli_id={props.captcha_id} character={props.character} images={props.images}/>}
 		</form>
 	);
 }
@@ -70,15 +70,15 @@ function SlipEntry(props) {
 function Captchouli(props) {
     return (
         <React.Fragment>
-          <input type="hidden" name="captchouli-id" value={props.captcha_id}/>
+        <input type="hidden" name="captchouli-id" value={props.captchouli_id}></input>
           <details>
-            <small className="text-muted">Select all images of <b>{props.character}</b></small>
+            <summary className="text-muted">Select all images of <b>{props.character}</b></summary>
             <div className="captchouli-container">
-              {props.images.map((image, i) => {
+              {Object.entries(props.images).map(([name, src]) => {
                   return <div className="captchouli-input">
                            <label>
-                             <input type="checkbox" className="captchouli-checkbox" name={image.name} autocomplete="off"/>
-                             <img className="captchouli-img" draggable="false" src={image.src}/>
+                             <input type="checkbox" className="captchouli-checkbox" name={name} autoComplete="off"/>
+                             <img className="captchouli-img" draggable="false" src={src}/>
                            </label>
                          </div>;
               })}
