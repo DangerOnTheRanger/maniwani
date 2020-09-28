@@ -37,8 +37,10 @@ def get_captchouli():
 
 @threads_blueprint.route("/new/<int:board_id>")
 def new(board_id):
-    board = db.session.query(Board).get(board_id)
-    return render_template("new-thread.html", board=board)
+    extra_data = {}
+    if app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+        extra_data = renderer.captchouli_to_json(captchouli.request_captcha())
+    return renderer.render_new_thread_form(board_id, extra_data)
 
 
 @threads_blueprint.route("/new", methods=["POST"])

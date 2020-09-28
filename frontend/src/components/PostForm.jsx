@@ -2,14 +2,14 @@ import React from 'react';
 
 function NewThreadForm(props) {
     return (<React.Fragment>
-             <PostFormBase embed_submit={true} tag_entry={true} {...props}/>
+             <PostFormBase tag_entry={true} {...props}/>
              <input type="hidden" form="postForm" name="board" value={props.board_id}/>
             </React.Fragment>);
 }
 
 function NewPostForm(props) {
     return (<React.Fragment>
-              <PostFormBase embed_submit={true} tag_entry={false} {...props}/>
+              <PostFormBase tag_entry={false} {...props}/>
              <input type="hidden" form="postForm" name="thread" value={props.thread_id}/>
             </React.Fragment>);
 }
@@ -39,6 +39,7 @@ function PostFormBase(props) {
             <small className="form-text text-muted">Maximum attachment size: { props.max_upload_size }. Check
               the rules to see what kind of files can be uploaded.</small>
           </div>
+          {props.embed_submit && <input type="submit" className="m-1 btn btn-primary" value="Post"/>}
           {props.captcha_method === 'CAPTCHOULI' &&
            <Captchouli captchouli_id={props.captcha_id} character={props.character} images={props.images}/>}
 		</form>

@@ -12,6 +12,8 @@ CATALOG_TEMPLATE = "react-catalog.html"
 CATALOG_RENDER_URL = "/render/catalog"
 THREAD_TEMPLATE = "react-thread.html"
 THREAD_RENDER_URL = "/render/thread"
+NEW_THREAD_TEMPLATE ="react-new-thread.html"
+NEW_THREAD_RENDER_URL = "/render/new-thread"
 
 
 def captchouli_to_json(captchouli):
@@ -48,3 +50,11 @@ def render_thread(thread, thread_id, extra_data=None):
         data.update(extra_data)
     base_template = render_template(THREAD_TEMPLATE, subject=thread["posts"][0].get("subject") or "", thread_id=thread_id) 
     return render_react_template(base_template, THREAD_RENDER_URL, data)
+
+
+def render_new_thread_form(board_id, extra_data=None):
+    data = {"board_id": board_id}
+    if extra_data:
+        data.update(extra_data)
+    base_template = render_template(NEW_THREAD_TEMPLATE)
+    return render_react_template(base_template, NEW_THREAD_RENDER_URL, data)
