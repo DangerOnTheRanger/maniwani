@@ -1,6 +1,7 @@
 import express from 'express';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import BoardIndex from './components/BoardIndex';
 import Catalog from './components/Catalog';
 import { NewThreadForm } from './components/PostForm';
 import NewPostModal from './components/NewPostModal';
@@ -51,6 +52,13 @@ function serveCatalog(req, res) {
     return res.send(templateWithData.replace('TEMPLATE_CONTENT', serverDOM));
 }
 app.post('/render/catalog', serveCatalog);
+app.post('/render/board-index', function (req, res) {
+    const boards = req.body.data.boards;
+    const serverDOM = ReactDOMServer.renderToString(<BoardIndex boards={boards}/>);
+    const template = req.body.template;
+    return res.send(template.replace('TEMPLATE_CONTENT', serverDOM));
+    
+}); 
 function serveThread(req, res) {
     const thread = req.body.data.thread;
     const threadId = req.body.data.thread_id;

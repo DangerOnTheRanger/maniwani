@@ -8,6 +8,7 @@ from werkzeug.http import parse_etags
 import cache
 import captchouli
 import renderer
+from model.Media import storage
 from model.Board import Board
 from model.BoardList import BoardList
 from model.BoardListCatalog import BoardCatalog
@@ -38,7 +39,12 @@ boards_blueprint = Blueprint('boards', __name__, template_folder='template')
 
 @boards_blueprint.route("/")
 def list():
-    return render_template("board-index.html", boards=BoardList().get())
+    boards = BoardList().get()
+    for board in boards:
+        board["catalog_url"] = url_for("boards.catalog", board_id=board["id"])
+        if board["media"]:
+            board["thumb_url"] = storage.get_thumb_url(board["media"])
+    return renderer.render_board_index(boards)
 
 
 @boards_blueprint.route("/<int:board_id>")

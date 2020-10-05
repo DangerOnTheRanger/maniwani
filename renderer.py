@@ -10,6 +10,8 @@ FIREHOSE_TEMPLATE = "react-index.html"
 FIREHOSE_RENDER_URL = "/render/firehose"
 CATALOG_TEMPLATE = "react-catalog.html"
 CATALOG_RENDER_URL = "/render/catalog"
+BOARD_INDEX_TEMPLATE = "react-board-index.html"
+BOARD_INDEX_RENDER_URL = "/render/board-index"
 THREAD_TEMPLATE = "react-thread.html"
 THREAD_RENDER_URL = "/render/thread"
 NEW_THREAD_TEMPLATE ="react-new-thread.html"
@@ -45,6 +47,10 @@ def render_catalog(catalog, board_name, board_id, extra_data=None):
     base_template = render_template(CATALOG_TEMPLATE, board_name=board_name, board_id=board_id)
     return render_react_template(base_template, CATALOG_RENDER_URL, data)
 
+def render_board_index(boards):
+    data = {"boards": boards}
+    base_template = render_template(BOARD_INDEX_TEMPLATE)
+    return render_react_template(base_template, BOARD_INDEX_RENDER_URL, data)
 
 def render_thread(thread, thread_id, extra_data=None):
     data = {"thread": thread, "thread_id": thread_id}
