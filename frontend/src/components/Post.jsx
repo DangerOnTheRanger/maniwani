@@ -114,6 +114,12 @@ function ReplyList(props) {
 }
 
 export default function Post(props) {
+    const [onClient, setOnClient] = useState(false);
+    useEffect(() => {
+        if(onClient == false) {
+            setOnClient(true);
+        }
+    });
     return (
         <div className="post-container" id={props.post_id}>
           {props.media && <PostThumbnail mimetype={props.mimetype} is_animated={props.is_animated} spoiler={props.spoiler} thumb_url={props.thumb_url} media_url={props.media_url}/>}
@@ -135,7 +141,8 @@ export default function Post(props) {
               </div>
               <div className="col-auto">
                 <small className="text-secondary">Posted: </small>
-                <small className="text-info"><TimeAgo date={props.datetime}/></small>
+                {onClient && <small className="text-info"><TimeAgo date={props.datetime}/></small>}
+                {!onClient && <small className="text-info">{props.datetime}</small>}
               </div>
               <div className="col-auto">
                 <small className="text-secondary">Post #:</small>
