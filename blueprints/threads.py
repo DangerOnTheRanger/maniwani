@@ -101,6 +101,9 @@ def view(thread_id):
     thread_data = {}
     for post in posts:
         post["datetime"] = post["datetime"].strftime("%a, %d %b %Y %H:%M:%S UTC")
+        if post["media"]:
+            post["media_url"] = storage.get_media_url(post["media"], post["media_ext"])
+            post["thumb_url"] = storage.get_thumb_url(post["media"])
     thread_data["posts"] = posts
     extra_data = {}
     if app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
