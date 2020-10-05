@@ -204,7 +204,8 @@ def view_gallery(thread_id):
         # TODO: either streamline what gets sent to the frontend
         # or automatically serialize datetimes so the below isn't necessary
         del post["datetime"]
-        post["media"] = storage.get_thumb_url(post["media"])
+        post["thumb_url"] = storage.get_thumb_url(post["media"])
+        post["media_url"] = storage.get_media_url(post["media"], post["media_ext"])
     thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
     board = db.session.query(Board).get(thread.board)
     return renderer.render_thread_gallery(board, thread_id, posts)
