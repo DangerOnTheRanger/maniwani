@@ -94,7 +94,8 @@ but a brief description of each follows:
   your Maniwani installation is protected with HTTPS, since Maniwani uses HTTP Basic for authentication and
   authorization.
 * `RENDERER_HOST` - this is a required string indicating the URL of the Maniwani frontend. For a production
-  deployment, this should be simply be the URL of the Express/React frontend container.
+  deployment, this should be simply be the URL of the Express/React frontend container. Keep in mind that
+  the frontend container serves traffic on port 3000 by default.
 * `DEFAULT_THEME` - this is an optional string representing the name of the theme Maniwani should use if
   the user has not otherwise selected a theme to use. If not present, the stock theme will be used.
 * `THEME_LIST` - this is an optional list of strings representing the list of installed themes available.
@@ -278,7 +279,7 @@ Running Maniwani
 
 Running Maniwani is highly dependent on how you've organized things in your particular production
 environment - whether you're using `docker-compose` or some other tool, etc. - but in essence comes
-down to more or less running `docker run dangerontheranger/maniwani` while ensuring the other
+down to more or less running both the backedn and frontend containers while ensuring the other
 pieces of your stack are also executing. If you went with the directory mount option for your custom
 configuration files, don't forget to mount that with `--mount` or `-v` before running the container.
 
