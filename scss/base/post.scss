@@ -7,11 +7,11 @@
 	background-color: #e7e7e7;
 }
 .post-container:nth-child(even) {
-	@extend .bg-white;
+	background-color: var(--white);
 }
 
 .reply-container {
-	@extend .bg-white;
+	background-color: var(--white);
 }
 
 .post-replies {
