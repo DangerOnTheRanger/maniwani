@@ -6,7 +6,7 @@ from werkzeug.http import parse_etags
 import cache
 import captchouli
 import cooldown
-from model.Media import upload_size
+from model.Media import upload_size, storage
 from model.Board import Board
 from model.NewPost import NewPost
 from model.NewThread import NewThread
@@ -200,9 +200,14 @@ def render_post(post_id):
 @threads_blueprint.route("/<int:thread_id>/gallery")
 def view_gallery(thread_id):
     posts = ThreadPosts().retrieve(thread_id)
+    for post in posts:
+        # TODO: either streamline what gets sent to the frontend
+        # or automatically serialize datetimes so the below isn't necessary
+        del post["datetime"]
+        post["media"] = storage.get_thumb_url(post["media"])
     thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
     board = db.session.query(Board).get(thread.board)
-    return render_template("gallery.html", thread_id=thread_id, board=board, posts=posts)
+    return renderer.render_thread_gallery(board, thread_id, posts)
 
 
 def _get_reply_urls(posts):

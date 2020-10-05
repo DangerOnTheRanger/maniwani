@@ -99,6 +99,7 @@ $theme-colors: (
 	"light": rgba(255,255,255,.1)
 );
 @import "bootstrap";
+@import "media-grid";
 @import "navbar";
 @import "styling";
 @import "catalog";

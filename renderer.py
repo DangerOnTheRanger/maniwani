@@ -14,6 +14,8 @@ THREAD_TEMPLATE = "react-thread.html"
 THREAD_RENDER_URL = "/render/thread"
 NEW_THREAD_TEMPLATE ="react-new-thread.html"
 NEW_THREAD_RENDER_URL = "/render/new-thread"
+GALLERY_TEMPLATE = "react-gallery.html"
+GALLERY_RENDER_URL = "/render/gallery"
 
 
 def captchouli_to_json(captchouli):
@@ -58,3 +60,9 @@ def render_new_thread_form(board_id, extra_data=None):
         data.update(extra_data)
     base_template = render_template(NEW_THREAD_TEMPLATE)
     return render_react_template(base_template, NEW_THREAD_RENDER_URL, data)
+
+
+def render_thread_gallery(board, thread_id, posts):
+    base_template = render_template(GALLERY_TEMPLATE, board=board, thread_id=thread_id)
+    data = {"posts": posts}
+    return render_react_template(base_template, GALLERY_RENDER_URL, data)

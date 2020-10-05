@@ -7,6 +7,7 @@ import NewPostModal from './components/NewPostModal';
 import NewThreadModal from './components/NewThreadModal';
 import Post from './components/Post';
 import Thread from './components/Thread';
+import ThreadGallery from './components/ThreadGallery';
 import { reducer, setBoard, setStyles, setCaptcha, DEFAULT_STATE } from './state';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
@@ -92,6 +93,13 @@ app.post('/render/new-thread', function (req, res) {
     const captchaProps = extractCaptcha(req.body);
     const template = req.body.template;
     const serverDOM = ReactDOMServer.renderToString(<NewThreadForm action="/threads/new" board_id={boardId} embed_submit={true} {...captchaProps}/>);
+    return res.send(template.replace('TEMPLATE_CONTENT', serverDOM));
+});
+
+app.post('/render/gallery', function (req, res) {
+    const posts = req.body.data.posts;
+    const template = req.body.template;
+    const serverDOM = ReactDOMServer.renderToString(<ThreadGallery posts={posts}/>);
     return res.send(template.replace('TEMPLATE_CONTENT', serverDOM));
 });
 
