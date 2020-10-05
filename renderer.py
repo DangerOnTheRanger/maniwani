@@ -14,8 +14,10 @@ BOARD_INDEX_TEMPLATE = "react-board-index.html"
 BOARD_INDEX_RENDER_URL = "/render/board-index"
 THREAD_TEMPLATE = "react-thread.html"
 THREAD_RENDER_URL = "/render/thread"
-NEW_THREAD_TEMPLATE ="react-new-thread.html"
+NEW_THREAD_TEMPLATE = "react-new-thread.html"
 NEW_THREAD_RENDER_URL = "/render/new-thread"
+NEW_POST_TEMPLATE = "react-new-post.html"
+NEW_POST_RENDER_URL = "/render/new-post"
 GALLERY_TEMPLATE = "react-gallery.html"
 GALLERY_RENDER_URL = "/render/gallery"
 
@@ -66,6 +68,14 @@ def render_new_thread_form(board_id, extra_data=None):
         data.update(extra_data)
     base_template = render_template(NEW_THREAD_TEMPLATE)
     return render_react_template(base_template, NEW_THREAD_RENDER_URL, data)
+
+
+def render_new_post_form(thread_id, extra_data=None):
+    data = {"thread_id": thread_id}
+    if extra_data:
+        data.update(extra_data)
+    base_template = render_template(NEW_POST_TEMPLATE, thread_id=thread_id)
+    return render_react_template(base_template, NEW_POST_RENDER_URL, data)
 
 
 def render_thread_gallery(board, thread_id, posts):

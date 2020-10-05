@@ -158,7 +158,10 @@ def move_submit(thread_id):
 
 @threads_blueprint.route("/<int:thread_id>/new")
 def new_post(thread_id):
-    return render_template("new-post.html", thread_id=thread_id)
+    extra_data = {}
+    if app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+        extra_data = renderer.captchouli_to_json(captchouli.request_captcha())
+    return renderer.render_new_post_form(thread_id, extra_data)
 
 
 @threads_blueprint.route("/<int:thread_id>/new", methods=["POST"])

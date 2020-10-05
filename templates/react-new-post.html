@@ -1,0 +1,12 @@
+{%- extends "base.html" %}
+{% block title %}
+	reply to thread
+{% endblock %}
+{% block navbar %}
+	<a href="{{ url_for("threads.view", thread_id=thread_id) }}" class="nav-item nav-link">Back to thread</a>
+{% endblock %}
+{% block content %}
+	<div class="container">
+		TEMPLATE_CONTENT
+	</div>
+{% endblock %}

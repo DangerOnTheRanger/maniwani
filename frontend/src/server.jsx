@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import BoardIndex from './components/BoardIndex';
 import Catalog from './components/Catalog';
-import { NewThreadForm } from './components/PostForm';
+import { NewPostForm, NewThreadForm } from './components/PostForm';
 import NewPostModal from './components/NewPostModal';
 import NewThreadModal from './components/NewThreadModal';
 import Post from './components/Post';
@@ -97,10 +97,18 @@ app.post('/render/firehose', function (req, res) {
 });
 
 app.post('/render/new-thread', function (req, res) {
-    const boardId =  req.body.data.board_id;
+    const boardId = req.body.data.board_id;
     const captchaProps = extractCaptcha(req.body);
     const template = req.body.template;
     const serverDOM = ReactDOMServer.renderToString(<NewThreadForm action="/threads/new" board_id={boardId} embed_submit={true} {...captchaProps}/>);
+    return res.send(template.replace('TEMPLATE_CONTENT', serverDOM));
+});
+
+app.post('/render/new-post', function (req, res) {
+    const threadId = req.body.data.thread_id;
+    const captchaProps = extractCaptcha(req.body);
+    const template = req.body.template;
+    const serverDOM = ReactDOMServer.renderToString(<NewPostForm action={"/threads/" + threadId + "/new"} thread_id={threadId} embed_submit={true} {...captchaProps}/>);
     return res.send(template.replace('TEMPLATE_CONTENT', serverDOM));
 });
 
