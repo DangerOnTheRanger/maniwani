@@ -77,8 +77,7 @@ requires `docker-compose`. In this directory, type:
 	
 The last command will only need to be run once per clean installation of the production
 environment. If you ever want to remove all database and storage data, remove the
-`compose-data` and `compose-captchouli` directories, though you'll likely need root
-permissions to do so since some subdirectories are created by other users. At this point,
+`compose-minio`, `compose-postgres`, and `compose-captchouli` volumes. At this point,
 you can use the normal `docker-compose start` and `docker-compose stop` to start and stop the production
 environment, navigating to http://127.0.0.1:5000 as per usual to view Maniwani. If you
 want additional info on deploying Maniwani in production, see `doc/deploying.md` for more.

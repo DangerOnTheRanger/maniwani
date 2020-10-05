@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from flask import url_for
 from flask.json import jsonify
 
 import cache
@@ -74,7 +75,7 @@ class ThreadPosts:
             p_dict["datetime"] = post.datetime
             p_dict["id"] = post.id
             if index == 0:
-                p_dict["tags"] = thread.tags
+                p_dict["tags"] = [tag.name for tag in thread.tags]
             poster = keyed_posters[post.poster]
             p_dict["poster"] = poster.hex_string
             p_dict["subject"] = post.subject
@@ -84,6 +85,8 @@ class ThreadPosts:
                 p_dict["media_ext"] = media.ext
                 p_dict["mimetype"] = media.mimetype
                 p_dict["is_animated"] = media.is_animated
+                p_dict["thumb_url"] = url_for("upload.thumb", media_id=post.media)
+                p_dict["media_url"] = url_for("upload.file", media_id=post.media)
             p_dict["spoiler"] = post.spoiler
             p_dict["slip"] = poster.slip
             replies = keyed_replies.get(post.id)

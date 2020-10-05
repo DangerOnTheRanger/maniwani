@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from flask import url_for
 from flask.json import jsonify
 
 import cache
@@ -39,6 +40,8 @@ class BoardCatalog:
             t_dict["body"] = op.body
             t_dict["id"] = thread.id
             t_dict["media"] = op.media
+            t_dict["thread_url"] = url_for("threads.view", thread_id=t_dict["id"])
+            t_dict["thumb_url"] = url_for("upload.thumb", media_id=t_dict["media"])
             t_dict["spoiler"] = op.spoiler
             t_dict["tags"] = list(map(lambda t: t.name, thread.tags))
             t_dict["views"] = thread.views

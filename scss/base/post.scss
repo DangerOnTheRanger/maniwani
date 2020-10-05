@@ -17,3 +17,11 @@
 .post-replies {
 	display: inline;
 }
+
+.thread-thumbnail {
+	@extend .img-thumbnail;
+	display: inline-block;
+	overflow: hidden;
+	max-width: 15em;
+	max-height: 20em;
+}

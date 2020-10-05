@@ -53,6 +53,10 @@ def post_render_cache_key(context, post_id):
     return "post-render-%d-%d" % (context, post_id)
 
 
+def render_markdown(source, extensions):
+    return clean(markdown(source, extensions=extensions), ALLOWED_TAGS, ALLOWED_ATTRIBUTES)
+
+
 def render_post_collection(posts, context, extensions):
     cache_connection = cache.Cache()
     for post in posts:
@@ -61,8 +65,7 @@ def render_post_collection(posts, context, extensions):
         if cached_render:
             post["body"] = cached_render
             continue
-        rendered_markdown = clean(markdown(post["body"], extensions=extensions),
-                             ALLOWED_TAGS, ALLOWED_ATTRIBUTES)
+        rendered_markdown = render_markdown(post["body"], extensions)
         cache_connection.set(cache_key, rendered_markdown)
         post["body"] = rendered_markdown
 
@@ -71,12 +74,27 @@ def render_for_catalog(posts):
     render_post_collection(posts, CONTEXT_CATALOG, [PostReplyExtension(),
                                                     SpoilerExtension(),
                                                     SpacingExtension()])
-                           
+  
 
 def render_for_threads(posts):
     render_post_collection(posts, CONTEXT_THREAD, [ThreadRootExtension(), PostReplyExtension(),
                                                    SpoilerExtension(),
                                                    SpacingExtension()])
+
+
+def render_individual(post):
+    cache_key = post_render_cache_key(CONTEXT_THREAD, post["id"])
+    cache_connection = cache.Cache()
+    cached_render = cache_connection.get(cache_key)
+    if cached_render:
+        post["body"] = cached_render
+        return
+    rendered_markdown = render_markdown(post["body"], [ThreadRootExtension(),
+                                                       PostReplyExtension(),
+                                                       SpoilerExtension(),
+                                                       SpacingExtension()])
+    cache_connection.set(cache_key, rendered_markdown)
+    post["body"] = rendered_markdown
 
 
 class Post(OutputMixin, db.Model):

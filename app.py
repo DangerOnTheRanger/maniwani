@@ -17,7 +17,7 @@ from blueprints.live import live_blueprint
 from resources import (
     BoardCatalogResource, BoardListResource, FirehoseResource,
     NewPostResource, NewThreadResource, PostRemovalResource,
-    ThreadPostsResource,
+    ThreadPostsResource, SinglePostResource
 )
 from shared import app, rest_api
 
@@ -37,6 +37,7 @@ if app.config["SERVE_REST"]:
     rest_api.add_resource(NewThreadResource, "/api/v1/thread/new")
     rest_api.add_resource(PostRemovalResource, "/api/v1/thread/post/<int:post_id>")
     rest_api.add_resource(NewPostResource, "/api/v1/thread/<int:thread_id>/new")
+    rest_api.add_resource(SinglePostResource, "/api/v1/post/<int:post_id>")
     rest_api.add_resource(FirehoseResource, "/api/v1/firehose")
     app.register_blueprint(live_blueprint, url_prefix="/api/v1")
     

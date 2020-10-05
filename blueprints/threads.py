@@ -6,7 +6,7 @@ from werkzeug.http import parse_etags
 import cache
 import captchouli
 import cooldown
-from model.Media import upload_size
+from model.Media import upload_size, storage
 from model.Board import Board
 from model.NewPost import NewPost
 from model.NewThread import NewThread
@@ -19,6 +19,7 @@ from model.SubmissionError import SubmissionError
 from model.Thread import Thread
 from model.ThreadPosts import ThreadPosts
 from post import InvalidMimeError, CaptchaError
+import renderer
 from shared import db, app
 from thread import invalidate_board_cache
 
@@ -36,8 +37,10 @@ def get_captchouli():
 
 @threads_blueprint.route("/new/<int:board_id>")
 def new(board_id):
-    board = db.session.query(Board).get(board_id)
-    return render_template("new-thread.html", board=board)
+    extra_data = {}
+    if app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+        extra_data = renderer.captchouli_to_json(captchouli.request_captcha())
+    return renderer.render_new_thread_form(board_id, extra_data)
 
 
 @threads_blueprint.route("/new", methods=["POST"])
@@ -95,8 +98,17 @@ def view(thread_id):
     num_posters = db.session.query(Poster).filter(Poster.thread == thread_id).count()
     num_media = thread.num_media()
     reply_urls = _get_reply_urls(posts)
-    template = render_template("thread.html", thread_id=thread_id, board=board, posts=posts, num_views=thread.views,
-                               num_media=num_media, num_posters=num_posters, reply_urls=reply_urls)
+    thread_data = {}
+    for post in posts:
+        post["datetime"] = post["datetime"].strftime("%a, %d %b %Y %H:%M:%S UTC")
+        if post["media"]:
+            post["media_url"] = storage.get_media_url(post["media"], post["media_ext"])
+            post["thumb_url"] = storage.get_thumb_url(post["media"])
+    thread_data["posts"] = posts
+    extra_data = {}
+    if app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+        extra_data = renderer.captchouli_to_json(captchouli.request_captcha())
+    template = renderer.render_thread(thread_data, thread_id, extra_data)
     uncached_response = make_response(template)
     uncached_response.set_etag(etag_value, weak=True)
     uncached_response.headers["Cache-Control"] = "public,must-revalidate"
@@ -146,7 +158,10 @@ def move_submit(thread_id):
 
 @threads_blueprint.route("/<int:thread_id>/new")
 def new_post(thread_id):
-    return render_template("new-post.html", thread_id=thread_id)
+    extra_data = {}
+    if app.config.get("CAPTCHA_METHOD") == "CAPTCHOULI":
+        extra_data = renderer.captchouli_to_json(captchouli.request_captcha())
+    return renderer.render_new_post_form(thread_id, extra_data)
 
 
 @threads_blueprint.route("/<int:thread_id>/new", methods=["POST"])
@@ -191,9 +206,15 @@ def render_post(post_id):
 @threads_blueprint.route("/<int:thread_id>/gallery")
 def view_gallery(thread_id):
     posts = ThreadPosts().retrieve(thread_id)
+    for post in posts:
+        # TODO: either streamline what gets sent to the frontend
+        # or automatically serialize datetimes so the below isn't necessary
+        del post["datetime"]
+        post["thumb_url"] = storage.get_thumb_url(post["media"])
+        post["media_url"] = storage.get_media_url(post["media"], post["media_ext"])
     thread = db.session.query(Thread).filter(Thread.id == thread_id).one()
     board = db.session.query(Board).get(thread.board)
-    return render_template("gallery.html", thread_id=thread_id, board=board, posts=posts)
+    return renderer.render_thread_gallery(board, thread_id, posts)
 
 
 def _get_reply_urls(posts):
