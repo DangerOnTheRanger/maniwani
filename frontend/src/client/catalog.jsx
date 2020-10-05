@@ -79,7 +79,7 @@ async function eventLoop() {
 eventLoop();
 ReactDOM.hydrate(<React.Fragment>
                    <Provider store={store}>
-                     <NewThreadModal board_id={window._BOARD} embed_submit={true}/>
+                     <NewThreadModal board_id={window._BOARD}/>
                      <Catalog />
                    </Provider>
                  </React.Fragment>, document.getElementById('catalog-root'));

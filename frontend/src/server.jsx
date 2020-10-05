@@ -46,8 +46,8 @@ function serveCatalog(req, res) {
                                                 JSON.stringify(store.getState())).
           replace('BOARD_ID', boardId);
     var serverDOM = ReactDOMServer.renderToString(<Provider store={store}>
-                                                    <NewThreadModal board_id={boardId} embed_submit={true}/>
-                                                    <Catalog display_board={false} />
+                                                    <NewThreadModal board_id={boardId}/>
+                                                    <Catalog display_board={false}/>
                                                   </Provider>);
     return res.send(templateWithData.replace('TEMPLATE_CONTENT', serverDOM));
 }
@@ -72,7 +72,7 @@ function serveThread(req, res) {
           replace('THREAD_ID', threadId);
     var serverDOM = ReactDOMServer.renderToString(<React.Fragment>
                                                     <Provider store={store}>
-                                                      <NewPostModal thread_id={threadId} embed_submit={true}/>
+                                                      <NewPostModal thread_id={threadId}/>
                                                       <Thread />
                                                     </Provider>
                                                   </React.Fragment>);
@@ -91,7 +91,7 @@ app.post('/render/firehose', function (req, res) {
     store.dispatch(setStyles(firehose.tag_styles));
     const template = req.body.template;
     var serverDOM = ReactDOMServer.renderToString(<Provider store={store}>
-                                                    <Catalog display_board={true} />
+                                                    <Catalog display_board={true}/>
                                                   </Provider>);
     return res.send(template.replace('TEMPLATE_CONTENT', serverDOM));
 });
