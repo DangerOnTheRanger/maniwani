@@ -29,7 +29,7 @@ function compile_client() {
 			file.contents = browserify(file.path, {debug: true}).bundle();
 		})).
 		pipe(buffer()).
-		//pipe(uglify()).
+		pipe(uglify()).
 		pipe(gulp.dest('build/client-bundle'));
 }
 
