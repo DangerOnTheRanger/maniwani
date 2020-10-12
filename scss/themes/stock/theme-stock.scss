@@ -1,8 +1,75 @@
-@import "bootstrap";
-@import "media-grid";
-@import "board-index";
-@import "catalog";
-@import "post";
-@import "styling";
-@import "captchouli";
-@import "navbar";
+@import "base";
+
+body {
+	margin: 0;
+	font-family: "Fira Sans";
+	background-color: #f8f9fa;
+	color: #212529;
+}
+
+p {
+	max-width: 90ch;
+}
+
+.lead {
+	font-size: 1.25rem;
+}
+
+.navbar {
+	background-color: #f8f9fa;
+}
+
+
+.navbar-link {
+	color: #212529;
+}
+
+.navbar-site-name {
+	color: #212529;
+}
+
+.thread {
+	background-color: #dee2e6;
+	color: #212529;
+}
+
+.thread-stats-container {
+	color: #868e96;
+}
+
+.text-secondary {
+	color: #868e96;
+}
+
+.post-container {
+	margin-bottom: 1rem;
+	background-color: #dee2e6;
+	margin-top: 1rem;
+}
+
+.board-entry {
+	background-color:  #868e96;
+}
+
+.board-label {
+	color: #212529;	
+}
+
+.btn {
+	color: #f8f9fa;
+}
+
+.btn-primary {
+	background-color: #868e96;
+}
+
+.btn-primary:hover {
+	background-color: #495057
+}
+
+.btn-secondary {
+	background-color: #343a40;
+}
+.btn-secondary:hover {
+	background-color: #212529;
+}

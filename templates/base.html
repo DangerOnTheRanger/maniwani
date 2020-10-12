@@ -6,50 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<link rel="stylesheet" href="{{ get_current_theme_path() }}">
-    <script src="{{ static_resource("jquery/jquery.min.js") }}"></script>
-    <script src="{{ static_resource("popperjs/umd/popper.min.js") }}"></script>
-    <script src="{{ static_resource("bootstrap/bootstrap.min.js") }}"></script>
 
     <!-- Fontawesome -->
     <link rel="stylesheet" href="{{ static_resource("fontawesome/all.min.css") }}">
+
+	<!-- Fira Sans -->
+	<link rel="stylesheet" href="{{ static_resource("webfonts/firasans/index.css") }}">
+	
 	{% block head %}{% endblock %}
     <title>{{ instance_name() }} - {% block title %}{% endblock %}</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg sticky-top mb-2">
-    <a class="navbar-brand" href="{{ url_for("main.index") }}">{{ instance_name() }}</a>
-    <script>
-			 document.write('<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#site-nav"> \
-				 <span class="navbar-toggler-icon"></span> \
-				 </button>')
-
-
-
-    </script>
-    <div id="site-nav" class="navbar-nav">
+	<nav class="navbar">
+		<a class="navbar-site-name" href="{{ url_for("main.index") }}">{{ instance_name() }}</a>
         {% block navbar %}{% endblock %}
 		{% if board is defined %}
-			<a href="{{ url_for("boards.catalog", board_id=board["id"]) }}" class="nav-item nav-link">/{{ board["name"] }}/ Catalog</a>
+			<a href="{{ url_for("boards.catalog", board_id=board["id"]) }}" class="navbar-link">/{{ board["name"] }}/ Catalog</a>
 		{% endif %}
-        <a href="{{ url_for("boards.list") }}" class="nav-item nav-link">Boards</a>
-        <a href="{{ url_for("slip.landing") }}" class="nav-item nav-link">Slip</a>
+        <a href="{{ url_for("boards.list") }}" class="navbar-link">Boards</a>
+        <a href="{{ url_for("slip.landing") }}" class="navbar-link">Slip</a>
         {% if board is not defined %}
-        <a href="{{ url_for("main.rules") }}" class="nav-item nav-link">Rules</a>
+			<a href="{{ url_for("main.rules") }}" class="navbar-link">Rules</a>
         {% else %}
-        <a href="{{ url_for("boards.rules", board_id=board.id) }}" class="nav-item nav-link">Rules</a>
+			<a href="{{ url_for("boards.rules", board_id=board.id) }}" class="navbar-link">Rules</a>
         {% endif %}
-        <a href="{{ url_for("main.faq") }}" class="nav-item nav-link">FAQ</a>
-        <div class="navbar-nav ml-auto">
-            {% block navbar_right %}{% endblock %}
-        </div>
-    </div>
-    <script>
-				$("#site-nav").addClass("collapse navbar-collapse")
-
-
-
-    </script>
-</nav>
+        <a href="{{ url_for("main.faq") }}" class="navbar-link">FAQ</a>
+	</nav>
 {% with flashes = get_flashed_messages() %}
 {% if flashes %}
 <div class="container">
@@ -77,11 +59,9 @@
 		<button id="theme-submit" type="submit" class="btn btn-primary">Select theme</button>
 	</form>
 </div>
-<div class="container-fluid">
+<div class="page-footer">
     {% block footer %}{% endblock %}
-    <p class="text-center text-muted">
-        <small>Powered by <a href="https://github.com/DangerOnTheRanger/maniwani">Maniwani</a>!</small>
-    </p>
+    <small>Powered by <a href="https://github.com/DangerOnTheRanger/maniwani">Maniwani</a>!</small>
 </div>
 </body>
 </html>

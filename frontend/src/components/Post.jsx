@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import TimeAgo from 'react-timeago';
 
 function getThumbClass(spoiler) {
-    return spoiler? "thread-thumbnail thumbnail-spoiler" : "thread-thumbnail";
+    return spoiler? "post-thumbnail thumbnail-spoiler" : "post-thumbnail";
 }
 
 function GenericThumbnail(props) {
@@ -133,26 +133,25 @@ export default function Post(props) {
                          </div>
                        </div>}
             <div className="row">
-              <div className="col-auto">
+              <div className="col">
                 <small className="text-secondary">Poster:</small>
                 <small className="text-info">{props.poster}</small>
                 {props.slip && props.slip.is_admin && <span className="badge badge-danger">Admin</span>}
                 {props.slip && !props.slip.is_admin && props.slip.is_mod && <span className="badge badge-success">Mod</span>}
               </div>
-              <div className="col-auto">
+              <div className="col">
                 <small className="text-secondary">Posted: </small>
                 {onClient && <small className="text-info"><TimeAgo date={props.datetime}/></small>}
                 {!onClient && <small className="text-info">{props.datetime}</small>}
               </div>
-              <div className="col-auto">
+              <div className="col">
                 <small className="text-secondary">Post #:</small>
                 <small className="text-info">{props.id}</small>
               </div>
-              <div className="w-100 d-block d-md-none"></div>
-              <div className="col-auto">
+              <div className="col">
                 <small><a className="badge badge-primary" href={"#" + props.id}>Permalink</a></small>
               </div>
-              {props.slip && (props.slip.is_admin || props.slip.is_mod) && <div className="col-auto">
+              {props.slip && (props.slip.is_admin || props.slip.is_mod) && <div className="col">
                                     <details className="badge badge-danger">
                                       <summary>Moderation</summary>
                                       {props.is_op && <a className="mod-item" href={props.move_url}>Move</a>}
@@ -161,7 +160,7 @@ export default function Post(props) {
                                   </div>}
             </div>
             {props.replies.length > 0 && <div className="row">
-                                          <div className="col-auto">
+                                          <div className="col">
                                             <ReplyList replies={props.replies}/>
                                           </div>
                                         </div>}

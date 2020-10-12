@@ -1,26 +1,26 @@
 .thread {
-	@extend .border;
-	@extend .rounded;
 	width: 300px;
 	height: 300px;
 	position: relative;
 	overflow: hidden;
-}
-.thread:hover {
-	text-decoration: none !important;
+	text-decoration: none;
+	padding: 10px;
 }
 .thread-body {
-	font-size: 0.7em;
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+.thread-subject {
+	display: block;
+	font-weight: bold;
+	text-align: center;
 }
 .catalog-grid {
 	display: grid;
-	justify-content: center;
-	grid-gap: 30px;
+	grid-gap: 90px;
 	grid-template-columns: repeat(auto-fill, 300px);
 }
 .catalog-media-container {
-	@extend .p-2;
-	@extend .mx-2;
 	position: relative;
 	overflow: hidden;
 	display: flex;
@@ -32,8 +32,7 @@
 	height: 125px;
 }
 .thread-stats-container {
-	@extend .p-1;
 	position: absolute;
-	bottom: 0;
-	right: 0;
+	bottom: 5px;
+	right: 10px;
 }

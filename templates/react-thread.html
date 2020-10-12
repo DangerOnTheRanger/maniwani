@@ -30,11 +30,11 @@
 	</script>
 {% endblock %}
 {% block navbar %}
-	<a id="newPostLink" href="{{ url_for("threads.new_post", thread_id=thread_id) }}" class="nav-item nav-link">New post</a>
-	<a href="{{ url_for("threads.view_gallery", thread_id=thread_id) }}" class="nav-item nav-link">Gallery</a>
+	<a id="newPostLink" href="{{ url_for("threads.new_post", thread_id=thread_id) }}" class="navbar-link">New post</a>
+	<a href="{{ url_for("threads.view_gallery", thread_id=thread_id) }}" class="navbar-link">Gallery</a>
 {% endblock %}
 {% block content %}
-	<div class="container-fluid">
+	<div class="container">
 		<div id="thread-container">
 TEMPLATE_CONTENT
 		</div>

@@ -1,27 +1,11 @@
-.post-container {
-	@extend .row;
-	@extend .pt-2;
-}
-
-.post-container:nth-child(odd) {
-	background-color: #e7e7e7;
-}
-.post-container:nth-child(even) {
-	background-color: var(--white);
-}
-
-.reply-container {
-	background-color: var(--white);
-}
-
 .post-replies {
 	display: inline;
 }
 
-.thread-thumbnail {
-	@extend .img-thumbnail;
+.post-thumbnail {
 	display: inline-block;
 	overflow: hidden;
 	max-width: 15em;
 	max-height: 20em;
+	margin-top: 8px;
 }

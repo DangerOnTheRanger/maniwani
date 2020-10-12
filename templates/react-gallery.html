@@ -3,10 +3,10 @@
 	media gallery
 {% endblock %}
 {% block navbar %}
-	<a href="{{ url_for("threads.view", thread_id=thread_id) }}" class="nav-item nav-link">Back to thread</a>
+	<a href="{{ url_for("threads.view", thread_id=thread_id) }}" class="navbar-link">Back to thread</a>
 {% endblock %}
 {% block content %}
-	<div class="container-fluid">
+	<div class="container">
 		<div id="gallery-root">
 			TEMPLATE_CONTENT
 		</div>
