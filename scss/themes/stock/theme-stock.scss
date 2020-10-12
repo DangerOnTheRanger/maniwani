@@ -3,7 +3,7 @@
 body {
 	margin: 0;
 	font-family: "Fira Sans";
-	background-color: #f8f9fa;
+	background-color: #dee2e6;
 	color: #212529;
 }
 
@@ -13,6 +13,13 @@ p {
 
 .lead {
 	font-size: 1.25rem;
+}
+
+.jumbotron {
+	background-color: #f8f9fa;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	margin-top: 1rem;
 }
 
 .navbar {
@@ -29,7 +36,7 @@ p {
 }
 
 .thread {
-	background-color: #dee2e6;
+	background-color: #f8f9fa;
 	color: #212529;
 }
 
@@ -43,12 +50,13 @@ p {
 
 .post-container {
 	margin-bottom: 1rem;
-	background-color: #dee2e6;
+	background-color: #f8f9fa;
 	margin-top: 1rem;
 }
 
 .board-entry {
-	background-color:  #868e96;
+	background-color:  #f8f9fa;
+	background-blend-mode: luminosity;
 }
 
 .board-label {
@@ -60,16 +68,16 @@ p {
 }
 
 .btn-primary {
-	background-color: #868e96;
+	background-color: #343a40;
 }
-
 .btn-primary:hover {
-	background-color: #495057
+	background-color: #212529;
 }
 
 .btn-secondary {
-	background-color: #343a40;
+	background-color: #868e96;
 }
+
 .btn-secondary:hover {
-	background-color: #212529;
+	background-color: #495057
 }
