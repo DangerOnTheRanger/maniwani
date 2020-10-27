@@ -25,11 +25,11 @@ function ThreadThumbnail(props) {
           {props.subject && <span className={"thread-subject"}>{props.subject || "No subject"}</span>}
           <div className={"thread-body " + textStyle} dangerouslySetInnerHTML={{__html: props.body}}/>
           <span className={"thread-stats-container " + textStyle}>
-            {props.display_board && <small>/</small>}
-            {props.display_board && <small>{props.board}</small>}
-            {props.display_board && (<small>/ </small>)}
-            <i className="fas fa-comment"></i>{props.num_replies}
-            <i className="fas fa-image"></i>{props.num_media}
+            {props.display_board && <small>/{props.board}/</small>}
+            {props.display_board && '\u00A0'}
+            <i className="fas fa-comment"></i>&nbsp;{props.num_replies}
+            &nbsp;
+            <i className="fas fa-image"></i>&nbsp;{props.num_media}
           </span>
         </a>
     );

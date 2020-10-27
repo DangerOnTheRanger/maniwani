@@ -128,7 +128,7 @@ export default function Post(props) {
                                 <div className="col"><b>{props.subject}</b></div></div>}
             {props.tags && props.tags.length > 0 && <div className="row">
                          <div className="col">
-                           <small className="text-muted">Tags: </small>
+                           <small className="text-secondary">Tags: </small>
                            <small>{props.tags.join(", ")}</small>
                          </div>
                        </div>}

@@ -3,8 +3,8 @@
 body {
 	margin: 0;
 	font-family: "Fira Sans";
-	background-color: #dee2e6;
-	color: #212529;
+	background-color: #1d1f21;
+	color: #b4b6b5;
 }
 
 p {
@@ -16,57 +16,61 @@ p {
 }
 
 .jumbotron {
-	background-color: #f8f9fa;
+	background-color: #27282c;
 	padding: 1rem;
 	margin-bottom: 1rem;
 	margin-top: 1rem;
 }
 
 .navbar {
-	background-color: #f8f9fa;
+	background-color: #27282c;
 }
 
 
 .navbar-link {
-	color: #212529;
+	color: #b4b6b5;
 }
 
 .navbar-site-name {
-	color: #212529;
+	color: #b4b6b5;
+}
+
+a {
+	color: #637b90;
 }
 
 .thread {
-	background-color: #f8f9fa;
-	color: #212529;
-	border-bottom: 7px solid #868e96;
+	background-color: #27282c;
+	color: #b4b6b5;
+	border-bottom: 7px solid #b4b6b5;
 }
 
 .thread-stats-container {
 }
 
 .fas {
-	color: #868e96;
+	color: #b4b6b5;
 }
 
 .text-secondary {
-	color: #868e96;
+	color: #e57f5d;
 }
 
 .post-container {
 	margin-bottom: 1rem;
-	background-color: #f8f9fa;
+	background-color: #27282c;
 	margin-top: 1rem;
 }
 
 .board-entry {
-	background-color:  #f8f9fa;
+	background-color:  #27282c;
 	background-blend-mode: luminosity;
 	overflow: hidden;
 }
 
 .board-label {
-	color: #212529;
-	background-color: #f8f9fa;
+	color: #b4b6b5;
+	background-color: #27282c;
 	text-align: center;
 	/* hack in conjuction with overflow above
 	  to get rid of the label missing a pixel of the background image sometimes
@@ -79,18 +83,11 @@ p {
 }
 
 .btn-primary {
-	background-color: #343a40;
-}
-.btn-primary:hover {
-	background-color: #212529;
+	background-color: #7f6b86;
 }
 
 .btn-secondary {
-	background-color: #868e96;
-}
-
-.btn-secondary:hover {
-	background-color: #495057
+	background-color: #637b90;
 }
 
 .badge {
@@ -98,7 +95,7 @@ p {
 	padding-right: 12px;
 	padding-top: 5px;
 	padding-bottom: 5px;
-	color: #f8f9fa;
+	color: #b4b6b5;
 	text-decoration: none;
 }
 
@@ -107,14 +104,13 @@ p {
 }
 
 .badge-primary {
-	background-color: #343a40;
-	
+	background-color: #1d1f21;
 }
 
 .modal {
-	background: #f8f9fa none repeat scroll 0% 0%;
+	background: #27282c none repeat scroll 0% 0%;
 }
 
 .modal-overlay {
-	background-color: #dee2e6;
+	background-color: #1d1f21;
 }
