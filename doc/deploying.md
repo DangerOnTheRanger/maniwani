@@ -22,6 +22,8 @@ other pieces of software installed:
   Github repository, while Futatsu uses an actual Amazon S3 instance. Strictly speaking,
   an S3 store isn't necessary, but most serious deployments should use it over the
   filesystem storage backend for performance reasons.
+* A keyvalue/pubsub store. Redis is recommended for production deployments, but Maniwani
+  comes with a stub implementation that can work if Redis is unviable.
 * Docker is recommended for deploying Maniwani itself, since it removes the need
   to install and manage prerequisites for Maniwani in addition to making updating
   to newly-released versions a breeze. The rest of this guide assumes usage of Docker.
@@ -81,12 +83,19 @@ but a brief description of each follows:
   supplied by Maniwani are: `ENDPOINT`, `BUCKET_UUID`, `BUCKET`, and `PATH`. `PATH` is the path to the
   resource (and does not begin with a `/`), while `BUCKET_UUID` is equal to `S3_UUID_PREFIX`, if it is
   present.
+* `STORE_PROVIDER` - this is a string indicating which keystore/pubsub provider Maniwani should target.
+  Valid values are `"REDIS"` for Redis, or `"INTERNAL"` for Maniwani's built-in substitute.
+* `REDIS_HOST` - this is an optional string that contains the URL of the Redis database if `STORE_PROVIDER`
+  is set to `"REDIS"`.
 * `SERVE_STATIC` - this is a boolean that indicates whether Maniwani should serve up CSS/JS/other
   static non-attachment assets itself (if set to `True`) or let the S3 store handle it (if set
   to `False`). This should be set to `False` for a production deploymenet.
 * `SERVE_REST` - if `True`, REST endpoints will be served by Maniwani. Note that ideally, the REST API for
   your Maniwani installation is protected with HTTPS, since Maniwani uses HTTP Basic for authentication and
   authorization.
+* `RENDERER_HOST` - this is a required string indicating the URL of the Maniwani frontend. For a production
+  deployment, this should be simply be the URL of the Express/React frontend container. Keep in mind that
+  the frontend container serves traffic on port 3000 by default.
 * `DEFAULT_THEME` - this is an optional string representing the name of the theme Maniwani should use if
   the user has not otherwise selected a theme to use. If not present, the stock theme will be used.
 * `THEME_LIST` - this is an optional list of strings representing the list of installed themes available.
@@ -109,7 +118,6 @@ but a brief description of each follows:
   a pre-rendered copy of a thread until the real view count divided by the view count in the cached render is greater
   than this number. If not set, Maniwani will not attempt to fetch any fully-rendered threads from the cache. Set this
   if site performance proves to be an issue; a good initial value is `1.15`.
-  
 
 `bootstrap-config.json` is the file used upon bootstrapping Maniwani for the first time to set up any boards,
 configure any initial slips (usually admin/moderator roles, but they don't have to be) and set up any special
@@ -271,7 +279,7 @@ Running Maniwani
 
 Running Maniwani is highly dependent on how you've organized things in your particular production
 environment - whether you're using `docker-compose` or some other tool, etc. - but in essence comes
-down to more or less running `docker run dangerontheranger/maniwani` while ensuring the other
+down to more or less running both the backedn and frontend containers while ensuring the other
 pieces of your stack are also executing. If you went with the directory mount option for your custom
 configuration files, don't forget to mount that with `--mount` or `-v` before running the container.
 

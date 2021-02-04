@@ -4,6 +4,8 @@
 if [ $1 = "devmode" ]; then
 	# start up internal pubsub server
 	python3 storestub.py &
+	# start up react sidecar
+	/maniwani-frontend/devmode-entrypoint.sh &
 	uwsgi --ini ./deploy-configs/uwsgi-devmode.ini
 # attempting to bootstrap?
 elif [ $1 = "bootstrap" ]; then

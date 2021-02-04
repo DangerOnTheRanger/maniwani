@@ -7,13 +7,21 @@
 	background-color: #e7e7e7;
 }
 .post-container:nth-child(even) {
-	@extend .bg-white;
+	background-color: var(--white);
 }
 
 .reply-container {
-	@extend .bg-white;
+	background-color: var(--white);
 }
 
 .post-replies {
 	display: inline;
+}
+
+.thread-thumbnail {
+	@extend .img-thumbnail;
+	display: inline-block;
+	overflow: hidden;
+	max-width: 15em;
+	max-height: 20em;
 }

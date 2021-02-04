@@ -8,6 +8,12 @@ Where does the name come from? I could tell you, but by that point
 you'd [have been torn to pieces.](https://wikipedia.org/wiki/Katanagatari)
 
 
+Sponsors
+--------
+
+<a href="https://github.com/samip5"><img src="https://avatars3.githubusercontent.com/u/1703002?s=60&amp;v=4" alt="@samip5" width="45" height="45"></a>
+
+
 Features
 --------
 
@@ -36,6 +42,11 @@ Features
 
 Installation
 ------------
+
+NOTE: If you build Maniwani with Docker, then it is recommended to use [docker-slim](https://github.com/docker-slim/docker-slim)
+on the resulting container image, which can net approximately a 3x decrease in image size. The `build-slim.sh` script included
+in the repository contains the flags needed to successfuly run a slimmed-down container; invoke it instead of using `docker-slim`
+directly.
 
 ### With Docker - standalone development image
 
@@ -66,8 +77,7 @@ requires `docker-compose`. In this directory, type:
 	
 The last command will only need to be run once per clean installation of the production
 environment. If you ever want to remove all database and storage data, remove the
-`compose-data` and `compose-captchouli` directories, though you'll likely need root
-permissions to do so since some subdirectories are created by other users. At this point,
+`compose-minio`, `compose-postgres`, and `compose-captchouli` volumes. At this point,
 you can use the normal `docker-compose start` and `docker-compose stop` to start and stop the production
 environment, navigating to http://127.0.0.1:5000 as per usual to view Maniwani. If you
 want additional info on deploying Maniwani in production, see `doc/deploying.md` for more.

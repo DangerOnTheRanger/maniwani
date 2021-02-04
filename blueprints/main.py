@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, make_response, request, session
 from markdown import markdown
 from werkzeug.http import parse_etags
 
+import renderer
 import cache
 from blueprints.boards import get_tags
 from model.Firehose import Firehose
@@ -34,8 +35,15 @@ def index():
         return cached_response
     greeting = open("deploy-configs/index-greeting.html").read()
     threads = Firehose().get_impl()
+    # fix to avoid needing to serialize the datetime
+    for thread in threads:
+        del thread["last_updated"]
     tag_styles = get_tags(threads)
-    template = render_template("index.html", greeting=greeting, threads=threads, tag_styles=tag_styles)
+    firehose_data = {
+        "threads": threads,
+        "tag_styles": tag_styles}
+    template = renderer.render_firehose(firehose_data, greeting)
+    #template = render_template("index.html", greeting=greeting, threads=threads, tag_styles=tag_styles)
     uncached_response = make_response(template)
     uncached_response.set_etag(etag_value, weak=True)
     uncached_response.headers["Cache-Control"] = "public,must-revalidate"

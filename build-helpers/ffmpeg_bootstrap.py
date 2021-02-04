@@ -5,9 +5,9 @@ import tarfile
 import urllib.request
 
 
-FFMPEG_URL = "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz"
+FFMPEG_URL = "https://www.johnvansickle.com/ffmpeg/old-releases/ffmpeg-4.2.2-amd64-static.tar.xz"
 FFMPEG_EXECUTABLE = "ffmpeg"
-FFMPEG_ARCHIVE_PATH = "ffmpeg-4.0.2-64bit-static/ffmpeg"
+FFMPEG_ARCHIVE_PATH = "ffmpeg-4.2.2-amd64-static/ffmpeg"
 FFMPEG_EXTRACTION_DIR = "../ffmpeg"
 
 

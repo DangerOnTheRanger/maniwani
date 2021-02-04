@@ -3,19 +3,27 @@ import gevent.event
 import gevent.monkey
 gevent.monkey.patch_socket()
 import gevent.queue
-from shared import app
 import storestub
 
 
+def _shared_hack():
+     # hack to get around circular import
+     import shared
+     global app
+     app = shared.app
+
+
 def make_redis():
-     host = app.config["REDIS_HOST"]
-     port = app.config.get("REDIS_PORT") or 6379
-     redis = __import__("redis")
-     return redis.Redis(host=host, port=port, db=0, decode_responses=True)
+    _shared_hack()
+    host = app.config["REDIS_HOST"]
+    port = app.config.get("REDIS_PORT") or 6379
+    redis = __import__("redis")
+    return redis.Redis(host=host, port=port, db=0, decode_responses=True)
 
 
 class Keystore:
     def __init__(self):
+        _shared_hack()
         self._backend = app.config.get("STORE_PROVIDER") or "INTERNAL"
         if self._backend == "REDIS":
            self._client = make_redis()

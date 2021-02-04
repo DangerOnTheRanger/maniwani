@@ -1,3 +1,7 @@
+import gevent.monkey
+gevent.monkey.patch_all()
+import psycogreen.gevent
+psycogreen.gevent.patch_psycopg()
 import os
 
 from alembic import command

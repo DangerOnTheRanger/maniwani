@@ -1,10 +1,8 @@
 FROM debian:buster-slim
-# install prereqs
-RUN apt-get update
-RUN apt-get install -y golang libopencv-dev
-RUN apt-get install -y git
-# grab utils for bootstrapping watcher
-RUN apt-get install -y netcat-openbsd psmisc
+# install prereqs, utils for bootstrapping watcher
+RUN apt-get update && apt-get install -y golang libopencv-dev git \
+	netcat-openbsd psmisc && \
+	rm -rf /var/lib/apt/lists/*
 # make a new user so we don't run as root
 RUN useradd -r captchouli
 WORKDIR /home/captchouli
