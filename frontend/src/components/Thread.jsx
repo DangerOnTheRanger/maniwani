@@ -8,11 +8,11 @@ function mapStateToProps(state) {
 
 function Thread(props) {
     return (
-        <div className="container">
+        <React.Fragment>
           {props.posts.map((post, i) => {
               return <Post {...post}/>;
           })}
-        </div>
+        </React.Fragment>
     );
 }
 

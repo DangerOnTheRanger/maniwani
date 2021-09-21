@@ -1,23 +1,103 @@
-@import "post";
+@import "base";
+
+body {
+	margin: 0;
+	font-family: monospace;
+	background-color: #181818;
+	color: #ececec;
+}
+
+p {
+	max-width: 90ch;
+}
+
+.lead {
+	font-size: 1.25rem;
+}
+
+.jumbotron {
+	padding: 1rem;
+	margin-bottom: 1rem;
+	margin-top: 1rem;
+}
+
+.navbar {
+	background-color: #181818;
+}
+
+
+.navbar-link {
+	color: #ececec;
+}
+
+.navbar-site-name {
+	color: #ececec;
+}
+
+.thread {
+	color: #ececec;
+}
+
+.thread:hover {
+	color: #ececec;
+}
+
+.thread-stats-container {
+}
+
+.fas {
+	color: #b6b6b6;
+}
+
+.text-secondary {
+	color: #b6b6b6;
+}
+
+.post-container {
+}
 
 .post-container:nth-child(odd) {
-	background-color: rgba(255,255,255,.05) !important;
+	background-color: rgba(255,255,255,.05);
 }
 
 .post-container:nth-child(even) {
-	background-color: rgba(255,255,255,.10) !important;
+	background-color: rgba(255,255,255,.10);
 }
 
-.container {
+.board-entry {
+	background-color:  #1a1a1a;
+	background-blend-mode: luminosity;
+	overflow: hidden;
+}
+
+.board-label {
+	color: #ececec;
+	background-color: #1a1a1a;
+	text-align: center;
+	/* hack in conjuction with overflow above
+	  to get rid of the label missing a pixel of the background image sometimes
+	  in firefox */
+	width: 101%;
+}
+
+.btn {
 	color: rgba(255,255,255,.7);
+	background-color: transparent;
+	text-decoration:underline;
+	border:none;
 }
 
-.text-info {
-	color: #ff8707ba !important;
+.badge {
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	color: #ececec;
+	text-decoration: none;
 }
 
 .badge-primary {
-	background-color: #ff78707ba !important;
+	background-color: #ff78707ba;
 	opacity:.7;
 	color: rgb(255,255,255);
 }
@@ -27,62 +107,12 @@
 	color: rgb(255,255,255);
 }
 
-.btn-dark {
-	color: rgba(255,255,255,.7);
-	background-color: transparent !important;
-	text-decoration:underline !important;
-	border:none!important;
+.modal {
+	background:#181818 none repeat scroll 0% 0%;
 }
 
-.thread {
-	border:none !important;
-	border-radius: 0px !important;
-	background-color:rgba(255,255,255,.1) !important;
-}
-
-.thread-stats-container {
-	margin-bottom: 3.5%;
-	margin-right: 3.5%;
-}
-
-.text-light {
-	color: rgba(255,255,255,.7) !important;
-}
-
-.thread .text-body {
-	color: rgba(255,255,255, .7) !important;
-}
-
-.fa-comment, .fa-image {
-	display:none;
-}
-
-.text-center {
-	color:rgba(255,255,255,0.7) !important;
-}
-
-.modal-content {
-	background-color: rgb(33,33,33);
-	color: rgba(255,255,255,.7);
-}
-
-.modal-header {
-	border-bottom: 0px !important;
-}
-
-.modal-footer {
-	border-top: 0px !important;
-}
-
-.navbar {
-	padding: 0rem 1rem;
-	line-height: .8;
-}
-
-.form-control, .jumbotron  {
-	background-color: #49505773 !important;
-	border: 1px solid #49505773;
-	color: #fff !important;
+.modal-overlay {
+	background-color:#181818;
 }
 
 a {
@@ -92,17 +122,3 @@ a {
 a:hover {
 	color: #ff8707;
 }
-
-body {
-	font-family:monospace !important;
-}
-$body-bg: black;
-$theme-colors: (
-	"light": rgba(255,255,255,.1)
-);
-@import "bootstrap";
-@import "media-grid";
-@import "board-index";
-@import "navbar";
-@import "styling";
-@import "catalog";

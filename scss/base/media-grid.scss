@@ -3,10 +3,11 @@
 	justify-content: center;
 	grid-gap: 30px;
 	grid-template-columns: repeat(auto-fill, 313px);
+	margin-top: 1rem;
+	margin-bottom: 1rem;
 }
 
 .media-element {
-	@extend .img-thumbnail;
 	height: 250px;
 	background-position: center;
 	background-repeat: no-repeat;

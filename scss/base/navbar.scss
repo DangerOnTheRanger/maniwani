@@ -1,4 +1,21 @@
 .navbar {
-	@extend .navbar-dark;
-	@extend .bg-dark;
+	display: flex;
+	position: sticky;
+	z-index: 1;
+	top: 0;
+	flex-flow: row nowrap;
+	justify-content: flex-start;
+}
+
+.navbar-site-name {
+	margin-right: 1rem;
+	font-size: 1.25rem;
+	text-decoration: none;
+	margin-top: 0.25rem;
+	margin-left: 0.25rem;
+}
+
+.navbar-link {
+	padding: 0.5rem;
+	text-decoration: none;
 }

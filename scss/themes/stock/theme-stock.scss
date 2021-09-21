@@ -1,8 +1,120 @@
-@import "bootstrap";
-@import "media-grid";
-@import "board-index";
-@import "catalog";
-@import "post";
-@import "styling";
-@import "captchouli";
-@import "navbar";
+@import "base";
+
+body {
+	margin: 0;
+	font-family: "Fira Sans";
+	background-color: #dee2e6;
+	color: #212529;
+}
+
+p {
+	max-width: 90ch;
+}
+
+.lead {
+	font-size: 1.25rem;
+}
+
+.jumbotron {
+	background-color: #f8f9fa;
+	padding: 1rem;
+	margin-bottom: 1rem;
+	margin-top: 1rem;
+}
+
+.navbar {
+	background-color: #f8f9fa;
+}
+
+
+.navbar-link {
+	color: #212529;
+}
+
+.navbar-site-name {
+	color: #212529;
+}
+
+.thread {
+	background-color: #f8f9fa;
+	color: #212529;
+	border-bottom: 7px solid #868e96;
+}
+
+.thread-stats-container {
+}
+
+.fas {
+	color: #868e96;
+}
+
+.text-secondary {
+	color: #868e96;
+}
+
+.post-container {
+	margin-bottom: 1rem;
+	background-color: #f8f9fa;
+	margin-top: 1rem;
+}
+
+.board-entry {
+	background-color:  #f8f9fa;
+	background-blend-mode: luminosity;
+	overflow: hidden;
+}
+
+.board-label {
+	color: #212529;
+	background-color: #f8f9fa;
+	text-align: center;
+	/* hack in conjuction with overflow above
+	  to get rid of the label missing a pixel of the background image sometimes
+	  in firefox */
+	width: 101%;
+}
+
+.btn {
+	color: #f8f9fa;
+}
+
+.btn-primary {
+	background-color: #343a40;
+}
+.btn-primary:hover {
+	background-color: #212529;
+}
+
+.btn-secondary {
+	background-color: #868e96;
+}
+
+.btn-secondary:hover {
+	background-color: #495057
+}
+
+.badge {
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	color: #f8f9fa;
+	text-decoration: none;
+}
+
+.badge-secondary {
+	background-color: #868e96;
+}
+
+.badge-primary {
+	background-color: #343a40;
+	
+}
+
+.modal {
+	background: #f8f9fa none repeat scroll 0% 0%;
+}
+
+.modal-overlay {
+	background-color: #dee2e6;
+}

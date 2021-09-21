@@ -3,8 +3,8 @@
 body {
 	margin: 0;
 	font-family: "Fira Sans";
-	background-color: #e7f3ff;
-	color: #424242;
+	background-color: #1d1f21;
+	color: #b4b6b5;
 }
 
 p {
@@ -16,51 +16,61 @@ p {
 }
 
 .jumbotron {
+	background-color: #27282c;
 	padding: 1rem;
 	margin-bottom: 1rem;
 	margin-top: 1rem;
 }
 
 .navbar {
-	background-color: #ffc683;
+	background-color: #27282c;
 }
 
 
 .navbar-link {
-	color: #424242;
+	color: #b4b6b5;
 }
 
 .navbar-site-name {
-	color: #424242;
+	color: #b4b6b5;
+}
+
+a {
+	color: #637b90;
 }
 
 .thread {
-	background-color: #ffffff;
-	color: #424242;
+	background-color: #27282c;
+	color: #b4b6b5;
+	border-bottom: 7px solid #b4b6b5;
+}
+
+.thread-stats-container {
 }
 
 .fas {
-	color: #7d4345;
+	color: #b4b6b5;
 }
 
 .text-secondary {
-	color: #7d4345;
+	color: #e57f5d;
 }
 
 .post-container {
-	margin-bottom: 2rem;
-	margin-top: 2rem;
+	margin-bottom: 1rem;
+	background-color: #27282c;
+	margin-top: 1rem;
 }
 
 .board-entry {
-	background-color: #90abcf;
+	background-color:  #27282c;
 	background-blend-mode: luminosity;
 	overflow: hidden;
 }
 
 .board-label {
-	color: #424242;
-	background-color: #90abcf;
+	color: #b4b6b5;
+	background-color: #27282c;
 	text-align: center;
 	/* hack in conjuction with overflow above
 	  to get rid of the label missing a pixel of the background image sometimes
@@ -69,15 +79,15 @@ p {
 }
 
 .btn {
-	color: #ffffff;
+	color: #f8f9fa;
 }
 
 .btn-primary {
-	background-color: #91accf;
+	background-color: #7f6b86;
 }
 
 .btn-secondary {
-	background-color: #a87274;
+	background-color: #637b90;
 }
 
 .badge {
@@ -85,23 +95,22 @@ p {
 	padding-right: 12px;
 	padding-top: 5px;
 	padding-bottom: 5px;
-	color: #ffffff;
+	color: #b4b6b5;
 	text-decoration: none;
 }
 
 .badge-secondary {
-	background-color: #91accf;
+	background-color: #868e96;
 }
 
 .badge-primary {
-	background-color: #a87274;
-	
+	background-color: #1d1f21;
 }
 
 .modal {
-	background: #e7f3ff none repeat scroll 0% 0%;
+	background: #27282c none repeat scroll 0% 0%;
 }
 
 .modal-overlay {
-	background-color: #e7f3ff;
+	background-color: #1d1f21;
 }

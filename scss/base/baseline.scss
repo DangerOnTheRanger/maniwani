@@ -1,0 +1,27 @@
+body {
+	margin: 0;
+	font-family: "Fira Sans, sans-serif";
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.col {
+	width: auto;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.page-footer {
+	text-align: center;
+}
+
+.btn {
+	border: none;
+	padding: 10px 25px;
+	font-size: 1rem;
+	margin: 0.25rem;
+	cursor: pointer;
+}

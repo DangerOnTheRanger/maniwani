@@ -16,28 +16,20 @@ function ThreadThumbnail(props) {
         }
     }
     var imageClass = props.spoiler? "catalog-thumbnail thumbnail-spoiler" : "catalog-thumbnail";
-    // TODO: use CSS to space the board display instead of a space character
     return (
         <a href={props.thread_url} className={"thread " + bgStyle}>
           <div className="catalog-media-container">
             {props.spoiler && <span className="spoiler-label text-danger">!</span>}
             <img className={imageClass} src={props.thumb_url}/>
           </div>
-          <div className="p-1">
-            {props.subject && <h6 className={"text-center font-weight-bold " + textStyle}>{props.subject}</h6>}
-            {!props.subject && <h6 className="text-center text-muted">No subject</h6>}
-          </div>
-          <div className="pb-2 pl-4 pr-4">
-            <div className={"thread-body " + textStyle} dangerouslySetInnerHTML={{__html: props.body}}>
-            </div>
-          </div>
+          {props.subject && <span className={"thread-subject"}>{props.subject || "No subject"}</span>}
+          <div className={"thread-body " + textStyle} dangerouslySetInnerHTML={{__html: props.body}}/>
           <span className={"thread-stats-container " + textStyle}>
-            {props.display_board && <small>/</small>}
-            {props.display_board && <small>{props.board}</small>}
-            {props.display_board && (<small>/ </small>)}
-            <i className="fas fa-comment"></i>{props.num_replies}
+            {props.display_board && <small>/{props.board}/</small>}
+            {props.display_board && '\u00A0'}
+            <i className="fas fa-comment"></i>&nbsp;{props.num_replies}
             &nbsp;
-            <i className="fas fa-image"></i>{props.num_media}
+            <i className="fas fa-image"></i>&nbsp;{props.num_media}
           </span>
         </a>
     );
@@ -49,7 +41,7 @@ function mapStateToProps(state) {
 
 function Catalog(props) {
     return (
-        <div className="container-fluid">
+        <div className="container">
           <div className="catalog-grid">
             {props.threads.map((thread, i) => {
                 return <ThreadThumbnail {...thread} display_board={props.display_board} tag_styles={props.tag_styles}/>;

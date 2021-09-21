@@ -20,6 +20,8 @@ function ModalBase(props) {
     return (
         <React.Fragment>
           {renderingModal && <Modal
+                              className="modal"
+                              overlayClassName="modal-overlay"
                               isOpen={modalOpen}
                               onRequestClose={() => {setModalOpen(false);}}>
                               <React.Fragment>

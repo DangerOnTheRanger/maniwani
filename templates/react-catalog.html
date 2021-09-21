@@ -10,9 +10,9 @@
 	</script>
 {% endblock %}
 {% block navbar %}
-	<a href="{{ url_for("threads.new", board_id=board_id) }}" id="newThreadLink" class="nav-item nav-link">New thread</a>
+	<a href="{{ url_for("threads.new", board_id=board_id) }}" id="newThreadLink" class="navbar-link">New thread</a>
 	{% if get_slip() and get_slip().is_admin %}
-		<a href="{{ url_for("boards.admin", board_id=board_id) }}" class="nav-item nav-link">Admin</a>
+		<a href="{{ url_for("boards.admin", board_id=board_id) }}" class="navbar-link">Admin</a>
 	{% endif %}
 {% endblock %}
 {% block content %}

@@ -1,0 +1,27 @@
+.form-control {
+	width: 100%;
+}
+
+.form-group > label {
+	margin-bottom: 0.25rem;
+	display: inline-block;
+	margin-top: 0.25rem;
+}
+
+.form-group > [type="file"] {
+	display: block;
+}
+
+.modal {
+	position: absolute;
+	inset: 40px;
+	overflow: auto;
+	border-radius: 4px;
+	outline: currentcolor none medium;
+	padding: 20px;
+}
+
+.modal-overlay {
+	position: fixed;
+	inset: 0px;
+}
